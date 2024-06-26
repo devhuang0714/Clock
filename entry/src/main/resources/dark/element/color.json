@@ -1,0 +1,20 @@
+{
+  "color": [
+    {
+      "name": "start_window_background",
+      "value": "#FFFFFF"
+    },
+    {
+      "name": "main_background_color",
+      "value": "#000000"
+    },
+    {
+      "name": "flip_card_bg_color",
+      "value": "#2C2A2D"
+    },
+    {
+      "name": "flip_text_color",
+      "value": "#BAB6B9"
+    }
+  ]
+}
