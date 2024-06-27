@@ -4,8 +4,10 @@ import common from '@ohos.app.ability.common';
 import mediaquery from '@ohos.mediaquery';
 import { Icons } from '../common/constants/Constants';
 import { Toast } from 'utils/Index';
-import { FlipCardClock, FlipCardClockController } from '../views/FlipCardClock'
-import { RoundClock } from '../views/RoundClock'
+import { ClockController } from '../views/Clocks/ClockController'
+import { RoundClock } from '../views/Clocks/RoundClock';
+import { FlipClock } from '../views/Clocks/FlipClock';
+import { DigitalClock } from '../views/Clocks/DigitalClock';
 
 @Entry
 @Component
@@ -16,12 +18,11 @@ struct Index {
   @State isDark: boolean = false // 是否暗黑模式
   @State isLandscape: boolean = false // 当前是否横屏
   @State isClean: boolean = false // 清屏
-  @State hours: number = 0
-  @State minutes: number = 0
-  @State seconds: number = 0
-  private clockController: FlipCardClockController = new FlipCardClockController()
-  fontSize: number = 130
-  space: number = 4
+  private date: Date = new Date()
+  private clockController: ClockController = new ClockController()
+  private fontSize: number = 130
+  private space: number = 4
+  private intervalId: number = 0;
 
   aboutToAppear(): void {
     // 绑定横竖屏切换回调函数
@@ -33,6 +34,10 @@ struct Index {
 
     this.updateTimes()
     this.startClock()
+  }
+
+  aboutToDisappear(): void {
+    clearInterval(this.intervalId)
   }
 
   onColorModeChange(): void {
@@ -50,18 +55,14 @@ struct Index {
   }
 
   startClock() {
-    setInterval(() => {
+    this.intervalId = setInterval(() => {
       this.updateTimes()
     }, 1000);
   }
 
   updateTimes() {
-    const date = new Date()
-    this.hours = date.getHours()
-    this.minutes = date.getMinutes()
-    this.seconds = date.getSeconds()
-
-    this.clockController.change(this.hours, this.minutes, this.seconds)
+    this.date = new Date()
+    this.clockController.update(this.date)
   }
 
   build() {
@@ -69,17 +70,25 @@ struct Index {
       Column() {
         Tabs() {
           TabContent() {
-            FlipCardClock({
-              hours: this.hours.toString().padStart(2, '0'),
-              minutes: this.minutes.toString().padStart(2, '0'),
-              seconds: this.seconds.toString().padStart(2, '0'),
+            DigitalClock({
               controller: this.clockController,
+              date: this.date
+            })
+          }
+
+          TabContent() {
+            FlipClock({
+              controller: this.clockController,
+              date: this.date,
               isLandscape: this.isLandscape
             })
           }
 
           TabContent() {
-            RoundClock()
+            RoundClock({
+              controller: this.clockController,
+              date: this.date
+            })
           }
         }
         .height('100%')
@@ -89,10 +98,10 @@ struct Index {
       .justifyContent(FlexAlign.Center)
       .backgroundColor($r('app.color.main_background_color'))
       .alignRules({
-        top: {anchor: "__container__", align: VerticalAlign.Top},
-        left: {anchor: "__container__", align: HorizontalAlign.Start},
-        right: {anchor: "__container__", align: HorizontalAlign.End},
-        bottom: {anchor: "__container__", align: VerticalAlign.Bottom}
+        top: { anchor: "__container__", align: VerticalAlign.Top },
+        left: { anchor: "__container__", align: HorizontalAlign.Start },
+        right: { anchor: "__container__", align: HorizontalAlign.End },
+        bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
       })
       .id("clock")
 
@@ -105,8 +114,8 @@ struct Index {
           this.changeOrientation(!this.isLandscape);
         })
         .alignRules({
-          top: {anchor: "__container__", align: VerticalAlign.Top},
-          left: {anchor: "__container__", align: HorizontalAlign.Start}
+          top: { anchor: "__container__", align: VerticalAlign.Top },
+          left: { anchor: "__container__", align: HorizontalAlign.Start }
         })
         .id("text")
 
@@ -147,9 +156,9 @@ struct Index {
     .opacity(this.isClean ? 0 : 1)
     .backgroundColor(Color.Transparent)
     .alignRules({
-      left: {anchor: "__container__", align: HorizontalAlign.Start},
-      right: {anchor: "__container__", align: HorizontalAlign.End},
-      bottom: {anchor: "__container__", align: VerticalAlign.Bottom}
+      left: { anchor: "__container__", align: HorizontalAlign.Start },
+      right: { anchor: "__container__", align: HorizontalAlign.End },
+      bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
     })
     .id("tools")
   }

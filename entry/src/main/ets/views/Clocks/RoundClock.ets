@@ -1,41 +1,46 @@
-import HYLogger from '../common/utils/HYLogger';
+import HYLogger from '../../common/utils/HYLogger';
 import { display } from '@kit.ArkUI';
+import { ClockController, ClockListener } from './ClockController'
 
 const HOURS: Array<string> = ['3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '1', '2'];
-const HEIGHT_ADD: number = 150; // 表盘下面需要绘制时间，canvas高度是宽度加150
 const TAG: string = 'Index';
+
+export class RoundClockController {
+  onChange: (hours: number, minutes: number, seconds: number) => void = () => {
+  }
+
+  public change(hours: number, minutes: number, seconds: number) {
+    this.onChange(hours, minutes, seconds)
+  }
+}
 
 @Component
 export struct RoundClock {
+  controller: ClockController = new ClockController()
+  date: Date = new Date()
+  @State canvasWidth: number = 300; // 300是表盘默认大小
   private settings: RenderingContextSettings = new RenderingContextSettings(true);
   private context: CanvasRenderingContext2D = new CanvasRenderingContext2D(this.settings);
-  @State canvasWidth: number = 300; // 300是表盘默认大小
   private radius: number = 150; // 默认表盘半径
-  private intervalId: number = 0;
-  updateTime = () => {
-    this.context.clearRect(0, 0, this.canvasWidth, this.canvasWidth + HEIGHT_ADD);
-    let nowTime = new Date();
-    let hour = nowTime.getHours();
-    let minute = nowTime.getMinutes();
-    let second = nowTime.getSeconds();
-    let time = `${this.fillTime(hour)}:${this.fillTime(minute)}:${this.fillTime(second)}`;
-    this.drawBackGround();
-    this.drawHour(hour, minute);
-    this.drawMinute(minute);
-    this.drawSecond(second);
-    this.drawDot();
-    this.drawTime(time);
-    this.context.translate(-this.radius, -this.radius);
+  private listener: ClockListener = {
+    onUpdate: (date) => {
+      this.context.clearRect(0, 0, this.canvasWidth, this.canvasWidth);
+      this.drawBackGround();
+      this.drawHour(date.getHours(), date.getMinutes());
+      this.drawMinute(date.getMinutes());
+      this.drawSecond(date.getSeconds());
+      this.drawDot();
+      this.context.translate(-this.radius, -this.radius);
+    }
   }
 
   aboutToAppear() {
     this.getSize();
-    this.updateTime()
-    this.intervalId = setInterval(this.updateTime, 1000)
+    this.controller.registerListener(this.listener)
   }
 
   aboutToDisappear(): void {
-    clearInterval(this.intervalId);
+    this.controller.unregisterListener(this.listener)
   }
 
   // 获取设备宽高计算表盘大小
@@ -59,7 +64,7 @@ export struct RoundClock {
     grad.addColorStop(0.0, 'white');
     grad.addColorStop(0.9, '#eee');
     grad.addColorStop(1.0, 'white');
-    this.context.fillStyle = grad;
+    this.context.fillStyle = grad
     this.context.fillRect(0, 0, this.canvasWidth, this.canvasWidth);
 
     // 绘制外圈圆
@@ -71,7 +76,7 @@ export struct RoundClock {
     this.context.stroke();
 
     // 绘制时间文字
-    this.context.font = '30px';
+    this.context.font = '36px';
     this.context.textAlign = "center";
     this.context.textBaseline = "middle";
     this.context.fillStyle = '#000';
@@ -147,7 +152,7 @@ export struct RoundClock {
     let rad = 2 * Math.PI / 60 * second;
     this.context.rotate(rad);
     this.context.moveTo(0, 10);
-    this.context.strokeStyle = '#05f';
+    this.context.strokeStyle = 'red';
     this.context.lineTo(0, -this.radius + 21);
     this.context.stroke();
     this.context.restore();
@@ -157,33 +162,21 @@ export struct RoundClock {
   drawDot() {
     this.context.save();
     this.context.beginPath();
-    this.context.fillStyle = '#05f';
+    this.context.fillStyle = 'red';
     this.context.arc(0, 0, 4, 0, 2 * Math.PI, false);
     this.context.fill();
-    this.context.restore();
-  }
-
-  // 绘制表盘下面时间文本
-  drawTime(time: string) {
-    this.context.save();
-    this.context.beginPath();
-    this.context.font = '90px';
-    this.context.textAlign = "center";
-    this.context.textBaseline = "middle";
-    this.context.fillStyle = '#000';
-    this.context.fillText(time, 0, this.radius + 80);
     this.context.restore();
   }
 
   build() {
     Stack({ alignContent: Alignment.Center }) {
       Canvas(this.context)
-        .padding({ top: 76 })
         .width(this.canvasWidth)
-        .height(this.canvasWidth + HEIGHT_ADD)
+        .height(this.canvasWidth)
+        .borderRadius(this.canvasWidth * 0.5)
+        .clip(true)
         .onReady(() => {
-          this.updateTime();
-          this.intervalId = setInterval(this.updateTime, 1000);
+          this.listener.onUpdate(this.date);
         })
     }
     .width('100%')

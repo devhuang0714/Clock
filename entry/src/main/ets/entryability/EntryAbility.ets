@@ -68,6 +68,10 @@ export default class EntryAbility extends UIAbility {
           'name': 'font-style5',
           'rawfile': 'font-style5.ttf'
         },
+        {
+          'name': 'led-italic',
+          'rawfile': 'led-italic.ttf'
+        },
       ]
       // 注册IconFont
       fonts.map((item) => {

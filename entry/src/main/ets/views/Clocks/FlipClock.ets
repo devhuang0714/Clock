@@ -1,5 +1,6 @@
 import animator, { AnimatorResult } from '@ohos.animator';
 import measure from '@ohos.measure'
+import { ClockController, ClockListener } from './ClockController'
 
 const fontStyle = 'font-style5'
 
@@ -8,12 +9,11 @@ function setTextStyles(fontSize: number, baselineOffset: number, space: number) 
   .fontFamily(fontStyle)
   .fontSize(fontSize)
   .fontColor($r('app.color.flip_text_color'))
-  .fontWeight(FontWeight.Medium)
+  .fontWeight(FontWeight.Bold)
   .textAlign(TextAlign.Center)
   .lineHeight(fontSize * 0.5)
   .baselineOffset(baselineOffset)
   .height((fontSize - space) * 0.5)
-  .width(140)
 }
 
 export class FlipCardController {
@@ -25,34 +25,38 @@ export class FlipCardController {
   }
 }
 
-export class FlipCardClockController {
-  onChange: (hours: number, minutes: number, seconds: number) => void = () => {
-  }
-
-  public change(hours: number, minutes: number, seconds: number) {
-    this.onChange(hours, minutes, seconds)
-  }
-}
-
 @Component
-export struct FlipCardClock {
+export struct FlipClock {
+  controller: ClockController = new ClockController()
+  date: Date = new Date()
   @Prop isLandscape: boolean = false
   @Prop fontSize: number = 130
   @Prop space: number = 4
   @State hours: string = '00'
   @State minutes: string = '00'
   @State seconds: string = '00'
-  controller: FlipCardClockController = new FlipCardClockController()
   private hourController: FlipCardController = new FlipCardController()
   private minuteController: FlipCardController = new FlipCardController()
   private secondController: FlipCardController = new FlipCardController()
+  private listener: ClockListener = {
+    onUpdate: (date) => {
+        this.hourController.change(date.getHours().toString().padStart(2, '0'))
+        this.minuteController.change(date.getMinutes().toString().padStart(2, '0'))
+        this.secondController.change(date.getSeconds().toString().padStart(2, '0'))
+    }
+  }
 
   aboutToAppear(): void {
-    this.controller.onChange = (hours, minutes, seconds) => {
-      this.hourController.change(hours.toString().padStart(2, '0'))
-      this.minuteController.change(minutes.toString().padStart(2, '0'))
-      this.secondController.change(seconds.toString().padStart(2, '0'))
-    }
+    this.hours = this.date.getHours().toString().padStart(2, '0')
+    this.minutes = this.date.getMinutes().toString().padStart(2, '0')
+    this.seconds = this.date.getSeconds().toString().padStart(2, '0')
+
+    this.controller.registerListener(this.listener)
+    this.listener.onUpdate(this.date)
+  }
+
+  aboutToDisappear(): void {
+    this.controller.unregisterListener(this.listener)
   }
 
   build() {
