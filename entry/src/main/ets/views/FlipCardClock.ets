@@ -17,11 +17,93 @@ function setTextStyles(fontSize: number, baselineOffset: number, space: number) 
 }
 
 export class FlipCardController {
-  changeFn: (next: string) => void = () => {
+  onChange: (next: string) => void = () => {
   }
 
   public change(next: string) {
-    this.changeFn(next)
+    this.onChange(next)
+  }
+}
+
+export class FlipCardClockController {
+  onChange: (hours: number, minutes: number, seconds: number) => void = () => {
+  }
+
+  public change(hours: number, minutes: number, seconds: number) {
+    this.onChange(hours, minutes, seconds)
+  }
+}
+
+@Component
+export struct FlipCardClock {
+  @Prop isLandscape: boolean = false
+  @Prop fontSize: number = 130
+  @Prop space: number = 4
+  @State hours: string = '00'
+  @State minutes: string = '00'
+  @State seconds: string = '00'
+  controller: FlipCardClockController = new FlipCardClockController()
+  private hourController: FlipCardController = new FlipCardController()
+  private minuteController: FlipCardController = new FlipCardController()
+  private secondController: FlipCardController = new FlipCardController()
+
+  aboutToAppear(): void {
+    this.controller.onChange = (hours, minutes, seconds) => {
+      this.hourController.change(hours.toString().padStart(2, '0'))
+      this.minuteController.change(minutes.toString().padStart(2, '0'))
+      this.secondController.change(seconds.toString().padStart(2, '0'))
+    }
+  }
+
+  build() {
+    if (this.isLandscape) {
+      this.LandscapeLayout()
+    } else {
+      this.PortraitLayout()
+    }
+  }
+
+  @Builder
+  PortraitLayout() {
+    Column({ space: 24 }) {
+      this.FlipCards()
+    }
+    .width('100%')
+    .justifyContent(FlexAlign.Center)
+  }
+
+  @Builder
+  LandscapeLayout() {
+    Row({ space: 24 }) {
+      this.FlipCards()
+    }
+    .width('100%')
+    .justifyContent(FlexAlign.Center)
+  }
+
+  @Builder
+  FlipCards() {
+    FlipCard({
+      fontSize: this.fontSize,
+      space: this.space,
+      current: this.hours,
+      controller: this.hourController
+    })
+
+    FlipCard({
+      fontSize: this.fontSize,
+      space: this.space,
+      current: this.minutes,
+      controller: this.minuteController
+    })
+
+    FlipCard({
+      fontSize: this.fontSize,
+      space: this.space,
+      current: this.seconds,
+      next: this.seconds,
+      controller: this.secondController
+    })
   }
 }
 
@@ -31,9 +113,9 @@ export struct FlipCard {
   @State fontSize: number = 60
   @State horizontalMargin: number = 12
   @State verticalMargin: number = 20
-  @State prev: string = '--'
-  @State current: string = '--'
-  @State next: string = '--'
+  @State prev: string = '00'
+  @State current: string = '00'
+  @State next: string = '00'
   @State isFlipping: boolean = false
   @State angle: number = 0
   private animator: AnimatorResult = animator.create({
@@ -51,7 +133,7 @@ export struct FlipCard {
   aboutToAppear(): void {
     this.prev = this.current
 
-    this.controller.changeFn = (next) => {
+    this.controller.onChange = (next) => {
       if (this.current == next) {
         return
       }
