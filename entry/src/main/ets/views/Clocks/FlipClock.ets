@@ -2,7 +2,7 @@ import animator, { AnimatorResult } from '@ohos.animator';
 import measure from '@ohos.measure'
 import { ClockController, ClockListener } from './ClockController'
 
-const fontStyle = 'font-style5'
+const fontStyle = 'flip-num-font'
 
 @Extend(Text)
 function setTextStyles(fontSize: number, baselineOffset: number, space: number) {

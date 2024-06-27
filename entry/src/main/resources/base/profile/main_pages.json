@@ -2,6 +2,7 @@
   "src": [
     "pages/Index",
     "pages/LauncherPage",
-    "pages/Settings/PrivacyPage"
+    "pages/Settings/PrivacyPage",
+    "pages/Settings/SettingPage"
   ]
 }

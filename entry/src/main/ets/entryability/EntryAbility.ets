@@ -45,32 +45,12 @@ export default class EntryAbility extends UIAbility {
           'rawfile': 'iconfont.ttf'
         },
         {
-          'name': 'led-font',
-          'rawfile': 'led-font.ttf'
+          'name': 'flip-num-font',
+          'rawfile': 'flip-num-font.ttf'
         },
         {
-          'name': 'font-style1',
-          'rawfile': 'font-style1.ttf'
-        },
-        {
-          'name': 'font-style2',
-          'rawfile': 'font-style2.otf'
-        },
-        {
-          'name': 'font-style3',
-          'rawfile': 'font-style3.otf'
-        },
-        {
-          'name': 'font-style4',
-          'rawfile': 'font-style4.ttf'
-        },
-        {
-          'name': 'font-style5',
-          'rawfile': 'font-style5.ttf'
-        },
-        {
-          'name': 'led-italic',
-          'rawfile': 'led-italic.ttf'
+          'name': 'digital-num-font',
+          'rawfile': 'digital-num-font.ttf'
         },
       ]
       // 注册IconFont

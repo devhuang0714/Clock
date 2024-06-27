@@ -3,7 +3,7 @@ import window from '@ohos.window';
 import common from '@ohos.app.ability.common';
 import mediaquery from '@ohos.mediaquery';
 import { Icons } from '../common/constants/Constants';
-import { Toast } from 'utils/Index';
+import router from '@ohos.router'
 import { ClockController } from '../views/Clocks/ClockController'
 import { RoundClock } from '../views/Clocks/RoundClock';
 import { FlipClock } from '../views/Clocks/FlipClock';
@@ -124,6 +124,9 @@ struct Index {
     .height('100%')
     .height('100%')
     .backgroundColor(Color.Transparent)
+    .onClick(() => {
+      this.isClean = !this.isClean
+    })
   }
 
   @Builder
@@ -149,7 +152,9 @@ struct Index {
         .fontFamily(Icons.FONT_FAMILY)
         .backgroundColor(Color.Transparent)
         .onClick(() => {
-          Toast.show('setting action')
+          router.pushUrl({
+            url: 'pages/Settings/SettingPage'
+          })
         })
     }
     .padding({ left: 24, right: 24, bottom: 36 })

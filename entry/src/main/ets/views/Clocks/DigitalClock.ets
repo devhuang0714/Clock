@@ -2,7 +2,7 @@ import { ClockController, ClockListener } from './ClockController'
 
 @Extend(Text)
 function setTextStyles(fontSize: number) {
-  .fontFamily('led-italic')
+  .fontFamily('digital-num-font')
   .fontSize(fontSize)
   .fontColor($r('app.color.flip_text_color'))
   .fontWeight(FontWeight.Bold)
