@@ -4,11 +4,10 @@ import router from '@ohos.router';
 @Entry
 @Component
 export struct SettingPage {
-
   pageTransition() {
     PageTransitionEnter({ duration: 300 })
       .slide(SlideEffect.Bottom)
-    PageTransitionExit({ duration: 300 })
+    PageTransitionExit({ type: RouteType.Pop, duration: 300 })
       .slide(SlideEffect.Bottom)
   }
 
@@ -17,6 +16,10 @@ export struct SettingPage {
       Grid() {
         GridItem() {
           this.SettingItem(Icons.CUSTOM, '自定义')
+        }
+
+        GridItem() {
+          this.SettingItem(Icons.CLOCK, '表盘风格')
         }
 
         GridItem() {

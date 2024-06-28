@@ -20,4 +20,6 @@ export class Icons {
   static readonly COMMENTS: string = '\ue8b9'
   static readonly CUSTOM: string = '\ue62f'
   static readonly ABOUT: string = '\ue607'
+  static readonly CLOCK: string = '\ue74f'
+  static readonly FLIP: string = '\ue69d'
 }

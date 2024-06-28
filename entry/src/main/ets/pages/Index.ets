@@ -34,15 +34,15 @@ struct Index {
   aboutToAppear(): void {
     this.clockItems = [
       {
-        previewIcon: $rawfile('icons/flip_clock.png'),
+        previewIcon: $r('app.media.flip_clock'),
         type: 'flipClock'
       },
       {
-        previewIcon: $rawfile('icons/round_clock.png'),
+        previewIcon: $r('app.media.round_clock'),
         type: 'roundClock'
       },
       {
-        previewIcon: $rawfile('icons/digital_clock.png'),
+        previewIcon: $r('app.media.digital_clock'),
         type: 'digitalClock'
       },
     ]
