@@ -1,14 +1,19 @@
 import webview from '@ohos.web.webview'
 import { GlobalContext } from 'utils/Index'
+import { ConfigurationConstant } from '@kit.AbilityKit';
 
 @Entry
 @Component
 struct PrivacyPage {
   webviewController: webview.WebviewController = new webview.WebviewController()
+  @State mode: WebDarkMode = WebDarkMode.Auto
+  @State access: boolean = true
 
   build() {
     Navigation() {
       Web({ src: $rawfile('html/privacy_policy.html'), controller: this.webviewController })
+        .darkMode(this.mode)
+        .forceDarkAccess(this.access)
     }
     .width('100%')
     .height('100%')

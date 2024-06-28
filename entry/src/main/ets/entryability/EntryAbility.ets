@@ -80,6 +80,22 @@ export default class EntryAbility extends UIAbility {
         .catch((err: BusinessError) => {
           console.error(`Failed to set the status bar to be invisible. Code is ${err.code}, message is ${err.message}`);
         });
+
+      // 设置屏幕常亮（不熄屏）
+      let isKeepScreenOn: boolean = true;
+      try {
+        windowClass.setWindowKeepScreenOn(isKeepScreenOn, (err: BusinessError) => {
+          const errCode: number = err.code;
+          if (errCode) {
+            console.error('Failed to set the screen to be always on. Cause: ' + JSON.stringify(err));
+            return;
+
+          }
+          console.info('Succeeded in setting the screen to be always on.');
+        });
+      } catch (exception) {
+        console.error('Failed to set the screen to be always on. Cause: ' + JSON.stringify(exception));
+      }
     });
   }
 

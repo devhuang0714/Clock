@@ -106,7 +106,7 @@ export struct DigitalClock {
         .setTextStyles(36)
 
       Text(this.time)
-        .setTextStyles(40)
+        .setTextStyles(42)
     }
     .width('100%')
   }

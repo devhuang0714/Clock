@@ -1,5 +1,6 @@
 export class AppConstants {
-  static readonly DEFAULT_STATUS_HEIGHT: number = 32;
+  static readonly DEFAULT_STATUS_HEIGHT: number = 56;
+  static readonly DEFAULT_NAV_HEIGHT: number = 48;
   static readonly BUNDLE_NAME: string = 'com.hyx.clock'
 }
 
@@ -14,4 +15,9 @@ export class Icons {
   static readonly EMAIL: string = '\ue68a'
   static readonly FEEDBACK: string = '\ue6fa'
   static readonly PRIVACY: string = '\ue612'
+  static readonly PACK_UP: string = '\ue64d'
+  static readonly TIPS: string = '\ue7a3'
+  static readonly COMMENTS: string = '\ue8b9'
+  static readonly CUSTOM: string = '\ue62f'
+  static readonly ABOUT: string = '\ue607'
 }
