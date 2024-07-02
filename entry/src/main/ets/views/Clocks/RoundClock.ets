@@ -5,16 +5,7 @@ import { ClockController, ClockListener } from './ClockController'
 const HOURS: Array<string> = ['3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '1', '2'];
 const TAG: string = 'Index';
 
-export class RoundClockController {
-  onChange: (hours: number, minutes: number, seconds: number) => void = () => {
-  }
-
-  public change(hours: number, minutes: number, seconds: number) {
-    this.onChange(hours, minutes, seconds)
-  }
-}
-
-@Component
+@Component({ freezeWhenInactive: true })
 export struct RoundClock {
   controller: ClockController = new ClockController()
   date: Date = new Date()

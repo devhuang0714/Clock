@@ -7,6 +7,8 @@ import { ClockController } from '../views/Clocks/ClockController'
 import { RoundClock } from '../views/Clocks/RoundClock';
 import { FlipClock } from '../views/Clocks/FlipClock';
 import { DigitalClock } from '../views/Clocks/DigitalClock';
+import { LunarCalendarClock, LunarCalendarClockType } from '../views/Clocks/LunarCalendarClock'
+import { RotateClock, RotateClockType } from '../views/Clocks/RotateClock'
 import router from '@ohos.router';
 
 interface ClockItem {
@@ -33,6 +35,26 @@ struct Index {
 
   aboutToAppear(): void {
     this.clockItems = [
+      {
+        previewIcon: $r('app.media.rotate_clock'),
+        type: 'lunarCalendarClock_style2'
+      },
+      {
+        previewIcon: $r('app.media.rotate_clock'),
+        type: 'lunarCalendarClock'
+      },
+      {
+        previewIcon: $r('app.media.rotate_clock'),
+        type: 'rotateClock'
+      },
+      {
+        previewIcon: $r('app.media.rotate_clock'),
+        type: 'rotateClock_style2'
+      },
+      {
+        previewIcon: $r('app.media.rotate_clock'),
+        type: 'rotateClock_style3'
+      },
       {
         previewIcon: $r('app.media.flip_clock'),
         type: 'flipClock'
@@ -114,6 +136,41 @@ struct Index {
                   controller: this.clockController,
                   date: this.date
                 })
+              } else if (item.type == 'rotateClock') {
+                RotateClock({
+                  controller: this.clockController,
+                  date: this.date,
+                  isLandscape: this.isLandscape,
+                  lightOn: true
+                })
+              } else if (item.type == 'rotateClock_style2') {
+                RotateClock({
+                  controller: this.clockController,
+                  date: this.date,
+                  isLandscape: this.isLandscape,
+                  type: RotateClockType.Style2,
+                  lightOn: true
+                })
+              } else if (item.type == 'rotateClock_style3') {
+                RotateClock({
+                  controller: this.clockController,
+                  date: this.date,
+                  isLandscape: this.isLandscape,
+                  type: RotateClockType.Style3
+                })
+              } else if (item.type == 'lunarCalendarClock') {
+                LunarCalendarClock({
+                  controller: this.clockController,
+                  date: this.date,
+                  isLandscape: this.isLandscape
+                })
+              } else if (item.type == 'lunarCalendarClock_style2') {
+                LunarCalendarClock({
+                  controller: this.clockController,
+                  date: this.date,
+                  isLandscape: this.isLandscape,
+                  type: LunarCalendarClockType.Style2
+                })
               }
             }
           })
@@ -168,7 +225,7 @@ struct Index {
         })
       }
       .columnsGap(12)
-      .maxCount(3)
+      .maxCount(this.clockItems.length)
       .backgroundColor($r('app.color.flip_card_bg_color'))
       .padding(12)
       .borderRadius(12)
@@ -188,9 +245,9 @@ struct Index {
 
   @Builder
   BottomTools() {
-    Row() {
+    Row({ space: 24 }) {
       Text(this.isDark ? Icons.THEME_LIGHT : Icons.THEME_DARK)
-        .fontSize(40)
+        .fontSize(36)
         .fontFamily(Icons.FONT_FAMILY)
         .backgroundColor(Color.Transparent)
         .onClick(() => {
@@ -201,11 +258,19 @@ struct Index {
           getContext().getApplicationContext().setColorMode(mode);
         })
 
+      Text(Icons.SCREEN_ORIENTATION)
+        .fontSize(36)
+        .fontFamily(Icons.FONT_FAMILY)
+        .backgroundColor(Color.Transparent)
+        .onClick(() => {
+          this.changeOrientation(!this.isLandscape)
+        })
+
       Blank()
         .layoutWeight(1)
 
       Text(Icons.SETTINGS)
-        .fontSize(40)
+        .fontSize(36)
         .fontFamily(Icons.FONT_FAMILY)
         .backgroundColor(Color.Transparent)
         .onClick(() => {

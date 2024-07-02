@@ -10,20 +10,10 @@ function setTextStyles(fontSize: number) {
   .width('100%')
 }
 
-export class DigitalClockController {
-  onChange: (date: Date) => void = () => {
-  }
-
-  public change(date: Date) {
-    this.onChange(date)
-  }
-}
-
-@Component
+@Component({ freezeWhenInactive: true })
 export struct DigitalClock {
   controller: ClockController = new ClockController()
   date: Date = new Date()
-  @State canvasWidth: number = 300; // 300是表盘默认大小
   @State year: string = '----'
   @State day: string = '-----'
   @State week: string = '--'
@@ -39,9 +29,6 @@ export struct DigitalClock {
       this.time = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes()
         .toString()
         .padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`
-      this.hours = date.getHours().toString().padStart(2, '0')
-      this.minutes = date.getMinutes().toString().padStart(2, '0')
-      this.seconds = date.getSeconds().toString().padStart(2, '0')
     }
   }
 

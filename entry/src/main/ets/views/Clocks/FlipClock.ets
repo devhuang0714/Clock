@@ -2,14 +2,15 @@ import animator, { AnimatorResult } from '@ohos.animator';
 import measure from '@ohos.measure'
 import { ClockController, ClockListener } from './ClockController'
 
-const fontStyle = 'flip-num-font'
+// const fontStyle = 'flip-num-font'
+const fontStyle = ''
 
 @Extend(Text)
 function setTextStyles(fontSize: number, baselineOffset: number, space: number) {
   .fontFamily(fontStyle)
   .fontSize(fontSize)
   .fontColor($r('app.color.flip_text_color'))
-  .fontWeight(FontWeight.Bold)
+  .fontWeight(FontWeight.Medium)
   .textAlign(TextAlign.Center)
   .lineHeight(fontSize * 0.5)
   .baselineOffset(baselineOffset)
@@ -25,7 +26,7 @@ export class FlipCardController {
   }
 }
 
-@Component
+@Component({ freezeWhenInactive: true })
 export struct FlipClock {
   controller: ClockController = new ClockController()
   date: Date = new Date()

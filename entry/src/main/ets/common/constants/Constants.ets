@@ -22,4 +22,5 @@ export class Icons {
   static readonly ABOUT: string = '\ue607'
   static readonly CLOCK: string = '\ue74f'
   static readonly FLIP: string = '\ue69d'
+  static readonly SCREEN_ORIENTATION: string = '\ue624'
 }

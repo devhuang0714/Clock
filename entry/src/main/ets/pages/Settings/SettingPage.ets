@@ -1,14 +1,18 @@
 import { AppConstants, Icons } from '../../common/constants/Constants';
 import router from '@ohos.router';
+import { Router } from '@ohos.arkui.UIContext';
 
 @Entry
 @Component
 export struct SettingPage {
   pageTransition() {
-    PageTransitionEnter({ duration: 300 })
+    PageTransitionEnter({ type: RouteType.Push, duration: 300 })
       .slide(SlideEffect.Bottom)
     PageTransitionExit({ type: RouteType.Pop, duration: 300 })
       .slide(SlideEffect.Bottom)
+
+    PageTransitionEnter({ type: RouteType.Pop, duration: 0 })
+    PageTransitionExit({ type: RouteType.Push, duration: 1000 })
   }
 
   build() {

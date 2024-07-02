@@ -10,7 +10,7 @@ export default class EntryAbility extends UIAbility {
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onCreate');
     GlobalContext.getContext().setObject('entryContext', this.context);
 
-    // AppStorage.setOrCreate('currentColorMode', this.context.config.colorMode);
+    AppStorage.setOrCreate('currentColorMode', this.context.config.colorMode);
     this.context.getApplicationContext().setColorMode(ConfigurationConstant.ColorMode.COLOR_MODE_DARK);
   }
 
