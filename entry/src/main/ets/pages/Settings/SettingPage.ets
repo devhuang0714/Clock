@@ -25,6 +25,11 @@ export struct SettingPage {
         GridItem() {
           this.SettingItem(Icons.CLOCK, '表盘风格')
         }
+        .onClick(() => {
+          router.pushUrl({
+            url: 'pages/Settings/ClockStyle'
+          })
+        })
 
         GridItem() {
           this.SettingItem(Icons.FEEDBACK, '意见反馈')
@@ -66,7 +71,6 @@ export struct SettingPage {
       .onClick(() => {
         router.back()
       })
-
     }
     .width('100%')
     .height('100%')

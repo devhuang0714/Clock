@@ -160,6 +160,7 @@ export struct RotateClock {
       RotateCard({
         controller: this.secondsController,
         num: this.seconds,
+        lightOn: this.lightOn,
         fontSize: 30,
         horizontalMargin: 3,
         verticalMargin: 5,

@@ -9,6 +9,7 @@ import { FlipClock } from '../views/Clocks/FlipClock';
 import { DigitalClock } from '../views/Clocks/DigitalClock';
 import { LunarCalendarClock, LunarCalendarClockType } from '../views/Clocks/LunarCalendarClock'
 import { RotateClock, RotateClockType } from '../views/Clocks/RotateClock'
+import { ClockStyleDialog } from '../views/Clocks/ClockStyleDialog'
 import router from '@ohos.router';
 
 interface ClockItem {
@@ -24,14 +25,29 @@ struct Index {
   @StorageProp('currentColorMode') @Watch('onColorModeChange') currentMode: number = ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT;
   @State isDark: boolean = false // 是否暗黑模式
   @State isLandscape: boolean = false // 当前是否横屏
-  @State isClean: boolean = false // 清屏
+  @Watch('onCleanChange') @State isClean: boolean = false // 清屏
   @State isPresentSetting: boolean = false
   @State selectedTabIndex: number = 0
   private clockItems: ClockItem[] = []
   private date: Date = new Date()
   private clockController: ClockController = new ClockController()
-  private intervalId: number = 0;
   private tabsController: TabsController = new TabsController()
+  private intervalId: number = 0;
+  private cleanTimeoutId: number = 0;
+  private clockStyleDialog: CustomDialogController = new CustomDialogController({
+    builder: ClockStyleDialog(),
+    customStyle: true,
+    offset: {
+      dx: 0,
+      dy: 0
+    },
+    openAnimation: {
+      duration: 0
+    },
+    closeAnimation: {
+      duration: 0
+    }
+  })
 
   aboutToAppear(): void {
     this.clockItems = [
@@ -78,15 +94,34 @@ struct Index {
 
     this.updateTimes()
     this.startClock()
+    this.onCleanChange()
   }
 
   aboutToDisappear(): void {
     clearInterval(this.intervalId)
+    clearTimeout(this.cleanTimeoutId)
+  }
+
+  onPageShow(): void {
+    this.onCleanChange()
+  }
+
+  onPageHide(): void {
+    clearTimeout(this.cleanTimeoutId)
   }
 
   pageTransition() {
     PageTransitionEnter({ duration: 0 })
     PageTransitionExit({ duration: 1000 })
+  }
+
+  onCleanChange() {
+    if (!this.isClean) {
+      clearTimeout(this.cleanTimeoutId)
+      this.cleanTimeoutId = setTimeout(() => {
+        this.isClean = true
+      }, 8000)
+    }
   }
 
   onColorModeChange(): void {
@@ -203,11 +238,24 @@ struct Index {
     .onClick(() => {
       this.isClean = !this.isClean
     })
+    .onAppear(() => {
+      this.changeOrientation(true)
+    })
   }
 
   @Builder
   TopPreviews() {
     Row() {
+      Text(Icons.THEME_FILL_ICON)
+        .fontFamily(Icons.FONT_FAMILY)
+        .fontSize(36)
+        .onClick(() => {
+          // router.pushUrl({
+          //   url: 'pages/Settings/ClockStyle'
+          // })
+          this.clockStyleDialog.open()
+        })
+
       Grid() {
         ForEach(this.clockItems, (item: ClockItem, index: number) => {
           GridItem() {
@@ -224,11 +272,16 @@ struct Index {
           })
         })
       }
-      .columnsGap(12)
-      .maxCount(this.clockItems.length)
       .backgroundColor($r('app.color.flip_card_bg_color'))
       .padding(12)
+      .margin({ left: 24, right: 24 })
       .borderRadius(12)
+      .columnsGap(12)
+      .rowsGap(12)
+      .maxCount(this.clockItems.length)
+
+      // .rowsTemplate('1fr')
+      // .scrollBar(BarState.Off)
     }
     .width('100%')
     .justifyContent(FlexAlign.Center)

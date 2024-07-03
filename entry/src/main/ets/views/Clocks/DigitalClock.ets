@@ -84,16 +84,16 @@ export struct DigitalClock {
   build() {
     Column({ space: 8 }) {
       Text(this.year)
-        .setTextStyles(28)
-
-      Text(this.day)
         .setTextStyles(32)
 
-      Text(this.week)
+      Text(this.day)
         .setTextStyles(36)
 
+      Text(this.week)
+        .setTextStyles(40)
+
       Text(this.time)
-        .setTextStyles(42)
+        .setTextStyles(50)
     }
     .width('100%')
   }
