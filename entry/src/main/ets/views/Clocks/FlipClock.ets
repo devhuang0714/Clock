@@ -1,15 +1,16 @@
 import animator, { AnimatorResult } from '@ohos.animator';
 import measure from '@ohos.measure'
 import { ClockController, ClockListener } from './ClockController'
+import { ClockConfig } from './ClockConfig'
 
 // const fontStyle = 'flip-num-font'
 const fontStyle = ''
 
 @Extend(Text)
-function setTextStyles(fontSize: number, baselineOffset: number, space: number) {
+function setTextStyles(fontSize: number, fontColor: ResourceColor, baselineOffset: number, space: number) {
   .fontFamily(fontStyle)
   .fontSize(fontSize)
-  .fontColor($r('app.color.flip_text_color'))
+  .fontColor(fontColor)
   .fontWeight(FontWeight.Medium)
   .textAlign(TextAlign.Center)
   .lineHeight(fontSize * 0.5)
@@ -30,6 +31,13 @@ export class FlipCardController {
 export struct FlipClock {
   controller: ClockController = new ClockController()
   date: Date = new Date()
+  @Prop config: ClockConfig = {
+    style: 'flip_clock_default',
+    preview: $r('app.media.flip_clock_default'),
+    backgroundColor: $r('app.color.main_background_color'),
+    cardColor: $r('app.color.flip_card_bg_color'),
+    fontColor: $r('app.color.flip_text_color')
+  }
   @Prop isLandscape: boolean = false
   @Prop fontSize: number = 130
   @Prop space: number = 4
@@ -41,9 +49,9 @@ export struct FlipClock {
   private secondController: FlipCardController = new FlipCardController()
   private listener: ClockListener = {
     onUpdate: (date) => {
-        this.hourController.change(date.getHours().toString().padStart(2, '0'))
-        this.minuteController.change(date.getMinutes().toString().padStart(2, '0'))
-        this.secondController.change(date.getSeconds().toString().padStart(2, '0'))
+      this.hourController.change(date.getHours().toString().padStart(2, '0'))
+      this.minuteController.change(date.getMinutes().toString().padStart(2, '0'))
+      this.secondController.change(date.getSeconds().toString().padStart(2, '0'))
     }
   }
 
@@ -90,6 +98,8 @@ export struct FlipClock {
   FlipCards() {
     FlipCard({
       fontSize: this.fontSize,
+      fontColor: this.config.fontColor,
+      color: this.config.cardColor,
       space: this.space,
       current: this.hours,
       controller: this.hourController
@@ -97,6 +107,8 @@ export struct FlipClock {
 
     FlipCard({
       fontSize: this.fontSize,
+      fontColor: this.config.fontColor,
+      color: this.config.cardColor,
       space: this.space,
       current: this.minutes,
       controller: this.minuteController
@@ -104,6 +116,8 @@ export struct FlipClock {
 
     FlipCard({
       fontSize: this.fontSize,
+      fontColor: this.config.fontColor,
+      color: this.config.cardColor,
       space: this.space,
       current: this.seconds,
       next: this.seconds,
@@ -115,7 +129,9 @@ export struct FlipClock {
 @Component
 export struct FlipCard {
   @State space: number = 6
-  @State fontSize: number = 60
+  @Prop fontSize: number = 60
+  @Prop fontColor: ResourceColor = $r('app.color.flip_text_color')
+  @Prop color: ResourceColor = $r('app.color.flip_card_bg_color')
   @State horizontalMargin: number = 12
   @State verticalMargin: number = 20
   @State prev: string = '00'
@@ -169,6 +185,8 @@ export struct FlipCard {
         HalfCard({
           text: this.current,
           fontSize: this.fontSize,
+          fontColor: this.fontColor,
+          color: this.color,
           space: this.space,
           type: HalfCardType.Top,
           horizontalMargin: this.horizontalMargin,
@@ -180,6 +198,8 @@ export struct FlipCard {
             HalfCard({
               text: this.current,
               fontSize: this.fontSize,
+              fontColor: this.fontColor,
+              color: this.color,
               space: this.space,
               type: HalfCardType.Bottom,
               horizontalMargin: this.horizontalMargin,
@@ -195,6 +215,8 @@ export struct FlipCard {
             HalfCard({
               text: this.prev,
               fontSize: this.fontSize,
+              fontColor: this.fontColor,
+              color: this.color,
               space: this.space,
               type: HalfCardType.Top,
               horizontalMargin: this.horizontalMargin,
@@ -217,6 +239,8 @@ export struct FlipCard {
         HalfCard({
           text: this.current,
           fontSize: this.fontSize,
+          fontColor: this.fontColor,
+          color: this.color,
           space: this.space,
           type: HalfCardType.Bottom,
           horizontalMargin: this.horizontalMargin,
@@ -224,8 +248,10 @@ export struct FlipCard {
         })
 
         HalfCard({
-          fontSize: this.fontSize,
           text: this.prev,
+          fontSize: this.fontSize,
+          fontColor: this.fontColor,
+          color: this.color,
           space: this.space,
           type: HalfCardType.Bottom,
           horizontalMargin: this.horizontalMargin,
@@ -244,6 +270,8 @@ enum HalfCardType {
 
 @Component
 export struct HalfCard {
+  @Prop color: ResourceColor = $r('app.color.flip_card_bg_color')
+  @Prop fontColor: ResourceColor = $r('app.color.flip_text_color')
   @Prop fontSize: number = 60
   @Prop horizontalMargin: number = 0
   @Prop verticalMargin: number = 0
@@ -251,7 +279,7 @@ export struct HalfCard {
   @Prop space: number = 0
   @Prop text: string = ''
   @Prop radius: number = 8
-  @State textWidth : number = this.fontSize
+  @State textWidth: number = this.fontSize
 
   aboutToAppear(): void {
     let maxWidth = 0
@@ -274,7 +302,7 @@ export struct HalfCard {
   build() {
     Column() {
       Text(this.text)
-        .setTextStyles(this.fontSize, this.type == HalfCardType.Top ? -this.fontSize * 0.5 : 0, this.space)
+        .setTextStyles(this.fontSize, this.fontColor, this.type == HalfCardType.Top ? -this.fontSize * 0.5 : 0, this.space)
         .width(this.textWidth)
     }
     .padding({
@@ -283,7 +311,7 @@ export struct HalfCard {
       top: this.type == HalfCardType.Top ? this.verticalMargin : 0,
       bottom: this.type == HalfCardType.Bottom ? this.verticalMargin : 0
     })
-    .backgroundColor($r('app.color.flip_card_bg_color'))
+    .backgroundColor(this.color)
     .justifyContent(this.type == HalfCardType.Top ? FlexAlign.End : FlexAlign.Start)
     .borderRadius({
       topLeft: this.type == HalfCardType.Top ? this.radius : 0,

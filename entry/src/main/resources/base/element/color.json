@@ -15,6 +15,10 @@
     {
       "name": "flip_text_color",
       "value": "#000000"
+    },
+    {
+      "name": "cover_bg_color",
+      "value": "#CCFFFFFF"
     }
   ]
 }

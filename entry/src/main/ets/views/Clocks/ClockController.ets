@@ -7,7 +7,7 @@ export class ClockController {
 
   registerListener(listener: ClockListener): void {
     if (this.listeners.indexOf(listener) < 0) {
-      console.info('add listener');
+      console.info('ClockController add listener');
       this.listeners.push(listener);
     }
   }
@@ -15,7 +15,7 @@ export class ClockController {
   unregisterListener(listener: ClockListener): void {
     const pos = this.listeners.indexOf(listener);
     if (pos >= 0) {
-      console.info('remove listener');
+      console.info('ClockController remove listener');
       this.listeners.splice(pos, 1);
     }
   }
