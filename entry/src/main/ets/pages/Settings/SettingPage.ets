@@ -1,6 +1,5 @@
 import { AppConstants, Icons } from '../../common/constants/Constants';
 import router from '@ohos.router';
-import { Router } from '@ohos.arkui.UIContext';
 
 @Entry
 @Component
@@ -27,7 +26,7 @@ export struct SettingPage {
         }
         .onClick(() => {
           router.pushUrl({
-            url: 'pages/Settings/ClockStyle'
+            url: 'pages/Settings/ClockTheme'
           })
         })
 

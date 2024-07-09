@@ -4,6 +4,6 @@
     "pages/LauncherPage",
     "pages/Settings/SettingPage",
     "pages/Settings/PrivacyPage",
-    "pages/Settings/ClockStyle"
+    "pages/Settings/ClockTheme"
   ]
 }

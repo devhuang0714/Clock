@@ -1,7 +1,7 @@
 import animator, { AnimatorResult } from '@ohos.animator';
 import measure from '@ohos.measure'
 import { ClockController, ClockListener } from './ClockController'
-import { ClockConfig } from './ClockConfig'
+import { ClockStyle } from './ClockConfig'
 
 // const fontStyle = 'flip-num-font'
 const fontStyle = ''
@@ -31,9 +31,7 @@ export class FlipCardController {
 export struct FlipClock {
   controller: ClockController = new ClockController()
   date: Date = new Date()
-  @Prop config: ClockConfig = {
-    style: 'flip_clock_default',
-    preview: $r('app.media.flip_clock_default'),
+  @Prop style: ClockStyle = {
     backgroundColor: $r('app.color.main_background_color'),
     cardColor: $r('app.color.flip_card_bg_color'),
     fontColor: $r('app.color.flip_text_color')
@@ -98,8 +96,8 @@ export struct FlipClock {
   FlipCards() {
     FlipCard({
       fontSize: this.fontSize,
-      fontColor: this.config.fontColor,
-      color: this.config.cardColor,
+      fontColor: this.style.fontColor,
+      color: this.style.cardColor,
       space: this.space,
       current: this.hours,
       controller: this.hourController
@@ -107,8 +105,8 @@ export struct FlipClock {
 
     FlipCard({
       fontSize: this.fontSize,
-      fontColor: this.config.fontColor,
-      color: this.config.cardColor,
+      fontColor: this.style.fontColor,
+      color: this.style.cardColor,
       space: this.space,
       current: this.minutes,
       controller: this.minuteController
@@ -116,8 +114,8 @@ export struct FlipClock {
 
     FlipCard({
       fontSize: this.fontSize,
-      fontColor: this.config.fontColor,
-      color: this.config.cardColor,
+      fontColor: this.style.fontColor,
+      color: this.style.cardColor,
       space: this.space,
       current: this.seconds,
       next: this.seconds,

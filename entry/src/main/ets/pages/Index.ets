@@ -12,6 +12,9 @@ import { LunarCalendarClock, LunarCalendarClockType } from '../views/Clocks/Luna
 import { RotateClock, RotateClockType } from '../views/Clocks/RotateClock'
 import { ClockStyleDialog } from '../views/Clocks/ClockStyleDialog'
 import { ClockConfig, CLOCK_CONFIGS } from '../views/Clocks/ClockConfig'
+import preferences from '@ohos.data.preferences';
+
+const defaultClockKey = 'defaultClockConfig'
 
 @Entry
 @Component
@@ -34,6 +37,12 @@ struct Index {
       selectedConfig: this.clockConfig,
       onSelected: (config) => {
         this.clockConfig = config
+        // 保存默认选择
+        const preference = preferences.getPreferencesSync(getContext(this), {
+          name: AppConstants.BUNDLE_NAME
+        })
+        preference.put(defaultClockKey, JSON.stringify(config))
+        preference.flush()
       }
     }),
     customStyle: true,
@@ -52,6 +61,15 @@ struct Index {
       this.isLandscape = mediaQueryResult.matches as boolean
     })
     this.isDark = this.currentMode == ConfigurationConstant.ColorMode.COLOR_MODE_DARK
+
+    // 保存默认选择
+    const preference = preferences.getPreferencesSync(getContext(this), {
+      name: AppConstants.BUNDLE_NAME
+    })
+    let configJson = preference.getSync(defaultClockKey, undefined) as string
+    if (configJson != undefined) {
+      this.clockConfig = JSON.parse(configJson)
+    }
 
     this.updateTimes()
     this.startClock()
@@ -118,8 +136,7 @@ struct Index {
         this.ClockView()
       }
       .justifyContent(FlexAlign.Center)
-      // .backgroundColor($r('app.color.main_background_color'))
-      .backgroundColor(this.clockConfig.backgroundColor)
+      .backgroundColor(this.clockConfig.style.backgroundColor)
       .alignRules({
         top: { anchor: "__container__", align: VerticalAlign.Top },
         left: { anchor: "__container__", align: HorizontalAlign.Start },
@@ -144,52 +161,53 @@ struct Index {
 
   @Builder
   ClockView() {
-    if (this.clockConfig.style == 'flip_clock_default') {
+    if (this.clockConfig.type == 'flip_clock_default') {
       FlipClock({
         controller: this.clockController,
-        config: this.clockConfig,
         date: this.date,
+        style: this.clockConfig.style,
         isLandscape: this.isLandscape
       })
-    } else if (this.clockConfig.style == 'round_clock_default') {
+    } else if (this.clockConfig.type == 'round_clock_default') {
       RoundClock({
         controller: this.clockController,
         date: this.date
       })
-    } else if (this.clockConfig.style == 'digital_clock_default') {
+    } else if (this.clockConfig.type == 'digital_clock_default') {
       DigitalClock({
         controller: this.clockController,
-        date: this.date
+        date: this.date,
+        style: this.clockConfig.style,
       })
-    } else if (this.clockConfig.style == 'rotate_clock_style1') {
+    } else if (this.clockConfig.type == 'rotate_clock_style1') {
       RotateClock({
         controller: this.clockController,
         date: this.date,
         isLandscape: this.isLandscape,
-        lightOn: true
+        // lightOn: true
       })
-    } else if (this.clockConfig.style == 'rotate_clock_style2') {
+    } else if (this.clockConfig.type == 'rotate_clock_style2') {
       RotateClock({
         controller: this.clockController,
         date: this.date,
         isLandscape: this.isLandscape,
         type: RotateClockType.Style2,
-        lightOn: true
+        // lightOn: true
       })
-    } else if (this.clockConfig.style == 'rotate_clock_style3') {
+    } else if (this.clockConfig.type == 'rotate_clock_style3') {
       RotateClock({
         controller: this.clockController,
         date: this.date,
         isLandscape: this.isLandscape,
         type: RotateClockType.Style3
       })
-    } else if (this.clockConfig.style == 'lunar_calendar_clock_style1') {
+    } else if (this.clockConfig.type == 'lunar_calendar_clock_style1') {
       LunarCalendarClock({
         controller: this.clockController,
         date: this.date,
         isLandscape: this.isLandscape
       })
-    } else if (this.clockConfig.style == 'lunar_calendar_clock_style2') {
+    } else if (this.clockConfig.type == 'lunar_calendar_clock_style2') {
       LunarCalendarClock({
         controller: this.clockController,
         date: this.date,

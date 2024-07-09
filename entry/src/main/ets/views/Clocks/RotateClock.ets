@@ -16,6 +16,8 @@ export enum RotateClockType {
   Style1,
   Style2,  // mini秒
   Style3,  // 不显示秒
+  Style4,  // mini秒 红色灯光
+  Style5,  // 不显示秒 红色灯光
 }
 
 @Component

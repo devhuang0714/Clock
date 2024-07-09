@@ -3,7 +3,7 @@ import router from '@ohos.router';
 
 @Entry
 @Component
-struct ClockStyle {
+struct ClockTheme {
   @State styles: Resource[] = [
     $r('app.media.flip_clock_default'),
     $r('app.media.round_clock_default'),
@@ -61,7 +61,7 @@ struct ClockStyle {
             .alignContent(Alignment.BottomEnd)
           }
           .border({
-            width: 6,
+            width: 3,
             color: this.selectedStyleIndex == index ? Color.Green : $r('app.color.flip_card_bg_color'),
             radius: 8
           })
