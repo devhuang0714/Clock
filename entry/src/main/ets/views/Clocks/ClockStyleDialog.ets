@@ -142,6 +142,7 @@ export struct ClockStyleDialog {
       .width('100%')
       .padding(12)
       .backgroundColor($r('app.color.cover_bg_color'))
+      .backdropBlur(20) // 高斯模糊
       .offset({
         y: this.offsetY
       })

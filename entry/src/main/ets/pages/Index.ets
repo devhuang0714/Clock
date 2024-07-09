@@ -16,6 +16,11 @@ import preferences from '@ohos.data.preferences';
 
 const defaultClockKey = 'defaultClockConfig'
 
+interface ToolItemOptions {
+  unicode: string
+  size: number
+}
+
 @Entry
 @Component
 struct Index {
@@ -220,10 +225,10 @@ struct Index {
   @Builder
   TopTools() {
     Row() {
-      Text(this.isDark ? Icons.THEME_LIGHT : Icons.THEME_DARK)
-        .fontSize(36)
-        .fontFamily(Icons.FONT_FAMILY)
-        .backgroundColor(Color.Transparent)
+      ToolItem({
+        unicode: this.isDark ? Icons.THEME_LIGHT : Icons.THEME_DARK,
+        fontSize: this.isDark ? 28 : 32
+      })
         .onClick(() => {
           let mode = ConfigurationConstant.ColorMode.COLOR_MODE_DARK
           if (this.isDark) {
@@ -235,10 +240,10 @@ struct Index {
       Blank()
         .layoutWeight(1)
 
-      Text(Icons.SETTINGS)
-        .fontSize(36)
-        .fontFamily(Icons.FONT_FAMILY)
-        .backgroundColor(Color.Transparent)
+      ToolItem({
+        unicode: Icons.SETTINGS,
+        fontSize: 32
+      })
         .onClick(() => {
           router.pushUrl({
             url: 'pages/Settings/SettingPage'
@@ -262,10 +267,10 @@ struct Index {
   @Builder
   BottomTools() {
     Row({ space: 24 }) {
-      Text(Icons.SCREEN_ORIENTATION)
-        .fontSize(36)
-        .fontFamily(Icons.FONT_FAMILY)
-        .backgroundColor(Color.Transparent)
+      ToolItem({
+        unicode: Icons.SCREEN_ORIENTATION,
+        fontSize: 28
+      })
         .onClick(() => {
           this.changeOrientation(!this.isLandscape)
         })
@@ -273,9 +278,10 @@ struct Index {
       Blank()
         .layoutWeight(1)
 
-      Text(Icons.THEME_FILL_ICON)
-        .fontFamily(Icons.FONT_FAMILY)
-        .fontSize(36)
+      ToolItem({
+        unicode: Icons.THEME_FILL_ICON,
+        fontSize: 32
+      })
         .onClick(() => {
           this.clockStyleDialog.open()
         })
@@ -289,5 +295,24 @@ struct Index {
       bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
     })
     .id("tools")
+  }
+}
+
+@Component
+struct ToolItem {
+  @Prop unicode: string = Icons.SETTINGS
+  @Prop fontSize: number = 28
+
+  build() {
+    Button() {
+      Text(this.unicode)
+        .fontFamily(Icons.FONT_FAMILY)
+        .fontSize(this.fontSize)
+        .fontColor($r('app.color.tool_item_color'))
+    }
+    .backgroundColor($r('app.color.tool_item_bg_color'))
+    .width(54)
+    .height(54)
+    .borderRadius(27)
   }
 }

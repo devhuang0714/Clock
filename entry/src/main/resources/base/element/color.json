@@ -19,6 +19,14 @@
     {
       "name": "cover_bg_color",
       "value": "#CCFFFFFF"
+    },
+    {
+      "name": "tool_item_bg_color",
+      "value": "#66000000"
+    },
+    {
+      "name": "tool_item_color",
+      "value": "#FFFFFF"
     }
   ]
 }
