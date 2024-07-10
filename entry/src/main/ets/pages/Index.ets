@@ -8,10 +8,10 @@ import { ClockController } from '../views/Clocks/ClockController'
 import { RoundClock } from '../views/Clocks/RoundClock';
 import { FlipClock } from '../views/Clocks/FlipClock';
 import { DigitalClock } from '../views/Clocks/DigitalClock';
-import { LunarCalendarClock, LunarCalendarClockType } from '../views/Clocks/LunarCalendarClock'
-import { RotateClock, RotateClockType } from '../views/Clocks/RotateClock'
+import { LunarCalendarClock } from '../views/Clocks/LunarCalendarClock'
+import { RotateClock } from '../views/Clocks/RotateClock'
 import { ClockStyleDialog } from '../views/Clocks/ClockStyleDialog'
-import { ClockConfig, CLOCK_CONFIGS } from '../views/Clocks/ClockConfig'
+import { ClockConfig, ClockType, CLOCK_CONFIGS } from '../views/Clocks/ClockConfig'
 
 // 持久化存储UI状态
 PersistentStorage.persistProp('defaultClockConfig', CLOCK_CONFIGS[0])
@@ -123,7 +123,7 @@ struct Index {
         this.ClockView()
       }
       .justifyContent(FlexAlign.Center)
-      .backgroundColor(this.clockConfig.style.backgroundColor)
+      .backgroundColor(this.clockConfig.colors.backgroundColor)
       .alignRules({
         top: { anchor: "__container__", align: VerticalAlign.Top },
         left: { anchor: "__container__", align: HorizontalAlign.Start },
@@ -148,65 +148,82 @@ struct Index {
 
   @Builder
   ClockView() {
-    if (this.clockConfig.type == 'flip_clock_default') {
+    if (this.clockConfig.type == ClockType.Flip) {
       FlipClock({
         controller: this.clockController,
         date: this.date,
-        style: this.clockConfig.style,
+        colorsConfig: this.clockConfig.colors,
         isLandscape: this.isLandscape
       })
-    } else if (this.clockConfig.type == 'round_clock_default') {
+    } else if (this.clockConfig.type == ClockType.Round) {
       RoundClock({
         controller: this.clockController,
         date: this.date
       })
-    } else if (this.clockConfig.type == 'digital_clock_default') {
+    } else if (this.clockConfig.type == ClockType.Digital) {
       DigitalClock({
         controller: this.clockController,
         date: this.date,
-        style: this.clockConfig.style,
+        colorsConfig: this.clockConfig.colors,
       })
-    } else if (this.clockConfig.type == 'rotate_clock_style1') {
+    } else if (this.clockConfig.type == ClockType.Rotate) {
       RotateClock({
         controller: this.clockController,
         date: this.date,
-        isLandscape: this.isLandscape,
         style: this.clockConfig.style,
-        // lightOn: true
-      })
-    } else if (this.clockConfig.type == 'rotate_clock_style2') {
-      RotateClock({
-        controller: this.clockController,
-        date: this.date,
+        colorsConfig: this.clockConfig.colors,
         isLandscape: this.isLandscape,
-        type: RotateClockType.Style2,
-        style: this.clockConfig.style,
-        // lightOn: true
       })
-    } else if (this.clockConfig.type == 'rotate_clock_style3') {
-      RotateClock({
-        controller: this.clockController,
-        date: this.date,
-        isLandscape: this.isLandscape,
-        type: RotateClockType.Style3,
-        style: this.clockConfig.style,
-      })
-    } else if (this.clockConfig.type == 'lunar_calendar_clock_style1') {
+    } else if (this.clockConfig.type == ClockType.LunarCalendar) {
       LunarCalendarClock({
         controller: this.clockController,
         date: this.date,
+        colorsConfig: this.clockConfig.colors,
         isLandscape: this.isLandscape,
-        style: this.clockConfig.style,
-      })
-    } else if (this.clockConfig.type == 'lunar_calendar_clock_style2') {
-      LunarCalendarClock({
-        controller: this.clockController,
-        date: this.date,
-        isLandscape: this.isLandscape,
-        type: LunarCalendarClockType.Style2,
-        style: this.clockConfig.style,
       })
     }
+    // else if (this.clockConfig.type == 'rotate_clock_style3') {
+    //   RotateClock({
+    //     controller: this.clockController,
+    //     date: this.date,
+    //     isLandscape: this.isLandscape,
+    //     style: this.clockConfig.style,
+    //     colorsConfig: this.clockConfig.colors,
+    //   })
+    // } else if (this.clockConfig.type == 'rotate_clock_style4') {
+    //   RotateClock({
+    //     controller: this.clockController,
+    //     date: this.date,
+    //     isLandscape: this.isLandscape,
+    //     type: RotateClockType.Style3,
+    //     style: this.clockConfig.style,
+    //     lightOn: true
+    //   })
+    // } else if (this.clockConfig.type == 'rotate_clock_style5') {
+    //   RotateClock({
+    //     controller: this.clockController,
+    //     date: this.date,
+    //     isLandscape: this.isLandscape,
+    //     type: RotateClockType.Style3,
+    //     style: this.clockConfig.style,
+    //     lightOn: true
+    //   })
+    // } else if (this.clockConfig.type == 'lunar_calendar_clock_style1') {
+    //   LunarCalendarClock({
+    //     controller: this.clockController,
+    //     date: this.date,
+    //     isLandscape: this.isLandscape,
+    //     style: this.clockConfig.style,
+    //   })
+    // } else if (this.clockConfig.type == 'lunar_calendar_clock_style2') {
+    //   LunarCalendarClock({
+    //     controller: this.clockController,
+    //     date: this.date,
+    //     isLandscape: this.isLandscape,
+    //     type: LunarCalendarClockType.Style2,
+    //     style: this.clockConfig.style,
+    //   })
+    // }
   }
 
   @Builder

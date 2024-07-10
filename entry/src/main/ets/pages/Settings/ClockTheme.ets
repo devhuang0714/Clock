@@ -26,6 +26,10 @@ struct ClockTheme {
     }
   }
 
+  isSelected(item: ClockConfig): boolean {
+    return this.selectedConfig.id == item.id
+  }
+
   build() {
     Column() {
       Row() {
@@ -54,7 +58,7 @@ struct ClockTheme {
               Image(item.preview)
                 .objectFit(ImageFit.Contain)
 
-              if (item.type == this.selectedConfig.type) {
+              if (this.isSelected(item)) {
                 Text(Icons.CHECKED)
                   .fontFamily(Icons.FONT_FAMILY)
                   .fontSize(24)
@@ -65,7 +69,7 @@ struct ClockTheme {
           }
           .border({
             width: 3,
-            color: item.type == this.selectedConfig.type ? Color.Green : $r('app.color.flip_card_bg_color'),
+            color: this.isSelected(item) ? Color.Green : $r('app.color.flip_card_bg_color'),
             radius: 8
           })
           .onClick(() => {

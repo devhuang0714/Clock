@@ -1,87 +1,192 @@
 
-export interface ClockStyle {
+export enum ClockType {
+  Flip,          // 翻页时钟
+  Round,         // 圆形时钟
+  Digital,       // 数码时钟
+  Rotate,        // 旋转时钟
+  LunarCalendar, // 农历数字时钟
+}
+
+export enum ClockStyle {
+  Style1,
+  Style2,
+  Style3,
+  Style4,
+  Style5,
+}
+
+export interface ClockColorsConfig {
   backgroundColor: ResourceColor,
   cardColor: ResourceColor,
   fontColor: ResourceColor
 }
 
+export interface ClockConfigExt {
+  lightOn: boolean | undefined
+}
+
 export interface ClockConfig {
-  type: string,
+  id: string,
+  type: ClockType,
+  style: ClockStyle,
   preview: Resource,
-  style: ClockStyle
+  colors: ClockColorsConfig,
+  ext: ClockConfigExt
 }
 
 export const CLOCK_CONFIGS: ClockConfig[] = [
   {
-    type: 'flip_clock_default',
-    preview: $r('app.media.flip_clock_default'),
-    style: {
+    id: 'flip_clock_style1',
+    type: ClockType.Flip,
+    style: ClockStyle.Style1,
+    preview: $r('app.media.flip_clock_style1'),
+    colors: {
       backgroundColor: $r('app.color.main_background_color'),
       cardColor: $r('app.color.flip_card_bg_color'),
       fontColor: $r('app.color.flip_text_color')
+    },
+    ext: {
+      lightOn: undefined
     }
   },
   {
-    type: 'round_clock_default',
-    preview: $r('app.media.round_clock_default'),
-    style: {
+    id: 'round_clock_style1',
+    type: ClockType.Round,
+    style: ClockStyle.Style1,
+    preview: $r('app.media.round_clock_style1'),
+    colors: {
       backgroundColor: $r('app.color.main_background_color'),
       cardColor: '',
       fontColor: ''
+    },
+    ext: {
+      lightOn: undefined
     }
   },
   {
-    type: 'digital_clock_default',
-    preview: $r('app.media.digital_clock_default'),
-    style: {
+    id: 'digital_clock_style1',
+    type: ClockType.Digital,
+    style: ClockStyle.Style1,
+    preview: $r('app.media.digital_clock_style1'),
+    colors: {
       backgroundColor: $r('app.color.main_background_color'),
       cardColor: '',
       fontColor: $r('app.color.flip_text_color')
+    },
+    ext: {
+      lightOn: undefined
     }
   },
   {
-    type: 'rotate_clock_style1',
+    id: 'rotate_clock_style1',
+    type: ClockType.Rotate,
+    style: ClockStyle.Style1,
     preview: $r('app.media.rotate_clock_style1'),
-    style: {
+    colors: {
       backgroundColor: $r('app.color.main_background_color'),
       cardColor: $r('app.color.flip_card_bg_color'),
       fontColor: $r('app.color.flip_text_color')
+    },
+    ext: {
+      lightOn: false
     }
   },
   {
-    type: 'rotate_clock_style2',
+    id: 'rotate_clock_style2',
+    type: ClockType.Rotate,
+    style: ClockStyle.Style2,
     preview: $r('app.media.rotate_clock_style2'),
-    style: {
+    colors: {
       backgroundColor: $r('app.color.main_background_color'),
       cardColor: $r('app.color.flip_card_bg_color'),
       fontColor: $r('app.color.flip_text_color')
+    },
+    ext: {
+      lightOn: false
     }
   },
   {
-    type: 'rotate_clock_style3',
+    id: 'rotate_clock_style3',
+    type: ClockType.Rotate,
+    style: ClockStyle.Style3,
     preview:$r('app.media.rotate_clock_style3'),
-    style: {
+    colors: {
       backgroundColor: $r('app.color.main_background_color'),
       cardColor: $r('app.color.flip_card_bg_color'),
       fontColor: $r('app.color.flip_text_color')
+    },
+    ext: {
+      lightOn: false
     }
   },
   {
-    type: 'lunar_calendar_clock_style1',
+    id: 'rotate_clock_style1_light',
+    type: ClockType.Rotate,
+    style: ClockStyle.Style1,
+    preview: $r('app.media.rotate_clock_style1'),
+    colors: {
+      backgroundColor: $r('app.color.main_background_color'),
+      cardColor: $r('app.color.flip_card_bg_color'),
+      fontColor: $r('app.color.flip_text_color')
+    },
+    ext: {
+      lightOn: true
+    }
+  },
+  {
+    id: 'rotate_clock_style2_light',
+    type: ClockType.Rotate,
+    style: ClockStyle.Style2,
+    preview: $r('app.media.rotate_clock_style2'),
+    colors: {
+      backgroundColor: $r('app.color.main_background_color'),
+      cardColor: $r('app.color.flip_card_bg_color'),
+      fontColor: $r('app.color.flip_text_color')
+    },
+    ext: {
+      lightOn: true
+    }
+  },
+  {
+    id: 'rotate_clock_style3_light',
+    type: ClockType.Rotate,
+    style: ClockStyle.Style3,
+    preview:$r('app.media.rotate_clock_style3'),
+    colors: {
+      backgroundColor: $r('app.color.main_background_color'),
+      cardColor: $r('app.color.flip_card_bg_color'),
+      fontColor: $r('app.color.flip_text_color')
+    },
+    ext: {
+      lightOn: true
+    }
+  },
+  {
+    id: 'lunar_calendar_clock_style1',
+    type: ClockType.LunarCalendar,
+    style: ClockStyle.Style1,
     preview: $r('app.media.lunar_calendar_clock_style1'),
-    style: {
+    colors: {
       backgroundColor: $r('app.color.main_background_color'),
       cardColor: '',
       fontColor: $r('app.color.flip_text_color')
+    },
+    ext: {
+      lightOn: undefined
     }
   },
   {
-    type: 'lunar_calendar_clock_style2',
+    id: 'lunar_calendar_clock_style2',
+    type: ClockType.LunarCalendar,
+    style: ClockStyle.Style2,
     preview: $r('app.media.lunar_calendar_clock_style2'),
-    style: {
+    colors: {
       backgroundColor: $r('app.color.main_background_color'),
       cardColor: '',
       fontColor: $r('app.color.flip_text_color')
+    },
+    ext: {
+      lightOn: undefined
     }
   }
 ]

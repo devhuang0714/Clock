@@ -1,4 +1,4 @@
-import { ClockStyle } from './ClockConfig'
+import { ClockColorsConfig } from './ClockConfig'
 import { ClockController, ClockListener } from './ClockController'
 
 @Extend(Text)
@@ -15,7 +15,7 @@ function setTextStyles(fontSize: number, fontColor: ResourceColor) {
 export struct DigitalClock {
   controller: ClockController = new ClockController()
   date: Date = new Date()
-  @Prop style: ClockStyle = {
+  @Prop colorsConfig: ClockColorsConfig = {
     backgroundColor: $r('app.color.main_background_color'),
     cardColor: '',
     fontColor: $r('app.color.flip_text_color')
@@ -90,16 +90,16 @@ export struct DigitalClock {
   build() {
     Column({ space: 8 }) {
       Text(this.year)
-        .setTextStyles(32, this.style.fontColor)
+        .setTextStyles(32, this.colorsConfig.fontColor)
 
       Text(this.day)
-        .setTextStyles(36, this.style.fontColor)
+        .setTextStyles(36, this.colorsConfig.fontColor)
 
       Text(this.week)
-        .setTextStyles(40, this.style.fontColor)
+        .setTextStyles(40, this.colorsConfig.fontColor)
 
       Text(this.time)
-        .setTextStyles(50, this.style.fontColor)
+        .setTextStyles(50, this.colorsConfig.fontColor)
     }
     .width('100%')
   }

@@ -1,8 +1,7 @@
 import { ClockController, ClockListener } from './ClockController'
 import animator, { AnimatorResult } from '@ohos.animator';
 import measure from '@ohos.measure'
-import { ConfigurationConstant } from '@kit.AbilityKit';
-import { ClockStyle } from './ClockConfig';
+import { ClockColorsConfig, ClockStyle } from './ClockConfig';
 
 @Extend(Text)
 function setTextStyles(fontSize: number, fontColor: ResourceColor) {
@@ -13,20 +12,17 @@ function setTextStyles(fontSize: number, fontColor: ResourceColor) {
   .width('100%')
 }
 
-export enum RotateClockType {
-  Style1,
-  Style2,  // mini秒
-  Style3,  // 不显示秒
-  Style4,  // mini秒 红色灯光
-  Style5,  // 不显示秒 红色灯光
-}
-
 @Component
 export struct RotateClock {
   controller: ClockController = new ClockController()
   date: Date = new Date()
-  type: RotateClockType = RotateClockType.Style1
-  @Prop style: ClockStyle = {
+  /**
+   * Style1 时分秒
+   * Style2 mini秒
+   * Style3 不显示秒
+   */
+  @Prop style: ClockStyle = ClockStyle.Style1
+  @Prop colorsConfig: ClockColorsConfig = {
     backgroundColor: $r('app.color.main_background_color'),
     cardColor: $r('app.color.flip_card_bg_color'),
     fontColor: $r('app.color.flip_text_color')
@@ -98,7 +94,7 @@ export struct RotateClock {
 
   @Builder
   LandscapeLayout() {
-    Row({space: 12}) {
+    Row({ space: 12 }) {
       this.RotateCards()
     }
     .width('100%')
@@ -112,16 +108,16 @@ export struct RotateClock {
         controller: this.hoursTensController,
         num: this.hoursTens,
         lightOn: this.lightOn,
-        fontColor: this.style.fontColor,
-        color: this.style.cardColor
+        fontColor: this.colorsConfig.fontColor,
+        color: this.colorsConfig.cardColor
       })
 
       RotateCard({
         controller: this.hoursUnitsController,
         num: this.hoursUnits,
         lightOn: this.lightOn,
-        fontColor: this.style.fontColor,
-        color: this.style.cardColor
+        fontColor: this.colorsConfig.fontColor,
+        color: this.colorsConfig.cardColor
       })
     }
 
@@ -135,20 +131,20 @@ export struct RotateClock {
         controller: this.minutesTensController,
         num: this.minutesTens,
         lightOn: this.lightOn,
-        fontColor: this.style.fontColor,
-        color: this.style.cardColor
+        fontColor: this.colorsConfig.fontColor,
+        color: this.colorsConfig.cardColor
       })
 
       RotateCard({
         controller: this.minutesUnitsController,
         num: this.minutesUnits,
         lightOn: this.lightOn,
-        fontColor: this.style.fontColor,
-        color: this.style.cardColor
+        fontColor: this.colorsConfig.fontColor,
+        color: this.colorsConfig.cardColor
       })
     }
 
-    if (this.type == RotateClockType.Style1) {
+    if (this.style == ClockStyle.Style1) {
       if (this.isLandscape) {
         Text(':')
           .fontSize(120)
@@ -159,8 +155,8 @@ export struct RotateClock {
           controller: this.secondsTensController,
           num: this.secondsTens,
           lightOn: this.lightOn,
-          fontColor: this.style.fontColor,
-          color: this.style.cardColor,
+          fontColor: this.colorsConfig.fontColor,
+          color: this.colorsConfig.cardColor,
           duration: 900
         })
 
@@ -168,12 +164,12 @@ export struct RotateClock {
           controller: this.secondsUnitsController,
           num: this.secondsUnits,
           lightOn: this.lightOn,
-          fontColor: this.style.fontColor,
-          color: this.style.cardColor,
+          fontColor: this.colorsConfig.fontColor,
+          color: this.colorsConfig.cardColor,
           duration: 900
         })
       }
-    } else if (this.type == RotateClockType.Style2) {
+    } else if (this.style == ClockStyle.Style2) {
       Blank()
         .width(36)
 
@@ -181,8 +177,8 @@ export struct RotateClock {
         controller: this.secondsController,
         num: this.seconds,
         lightOn: this.lightOn,
-        fontColor: this.style.fontColor,
-        color: this.style.cardColor,
+        fontColor: this.colorsConfig.fontColor,
+        color: this.colorsConfig.cardColor,
         fontSize: 30,
         horizontalMargin: 3,
         verticalMargin: 5,

@@ -64,13 +64,13 @@ export struct ClockStyleDialog {
         type: TabType.Background
       }
     ]
-    if (this.selectedConfig.style.fontColor != '') {
+    if (this.selectedConfig.colors.fontColor != '') {
       tabItems.push({
         title: '字体颜色',
         type: TabType.FontColor
       })
     }
-    if (this.selectedConfig.style.cardColor != '') {
+    if (this.selectedConfig.colors.cardColor != '') {
       tabItems.push({
         title: '卡片颜色',
         type: TabType.CardColor
@@ -78,6 +78,10 @@ export struct ClockStyleDialog {
     }
     this.tabItems = tabItems
     this.selectedTabItem = tabItems[0]
+  }
+
+  isSelected(item: ClockConfig): boolean {
+    return this.selectedConfig.id == item.id
   }
 
   build() {
@@ -109,27 +113,27 @@ export struct ClockStyleDialog {
               this.ClockStylesView(TabType.Theme)
             } else if (item.type == TabType.Background) {
               ColorsView({
-                selectedColor: this.selectedConfig.style.backgroundColor as string,
+                selectedColor: this.selectedConfig.colors.backgroundColor as string,
                 onSelected: (color) => {
-                  this.selectedConfig.style.backgroundColor = color
+                  this.selectedConfig.colors.backgroundColor = color
                   this.onSelected(this.selectedConfig)
                 }
               })
                 .visibility(this.selectedTabItem.type == TabType.Background ? Visibility.Visible : Visibility.Hidden)
             } else if (item.type == TabType.CardColor) {
               ColorsView({
-                selectedColor: this.selectedConfig.style.cardColor as string,
+                selectedColor: this.selectedConfig.colors.cardColor as string,
                 onSelected: (color) => {
-                  this.selectedConfig.style.cardColor = color
+                  this.selectedConfig.colors.cardColor = color
                   this.onSelected(this.selectedConfig)
                 }
               })
                 .visibility(this.selectedTabItem.type == TabType.CardColor ? Visibility.Visible : Visibility.Hidden)
             } else if (item.type == TabType.FontColor) {
               ColorsView({
-                selectedColor: this.selectedConfig.style.fontColor as string,
+                selectedColor: this.selectedConfig.colors.fontColor as string,
                 onSelected: (color) => {
-                  this.selectedConfig.style.fontColor = color
+                  this.selectedConfig.colors.fontColor = color
                   this.onSelected(this.selectedConfig)
                 }
               })
@@ -178,7 +182,7 @@ export struct ClockStyleDialog {
             Image(item.preview)
               .objectFit(ImageFit.Contain)
 
-            if (item.type == this.selectedConfig.type) {
+            if (this.isSelected(item)) {
               Text(Icons.CHECKED)
                 .fontFamily(Icons.FONT_FAMILY)
                 .fontSize(24)
@@ -189,11 +193,11 @@ export struct ClockStyleDialog {
         }
         .border({
           width: 3,
-          color: item.type == this.selectedConfig.type ? Color.Green : $r('app.color.flip_card_bg_color'),
+          color: this.isSelected(item) ? Color.Green : $r('app.color.flip_card_bg_color'),
           radius: 8
         })
         .onClick(() => {
-          if (this.selectedConfig.type != item.type) {
+          if (!this.isSelected(item)) {
             this.selectedConfig = this.deepCopy(item)
             this.onSelected(item)
           }
