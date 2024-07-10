@@ -12,14 +12,9 @@ import { LunarCalendarClock, LunarCalendarClockType } from '../views/Clocks/Luna
 import { RotateClock, RotateClockType } from '../views/Clocks/RotateClock'
 import { ClockStyleDialog } from '../views/Clocks/ClockStyleDialog'
 import { ClockConfig, CLOCK_CONFIGS } from '../views/Clocks/ClockConfig'
-import { ClockConfigManager } from '../models/ClockConfigManager'
 
-const defaultClockKey = 'defaultClockConfig'
-
-interface ToolItemOptions {
-  unicode: string
-  size: number
-}
+// 持久化存储UI状态
+PersistentStorage.persistProp('defaultClockConfig', CLOCK_CONFIGS[0])
 
 @Entry
 @Component
@@ -32,7 +27,7 @@ struct Index {
   @Watch('onCleanChange') @State isClean: boolean = false // 清屏
   @State isPresentSetting: boolean = false
   @State selectedTabIndex: number = 0
-  @StorageProp('defaultClockConfig') clockConfig: ClockConfig = CLOCK_CONFIGS[0]
+  @StorageLink('defaultClockConfig') clockConfig: ClockConfig = CLOCK_CONFIGS[0]
   private date: Date = new Date()
   private clockController: ClockController = new ClockController()
   private intervalId: number = 0;
@@ -42,8 +37,6 @@ struct Index {
       selectedConfig: this.clockConfig,
       onSelected: (config) => {
         this.clockConfig = config
-        // 保存默认选择
-        ClockConfigManager.setDefaultConfig(config)
       }
     }),
     customStyle: true,
@@ -63,9 +56,6 @@ struct Index {
       this.isLandscape = mediaQueryResult.matches as boolean
     })
     this.isDark = this.currentMode == ConfigurationConstant.ColorMode.COLOR_MODE_DARK
-
-    // 默认表盘
-    this.clockConfig = ClockConfigManager.getDefaultConfig()
 
     this.updateTimes()
     this.startClock()

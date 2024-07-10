@@ -1,15 +1,12 @@
 import { AppConstants, Icons } from '../../common/constants/Constants'
 import router from '@ohos.router';
 import { ClockConfig, CLOCK_CONFIGS } from '../../views/Clocks/ClockConfig';
-import { ClockConfigManager } from '../../models/ClockConfigManager'
 
-let storage = LocalStorage.getShared()
-
-@Entry(storage)
+@Entry
 @Component
 struct ClockTheme {
   @State clockItems: ClockConfig[] = CLOCK_CONFIGS
-  @State selectedConfig: ClockConfig = ClockConfigManager.getDefaultConfig()
+  @State selectedConfig: ClockConfig = CLOCK_CONFIGS[0]
 
   pageTransition() {
     PageTransitionEnter({ type: RouteType.Push, duration: 300 })
@@ -19,6 +16,13 @@ struct ClockTheme {
 
     PageTransitionEnter({ type: RouteType.Pop, duration: 0 })
     PageTransitionExit({ type: RouteType.Push, duration: 1000 })
+  }
+
+  aboutToAppear(): void {
+    let config = AppStorage.get<ClockConfig>('defaultClockConfig')
+    if (config != undefined) {
+      this.selectedConfig = config
+    }
   }
 
   build() {
@@ -31,7 +35,6 @@ struct ClockTheme {
           .fontColor($r('app.color.flip_text_color'))
           .backgroundColor(Color.Transparent)
           .onClick(() => {
-            ClockConfigManager.setDefaultConfig(this.selectedConfig)
             AppStorage.setOrCreate('defaultClockConfig', this.selectedConfig)
             router.back({
               url: 'pages/Index'
