@@ -1,9 +1,43 @@
 import { AppConstants, Icons } from '../../common/constants/Constants';
 import router from '@ohos.router';
 
+interface SettingItem {
+  title: string,
+  unicode: string,
+  url: string
+}
+
 @Entry
 @Component
 export struct SettingPage {
+  @State items: SettingItem[] = [
+    // {
+    //   title: '自定义',
+    //   unicode: Icons.CUSTOM,
+    //   url: ''
+    // },
+    {
+      title: '表盘风格',
+      unicode: Icons.CLOCK,
+      url: 'pages/Settings/ClockTheme'
+    },
+    {
+      title: '意见反馈',
+      unicode: Icons.FEEDBACK,
+      url: 'pages/Settings/FeedbackPage'
+    },
+    // {
+    //   title: '隐私协议',
+    //   unicode: Icons.PRIVACY,
+    //   url: 'pages/Settings/PrivacyPage'
+    // },
+    {
+      title: '关于我们',
+      unicode: Icons.ABOUT,
+      url: 'pages/Settings/AboutPage'
+    }
+  ]
+
   pageTransition() {
     PageTransitionEnter({ type: RouteType.Push, duration: 300 })
       .slide(SlideEffect.Bottom)
@@ -17,38 +51,14 @@ export struct SettingPage {
   build() {
     Column() {
       Grid() {
-        GridItem() {
-          this.SettingItem(Icons.CUSTOM, '自定义')
-        }
-
-        GridItem() {
-          this.SettingItem(Icons.CLOCK, '表盘风格')
-        }
-        .onClick(() => {
-          router.pushUrl({
-            url: 'pages/Settings/ClockTheme'
-          })
-        })
-
-        GridItem() {
-          this.SettingItem(Icons.FEEDBACK, '意见反馈')
-        }
-
-        GridItem() {
-          this.SettingItem(Icons.PRIVACY, '隐私协议')
-        }
-        .onClick(() => {
-          router.pushUrl({
-            url: 'pages/Settings/PrivacyPage'
-          })
-        })
-
-        GridItem() {
-          this.SettingItem(Icons.ABOUT, '关于我们')
-        }
-        .onClick(() => {
-          router.pushUrl({
-            url: 'pages/Settings/PrivacyPage'
+        ForEach(this.items, (item: SettingItem) => {
+          GridItem() {
+            this.SettingItem(item.unicode, item.title)
+          }
+          .onClick(() => {
+            router.pushUrl({
+              url: item.url
+            })
           })
         })
       }

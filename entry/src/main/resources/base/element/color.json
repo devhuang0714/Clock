@@ -31,6 +31,10 @@
     {
       "name": "tool_item_color",
       "value": "#FFFFFF"
+    },
+    {
+      "name": "blue",
+      "value": "#347FF1"
     }
   ]
 }
