@@ -2,11 +2,12 @@ import { ClockController, ClockListener } from './ClockController'
 import animator, { AnimatorResult } from '@ohos.animator';
 import measure from '@ohos.measure'
 import { ConfigurationConstant } from '@kit.AbilityKit';
+import { ClockStyle } from './ClockConfig';
 
 @Extend(Text)
-function setTextStyles(fontSize: number) {
+function setTextStyles(fontSize: number, fontColor: ResourceColor) {
   .fontSize(fontSize)
-  .fontColor($r('app.color.flip_text_color'))
+  .fontColor(fontColor)
   .fontWeight(FontWeight.Medium)
   .textAlign(TextAlign.Center)
   .width('100%')
@@ -25,6 +26,11 @@ export struct RotateClock {
   controller: ClockController = new ClockController()
   date: Date = new Date()
   type: RotateClockType = RotateClockType.Style1
+  @Prop style: ClockStyle = {
+    backgroundColor: $r('app.color.main_background_color'),
+    cardColor: $r('app.color.flip_card_bg_color'),
+    fontColor: $r('app.color.flip_text_color')
+  }
   @Prop isLandscape: boolean = false
   @Prop lightOn: boolean = false
   @State hoursTens: number = 0 // 十位
@@ -105,13 +111,17 @@ export struct RotateClock {
       RotateCard({
         controller: this.hoursTensController,
         num: this.hoursTens,
-        lightOn: this.lightOn
+        lightOn: this.lightOn,
+        fontColor: this.style.fontColor,
+        color: this.style.cardColor
       })
 
       RotateCard({
         controller: this.hoursUnitsController,
         num: this.hoursUnits,
-        lightOn: this.lightOn
+        lightOn: this.lightOn,
+        fontColor: this.style.fontColor,
+        color: this.style.cardColor
       })
     }
 
@@ -124,13 +134,17 @@ export struct RotateClock {
       RotateCard({
         controller: this.minutesTensController,
         num: this.minutesTens,
-        lightOn: this.lightOn
+        lightOn: this.lightOn,
+        fontColor: this.style.fontColor,
+        color: this.style.cardColor
       })
 
       RotateCard({
         controller: this.minutesUnitsController,
         num: this.minutesUnits,
-        lightOn: this.lightOn
+        lightOn: this.lightOn,
+        fontColor: this.style.fontColor,
+        color: this.style.cardColor
       })
     }
 
@@ -145,6 +159,8 @@ export struct RotateClock {
           controller: this.secondsTensController,
           num: this.secondsTens,
           lightOn: this.lightOn,
+          fontColor: this.style.fontColor,
+          color: this.style.cardColor,
           duration: 900
         })
 
@@ -152,6 +168,8 @@ export struct RotateClock {
           controller: this.secondsUnitsController,
           num: this.secondsUnits,
           lightOn: this.lightOn,
+          fontColor: this.style.fontColor,
+          color: this.style.cardColor,
           duration: 900
         })
       }
@@ -163,6 +181,8 @@ export struct RotateClock {
         controller: this.secondsController,
         num: this.seconds,
         lightOn: this.lightOn,
+        fontColor: this.style.fontColor,
+        color: this.style.cardColor,
         fontSize: 30,
         horizontalMargin: 3,
         verticalMargin: 5,
@@ -186,9 +206,11 @@ class RotateCardController {
 struct RotateCard {
   controller: RotateCardController = new RotateCardController()
   duration: number = 1000
+  @Prop fontSize: number = 130
+  @Prop fontColor: ResourceColor = $r('app.color.flip_text_color')
+  @Prop color: ResourceColor = $r('app.color.flip_card_bg_color')
   @State num: number = 0
   @State next: number = 0
-  @State fontSize: number = 130
   @State horizontalMargin: number = 10
   @State verticalMargin: number = 0
   @Prop lightOn: boolean = false
@@ -247,11 +269,11 @@ struct RotateCard {
     Stack() {
       Row() {
         Text(this.next.toString().padStart(this.maxLength, '0'))
-          .setTextStyles(this.fontSize)
+          .setTextStyles(this.fontSize, this.fontColor)
       }
       .width('100%')
       .height(this.cardHeight)
-      .backgroundColor($r('app.color.flip_card_bg_color'))
+      .backgroundColor(this.color)
       .borderRadius(8)
       .rotate({
         x: 1,
@@ -261,11 +283,11 @@ struct RotateCard {
 
       Row() {
         Text(this.num.toString().padStart(this.maxLength, '0'))
-          .setTextStyles(this.fontSize)
+          .setTextStyles(this.fontSize, this.fontColor)
       }
       .width('100%')
       .height(this.cardHeight)
-      .backgroundColor($r('app.color.flip_card_bg_color'))
+      .backgroundColor(this.color)
       .borderRadius(8)
       .rotate({
         x: 1,

@@ -62,6 +62,16 @@ export default class EntryAbility extends UIAbility {
       })
 
       let windowClass: window.Window = windowStage.getMainWindowSync(); // 获取应用主窗口
+
+      // 获取布局避让遮挡的区域
+      let avoidArea = windowClass.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM); // 状态栏避让
+      let bottomRectHeight = avoidArea.topRect.height; // 获取到状态栏区域的高度
+      AppStorage.setOrCreate('topRectHeight', bottomRectHeight);
+
+      avoidArea = windowClass.getWindowAvoidArea(window.AvoidAreaType.TYPE_NAVIGATION_INDICATOR); // 导航条避让
+      bottomRectHeight = avoidArea.bottomRect.height; // 获取到导航条区域的高度
+      AppStorage.setOrCreate('bottomRectHeight', bottomRectHeight);
+
       // 1. 设置窗口全屏
       let isLayoutFullScreen = true;
       windowClass.setWindowLayoutFullScreen(isLayoutFullScreen)

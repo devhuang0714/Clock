@@ -71,7 +71,7 @@ export const CLOCK_CONFIGS: ClockConfig[] = [
     preview: $r('app.media.lunar_calendar_clock_style1'),
     style: {
       backgroundColor: $r('app.color.main_background_color'),
-      cardColor: $r('app.color.flip_card_bg_color'),
+      cardColor: '',
       fontColor: $r('app.color.flip_text_color')
     }
   },
@@ -80,7 +80,7 @@ export const CLOCK_CONFIGS: ClockConfig[] = [
     preview: $r('app.media.lunar_calendar_clock_style2'),
     style: {
       backgroundColor: $r('app.color.main_background_color'),
-      cardColor: $r('app.color.flip_card_bg_color'),
+      cardColor: '',
       fontColor: $r('app.color.flip_text_color')
     }
   }

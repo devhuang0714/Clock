@@ -213,7 +213,7 @@ struct ColorsView {
   @Prop selectedColor: string = '#ffcccc'
   onSelected: (color: string) => void = () => {
   }
-  private colors: string[] = [
+  private colors1: string[] = [
     '#ffcccc', '#ffe6cc', '#ffffcc', '#ccffcc', '#ccffe6', '#ccffff', '#cce6ff', '#ccccff', '#e6ccff', '#ffccff',
     '#ff9999', '#ffcc99', '#ffff99', '#99ff99', '#99ffcc', '#99ffff', '#99ccff', '#9999ff', '#cc99ff', '#ff99ff',
     '#ff6666', '#ffb366', '#ffff66', '#66ff66', '#66ffb3', '#66ffff', '#66b3ff', '#6666ff', '#b366ff', '#ff66ff',
@@ -225,6 +225,19 @@ struct ColorsView {
     '#5c0000', '#5c2e00', '#5c5c00', '#005c00', '#005c2e', '#005c5c', '#002e5c', '#00005c', '#2e005c', '#5c005c',
     '#ffffff', '#cdcdcd', '#b2b2b2', '#999999', '#7f7f7f', '#666666', '#4c4c4c', '#333333', '#191919', '#000000'
   ];
+
+  private colors: string[] = [
+    "#ffffff", "#000000", "#ffcccc", "#ff9999", "#ff6666", "#ff3333", "#ff0000", "#f50000", "#d60000", "#a30000",
+    "#5c0000", "#ffe6cc", "#ffcc99", "#ffb366", "#ff9933", "#ff8000", "#f57b00", "#d66c00", "#a35200", "#5c2e00",
+    "#cdcdcd", "#ffffcc", "#ffff99", "#ffff66", "#ffff33", "#ffff00", "#f5f500", "#d6d600", "#a3a300", "#5c5c00",
+    "#b2b2b2", "#ccffcc", "#99ff99", "#66ff66", "#33ff33", "#00ff00", "#00f500", "#00d600", "#00a300", "#005c00",
+    "#999999", "#ccffe6", "#99ffcc", "#66ffb3", "#33ff99", "#00ff80", "#00f57b", "#00d66c", "#00a352", "#005c2e",
+    "#7f7f7f", "#ccffff", "#99ffff", "#66ffff", "#33ffff", "#00ffff", "#00f5f5", "#00d6d6", "#00a3a3", "#005c5c",
+    "#666666", "#cce6ff", "#99ccff", "#66b3ff", "#3399ff", "#0080ff", "#007bf5", "#006cd6", "#0052a3", "#002e5c",
+    "#4c4c4c", "#ccccff", "#9999ff", "#6666ff", "#3333ff", "#0000ff", "#0000f5", "#0000d6", "#0000a3", "#00005c",
+    "#333333", "#e6ccff", "#cc99ff", "#b366ff", "#9933ff", "#8000ff", "#7b00f5", "#6c00d6", "#5200a3", "#2e005c",
+    "#191919", "#ffccff", "#ff99ff", "#ff66ff", "#ff33ff", "#ff00ff", "#f500f5", "#d600d6", "#a300a3", "#5c005c"
+  ]
 
   build() {
     Grid() {

@@ -26,4 +26,5 @@ export class Icons {
   static readonly THEME_STROKE_ICON: string = '\ue65e'
   static readonly THEME_FILL_ICON: string = '\ue860'
   static readonly CHECKED: string = '\ue61d'
+  static readonly BACK: string = '\ue62e'
 }

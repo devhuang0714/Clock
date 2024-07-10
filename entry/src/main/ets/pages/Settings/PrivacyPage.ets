@@ -1,25 +1,52 @@
 import webview from '@ohos.web.webview'
 import { GlobalContext } from 'utils/Index'
-import { ConfigurationConstant } from '@kit.AbilityKit';
+import { Icons } from '../../common/constants/Constants';
+import router from '@ohos.router';
 
-@Entry
+let storage = LocalStorage.getShared();
+
+@Entry(storage)
 @Component
 struct PrivacyPage {
+  topRectHeight: string = AppStorage.get<number>('topRectHeight') + 'px'
   webviewController: webview.WebviewController = new webview.WebviewController()
-  @State mode: WebDarkMode = WebDarkMode.Auto
-  @State access: boolean = true
 
   build() {
-    Navigation() {
+    Column() {
+      Row() {
+        Button() {
+          Text(Icons.BACK)
+            .fontFamily(Icons.FONT_FAMILY)
+            .fontSize(24)
+            .fontColor(Color.Black)
+            .onClick(() => {
+              if (!this.onBackPress()) {
+                router.back()
+              }
+            })
+        }
+        .width(44)
+        .height(44)
+        .type(ButtonType.Normal)
+        .borderRadius(3)
+        .backgroundColor(Color.White)
+        .margin({ left: 12 })
+
+        Text($r('app.string.privacy_text_title'))
+          .fontSize(18)
+          .fontColor(Color.Black)
+      }
+      .width('100%')
+      .height(44)
+      .justifyContent(FlexAlign.Start)
+      .margin({ top: this.topRectHeight })
+
       Web({ src: $rawfile('html/privacy_policy.html'), controller: this.webviewController })
-        .darkMode(this.mode)
-        .forceDarkAccess(this.access)
+        .layoutWeight(1)
     }
     .width('100%')
     .height('100%')
-    .title('隐私协议')
-    .titleMode(NavigationTitleMode.Mini)
-    .backgroundColor($r('app.color.main_background_color'))
+    .backgroundColor(Color.White)
   }
 
   onBackPress(): boolean | void {

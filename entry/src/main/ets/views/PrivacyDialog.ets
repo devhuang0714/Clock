@@ -22,6 +22,7 @@ export default struct PrivacyDialog {
         })
       Text($r('app.string.dialog_text_privacy_content'))
         .fontSize(18)
+        .fontColor('#182431')
         .width('90%')
       Text($r('app.string.dialog_text_privacy_statement'))
         .width('90%')

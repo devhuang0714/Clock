@@ -9,6 +9,10 @@
       "value": "#FFFFFF"
     },
     {
+      "name": "main_text_color",
+      "value": "#000000"
+    },
+    {
       "name": "flip_card_bg_color",
       "value": "#EFEFEF"
     },

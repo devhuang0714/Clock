@@ -51,6 +51,7 @@ struct Index {
       }
     }),
     customStyle: true,
+    maskColor: Color.Transparent,
     openAnimation: {
       duration: 0
     },
@@ -189,6 +190,7 @@ struct Index {
         controller: this.clockController,
         date: this.date,
         isLandscape: this.isLandscape,
+        style: this.clockConfig.style,
         // lightOn: true
       })
     } else if (this.clockConfig.type == 'rotate_clock_style2') {
@@ -197,6 +199,7 @@ struct Index {
         date: this.date,
         isLandscape: this.isLandscape,
         type: RotateClockType.Style2,
+        style: this.clockConfig.style,
         // lightOn: true
       })
     } else if (this.clockConfig.type == 'rotate_clock_style3') {
@@ -204,20 +207,23 @@ struct Index {
         controller: this.clockController,
         date: this.date,
         isLandscape: this.isLandscape,
-        type: RotateClockType.Style3
+        type: RotateClockType.Style3,
+        style: this.clockConfig.style,
       })
     } else if (this.clockConfig.type == 'lunar_calendar_clock_style1') {
       LunarCalendarClock({
         controller: this.clockController,
         date: this.date,
-        isLandscape: this.isLandscape
+        isLandscape: this.isLandscape,
+        style: this.clockConfig.style,
       })
     } else if (this.clockConfig.type == 'lunar_calendar_clock_style2') {
       LunarCalendarClock({
         controller: this.clockController,
         date: this.date,
         isLandscape: this.isLandscape,
-        type: LunarCalendarClockType.Style2
+        type: LunarCalendarClockType.Style2,
+        style: this.clockConfig.style,
       })
     }
   }

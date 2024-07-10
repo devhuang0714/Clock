@@ -1,13 +1,14 @@
 import { ClockController, ClockListener } from './ClockController'
 import I18n from '@ohos.i18n';
+import { ClockStyle } from './ClockConfig';
 
 const FONT_FAMILY = 'digital-num-font'
 
 @Extend(Text)
-function setTextStyles(fontSize: number) {
+function setTextStyles(fontSize: number, fontColor: ResourceColor) {
   .fontFamily(FONT_FAMILY)
   .fontSize(fontSize)
-  .fontColor($r('app.color.flip_text_color'))
+  .fontColor(fontColor)
 }
 
 export enum LunarCalendarClockType {
@@ -20,6 +21,11 @@ export struct LunarCalendarClock {
   controller: ClockController = new ClockController()
   date: Date = new Date()
   @Prop type: LunarCalendarClockType = LunarCalendarClockType.Style1
+  @Prop style: ClockStyle = {
+    backgroundColor: $r('app.color.main_background_color'),
+    cardColor: $r('app.color.flip_card_bg_color'),
+    fontColor: $r('app.color.flip_text_color')
+  }
   @Prop isLandscape: boolean = false
   @State year: string = '----'
   @State month: string = ''
@@ -72,7 +78,7 @@ export struct LunarCalendarClock {
   Style1() {
     Column({ space: 8 }) {
       Text(`${this.hours}:${this.minutes}`)
-        .setTextStyles(100)
+        .setTextStyles(100, this.style.fontColor)
         .fontWeight(FontWeight.Medium)
         .minFontSize(60)
         .maxFontSize(120)
@@ -91,6 +97,7 @@ export struct LunarCalendarClock {
           Span('日')
         }
         .fontSize(28)
+        .fontColor(this.style.fontColor)
 
         Blank()
           .layoutWeight(1)
@@ -102,6 +109,7 @@ export struct LunarCalendarClock {
             .fontSize(40)
         }
         .fontSize(28)
+        .fontColor(this.style.fontColor)
       }
       .alignItems(VerticalAlign.Bottom)
 
@@ -120,6 +128,7 @@ export struct LunarCalendarClock {
         Span('日')
       }
       .fontSize(28)
+      .fontColor(this.style.fontColor)
       .width('100%')
     }
     .width('100%')
@@ -135,7 +144,7 @@ export struct LunarCalendarClock {
       wrap: FlexWrap.Wrap
     }) {
       Text(`${this.hours}:${this.minutes}`)
-        .setTextStyles(100)
+        .setTextStyles(100, this.style.fontColor)
         .fontWeight(FontWeight.Medium)
         .maxFontSize(120)
         .minFontSize(60)
@@ -145,6 +154,7 @@ export struct LunarCalendarClock {
         Row() {
           Text('新\n历')
             .fontSize(24)
+            .fontColor(this.style.fontColor)
             .margin({ right: 8 })
 
           Text() {
@@ -158,12 +168,14 @@ export struct LunarCalendarClock {
             Span('日')
           }
           .fontSize(28)
+          .fontColor(this.style.fontColor)
         }
         .alignItems(VerticalAlign.Bottom)
 
         Row() {
           Text('农\n历')
             .fontSize(24)
+            .fontColor(this.style.fontColor)
             .margin({ right: 8 })
 
           Text() {
@@ -177,6 +189,7 @@ export struct LunarCalendarClock {
             Span('日')
           }
           .fontSize(28)
+          .fontColor(this.style.fontColor)
         }
 
         Text() {
@@ -186,6 +199,7 @@ export struct LunarCalendarClock {
             .fontSize(40)
         }
         .fontSize(28)
+        .fontColor(this.style.fontColor)
       }
     }
     .padding({ left: this.isLandscape ? 40 : 24, right: this.isLandscape ? 40 : 24 })
