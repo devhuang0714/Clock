@@ -4,6 +4,7 @@ import { window } from '@kit.ArkUI';
 import { BusinessError } from '@ohos.base';
 import font from '@ohos.font';
 import { GlobalContext } from 'utils/Index'
+import { AppConstants } from '../common/constants/Constants';
 
 export default class EntryAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
@@ -65,12 +66,14 @@ export default class EntryAbility extends UIAbility {
 
       // 获取布局避让遮挡的区域
       let avoidArea = windowClass.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM); // 状态栏避让
-      let bottomRectHeight = avoidArea.topRect.height; // 获取到状态栏区域的高度
-      AppStorage.setOrCreate('topRectHeight', bottomRectHeight);
+      let topRectHeight = avoidArea.topRect.height; // 获取到状态栏区域的高度
+      AppStorage.setOrCreate('topRectHeight', topRectHeight);
+      AppConstants.DEFAULT_STATUS_HEIGHT = px2vp(topRectHeight)
 
       avoidArea = windowClass.getWindowAvoidArea(window.AvoidAreaType.TYPE_NAVIGATION_INDICATOR); // 导航条避让
-      bottomRectHeight = avoidArea.bottomRect.height; // 获取到导航条区域的高度
+      let bottomRectHeight = avoidArea.bottomRect.height; // 获取到导航条区域的高度
       AppStorage.setOrCreate('bottomRectHeight', bottomRectHeight);
+      AppConstants.DEFAULT_NAV_HEIGHT = px2vp(bottomRectHeight)
 
       // 1. 设置窗口全屏
       let isLayoutFullScreen = true;

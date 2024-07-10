@@ -3,9 +3,7 @@ import { GlobalContext } from 'utils/Index'
 import { Icons } from '../../common/constants/Constants';
 import router from '@ohos.router';
 
-let storage = LocalStorage.getShared();
-
-@Entry(storage)
+@Entry()
 @Component
 struct PrivacyPage {
   topRectHeight: string = AppStorage.get<number>('topRectHeight') + 'px'

@@ -1,20 +1,15 @@
 import { AppConstants, Icons } from '../../common/constants/Constants'
 import router from '@ohos.router';
+import { ClockConfig, CLOCK_CONFIGS } from '../../views/Clocks/ClockConfig';
+import { ClockConfigManager } from '../../models/ClockConfigManager'
 
-@Entry
+let storage = LocalStorage.getShared()
+
+@Entry(storage)
 @Component
 struct ClockTheme {
-  @State styles: Resource[] = [
-    $r('app.media.flip_clock_default'),
-    $r('app.media.round_clock_default'),
-    $r('app.media.digital_clock_default'),
-    $r('app.media.rotate_clock_style1'),
-    $r('app.media.rotate_clock_style2'),
-    $r('app.media.rotate_clock_style3'),
-    $r('app.media.lunar_calendar_clock_style1'),
-    $r('app.media.lunar_calendar_clock_style2'),
-  ]
-  @State selectedStyleIndex: number = 0
+  @State clockItems: ClockConfig[] = CLOCK_CONFIGS
+  @State selectedConfig: ClockConfig = ClockConfigManager.getDefaultConfig()
 
   pageTransition() {
     PageTransitionEnter({ type: RouteType.Push, duration: 300 })
@@ -36,22 +31,26 @@ struct ClockTheme {
           .fontColor($r('app.color.flip_text_color'))
           .backgroundColor(Color.Transparent)
           .onClick(() => {
-            router.back()
+            ClockConfigManager.setDefaultConfig(this.selectedConfig)
+            AppStorage.setOrCreate('defaultClockConfig', this.selectedConfig)
+            router.back({
+              url: 'pages/Index'
+            })
           })
       }
       .width('100%')
       .height(40)
       .justifyContent(FlexAlign.End)
-      .margin({ bottom: 24 })
+      .margin({ top: AppConstants.DEFAULT_STATUS_HEIGHT, bottom: 24 })
 
       Grid() {
-        ForEach(this.styles, (icon: Resource, index: number) => {
+        ForEach(this.clockItems, (item: ClockConfig) => {
           GridItem() {
             Stack() {
-              Image(icon)
+              Image(item.preview)
                 .objectFit(ImageFit.Contain)
 
-              if (index == this.selectedStyleIndex) {
+              if (item.type == this.selectedConfig.type) {
                 Text(Icons.CHECKED)
                   .fontFamily(Icons.FONT_FAMILY)
                   .fontSize(24)
@@ -62,11 +61,11 @@ struct ClockTheme {
           }
           .border({
             width: 3,
-            color: this.selectedStyleIndex == index ? Color.Green : $r('app.color.flip_card_bg_color'),
+            color: item.type == this.selectedConfig.type ? Color.Green : $r('app.color.flip_card_bg_color'),
             radius: 8
           })
           .onClick(() => {
-            this.selectedStyleIndex = index
+            this.selectedConfig = item
           })
         })
       }
@@ -92,7 +91,6 @@ struct ClockTheme {
     .height('100%')
     .backgroundColor($r('app.color.main_background_color'))
     .padding({
-      // top: AppConstants.DEFAULT_STATUS_HEIGHT,
       bottom: AppConstants.DEFAULT_NAV_HEIGHT,
       left: 24,
       right: 24

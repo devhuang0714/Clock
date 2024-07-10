@@ -1,6 +1,6 @@
 export class AppConstants {
-  static readonly DEFAULT_STATUS_HEIGHT: number = 40;
-  static readonly DEFAULT_NAV_HEIGHT: number = 48;
+  static DEFAULT_STATUS_HEIGHT: number = 0;
+  static DEFAULT_NAV_HEIGHT: number = 0;
   static readonly BUNDLE_NAME: string = 'com.hyx.clock'
 }
 

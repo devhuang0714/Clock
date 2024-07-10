@@ -12,7 +12,7 @@ import { LunarCalendarClock, LunarCalendarClockType } from '../views/Clocks/Luna
 import { RotateClock, RotateClockType } from '../views/Clocks/RotateClock'
 import { ClockStyleDialog } from '../views/Clocks/ClockStyleDialog'
 import { ClockConfig, CLOCK_CONFIGS } from '../views/Clocks/ClockConfig'
-import preferences from '@ohos.data.preferences';
+import { ClockConfigManager } from '../models/ClockConfigManager'
 
 const defaultClockKey = 'defaultClockConfig'
 
@@ -32,7 +32,7 @@ struct Index {
   @Watch('onCleanChange') @State isClean: boolean = false // 清屏
   @State isPresentSetting: boolean = false
   @State selectedTabIndex: number = 0
-  @State clockConfig: ClockConfig = CLOCK_CONFIGS[0]
+  @StorageProp('defaultClockConfig') clockConfig: ClockConfig = CLOCK_CONFIGS[0]
   private date: Date = new Date()
   private clockController: ClockController = new ClockController()
   private intervalId: number = 0;
@@ -43,11 +43,7 @@ struct Index {
       onSelected: (config) => {
         this.clockConfig = config
         // 保存默认选择
-        const preference = preferences.getPreferencesSync(getContext(this), {
-          name: AppConstants.BUNDLE_NAME
-        })
-        preference.put(defaultClockKey, JSON.stringify(config))
-        preference.flush()
+        ClockConfigManager.setDefaultConfig(config)
       }
     }),
     customStyle: true,
@@ -68,14 +64,8 @@ struct Index {
     })
     this.isDark = this.currentMode == ConfigurationConstant.ColorMode.COLOR_MODE_DARK
 
-    // 保存默认选择
-    const preference = preferences.getPreferencesSync(getContext(this), {
-      name: AppConstants.BUNDLE_NAME
-    })
-    let configJson = preference.getSync(defaultClockKey, undefined) as string
-    if (configJson != undefined) {
-      this.clockConfig = JSON.parse(configJson)
-    }
+    // 默认表盘
+    this.clockConfig = ClockConfigManager.getDefaultConfig()
 
     this.updateTimes()
     this.startClock()
