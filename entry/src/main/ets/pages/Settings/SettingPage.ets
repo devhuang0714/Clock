@@ -93,9 +93,9 @@ export struct SettingPage {
         .fontColor($r('app.color.flip_text_color'))
     }
     .width(140)
+    .aspectRatio(1)
     .justifyContent(FlexAlign.Center)
     .alignItems(HorizontalAlign.Center)
-    .aspectRatio(1)
     .borderRadius(12)
     .backgroundColor($r('app.color.flip_card_bg_color'))
   }

@@ -7,6 +7,7 @@ import { ClockConfig, CLOCK_CONFIGS } from '../../views/Clocks/ClockConfig';
 struct ClockTheme {
   @State clockItems: ClockConfig[] = CLOCK_CONFIGS
   @State selectedConfig: ClockConfig = CLOCK_CONFIGS[0]
+  @StorageProp('isLandscape') isLandscape: boolean = false
 
   pageTransition() {
     PageTransitionEnter({ type: RouteType.Push, duration: 300 })
@@ -74,7 +75,7 @@ struct ClockTheme {
       }
       .rowsGap(12)
       .columnsGap(24)
-      .columnsTemplate('1fr 1fr 1fr 1fr')
+      .columnsTemplate(this.isLandscape ? '1fr 1fr 1fr 1fr' : '1fr 1fr')
       .scrollBar(BarState.Off)
       .layoutWeight(1)
 

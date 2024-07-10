@@ -54,6 +54,7 @@ struct Index {
     this.listener.on('change', (mediaQueryResult: mediaquery.MediaQueryResult) => {
       console.log(`mediaQueryResult: ${mediaQueryResult.matches as boolean}`)
       this.isLandscape = mediaQueryResult.matches as boolean
+      AppStorage.setOrCreate('isLandscape', this.isLandscape)
     })
     this.isDark = this.currentMode == ConfigurationConstant.ColorMode.COLOR_MODE_DARK
 
