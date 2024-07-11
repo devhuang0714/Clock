@@ -113,8 +113,7 @@ struct Index {
   }
 
   updateTimes() {
-    // this.date = new Date()
-    this.date = new Date('2020-09-22 09:22:00')
+    this.date = new Date()
     this.clockController.update(this.date)
   }
 
