@@ -5,6 +5,7 @@ import { BusinessError } from '@ohos.base';
 import font from '@ohos.font';
 import { GlobalContext } from 'utils/Index'
 import { AppConstants } from '../common/constants/Constants';
+import { UT } from '../common/usertrack/UserTrack'
 
 export default class EntryAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
@@ -13,6 +14,11 @@ export default class EntryAbility extends UIAbility {
 
     AppStorage.setOrCreate('currentColorMode', this.context.config.colorMode);
     this.context.getApplicationContext().setColorMode(ConfigurationConstant.ColorMode.COLOR_MODE_DARK);
+
+    // 预初始化统计SDK
+    UT.preInit({
+      context: this.context.getApplicationContext()
+    })
   }
 
   onNewWant(want: Want, launchParam: AbilityConstant.LaunchParam): void {
