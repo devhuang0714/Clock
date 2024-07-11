@@ -1,3 +1,4 @@
+import { FaultLogger } from '@kit.PerformanceAnalysisKit'
 
 export enum ClockType {
   Flip,          // 翻页时钟
@@ -22,7 +23,7 @@ export interface ClockColorsConfig {
 }
 
 export interface ClockConfigExt {
-  lightOn: boolean | undefined
+  lightOn: boolean
 }
 
 export interface ClockConfig {
@@ -46,7 +47,7 @@ export const CLOCK_CONFIGS: ClockConfig[] = [
       fontColor: $r('app.color.flip_text_color')
     },
     ext: {
-      lightOn: undefined
+      lightOn: false
     }
   },
   {
@@ -60,7 +61,7 @@ export const CLOCK_CONFIGS: ClockConfig[] = [
       fontColor: ''
     },
     ext: {
-      lightOn: undefined
+      lightOn: false
     }
   },
   {
@@ -74,7 +75,7 @@ export const CLOCK_CONFIGS: ClockConfig[] = [
       fontColor: $r('app.color.flip_text_color')
     },
     ext: {
-      lightOn: undefined
+      lightOn: false
     }
   },
   {
@@ -123,7 +124,7 @@ export const CLOCK_CONFIGS: ClockConfig[] = [
     id: 'rotate_clock_style1_light',
     type: ClockType.Rotate,
     style: ClockStyle.Style1,
-    preview: $r('app.media.rotate_clock_style1'),
+    preview: $r('app.media.rotate_clock_style1_light'),
     colors: {
       backgroundColor: $r('app.color.main_background_color'),
       cardColor: $r('app.color.flip_card_bg_color'),
@@ -137,7 +138,7 @@ export const CLOCK_CONFIGS: ClockConfig[] = [
     id: 'rotate_clock_style2_light',
     type: ClockType.Rotate,
     style: ClockStyle.Style2,
-    preview: $r('app.media.rotate_clock_style2'),
+    preview: $r('app.media.rotate_clock_style2_light'),
     colors: {
       backgroundColor: $r('app.color.main_background_color'),
       cardColor: $r('app.color.flip_card_bg_color'),
@@ -151,7 +152,7 @@ export const CLOCK_CONFIGS: ClockConfig[] = [
     id: 'rotate_clock_style3_light',
     type: ClockType.Rotate,
     style: ClockStyle.Style3,
-    preview:$r('app.media.rotate_clock_style3'),
+    preview:$r('app.media.rotate_clock_style3_light'),
     colors: {
       backgroundColor: $r('app.color.main_background_color'),
       cardColor: $r('app.color.flip_card_bg_color'),
@@ -172,7 +173,7 @@ export const CLOCK_CONFIGS: ClockConfig[] = [
       fontColor: $r('app.color.flip_text_color')
     },
     ext: {
-      lightOn: undefined
+      lightOn: false
     }
   },
   {
@@ -186,7 +187,7 @@ export const CLOCK_CONFIGS: ClockConfig[] = [
       fontColor: $r('app.color.flip_text_color')
     },
     ext: {
-      lightOn: undefined
+      lightOn: false
     }
   }
 ]

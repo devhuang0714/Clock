@@ -39,7 +39,7 @@ struct FeedbackPage {
   build() {
     Column() {
       NavigationBar({
-        title: $r('app.string.privacy_text_title'),
+        title: '意见反馈',
         builder: this.CommitItem
       })
 

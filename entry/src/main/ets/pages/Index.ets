@@ -172,58 +172,18 @@ struct Index {
         date: this.date,
         style: this.clockConfig.style,
         colorsConfig: this.clockConfig.colors,
+        lightOn: this.clockConfig.ext.lightOn,
         isLandscape: this.isLandscape,
       })
     } else if (this.clockConfig.type == ClockType.LunarCalendar) {
       LunarCalendarClock({
         controller: this.clockController,
         date: this.date,
+        style: this.clockConfig.style,
         colorsConfig: this.clockConfig.colors,
         isLandscape: this.isLandscape,
       })
     }
-    // else if (this.clockConfig.type == 'rotate_clock_style3') {
-    //   RotateClock({
-    //     controller: this.clockController,
-    //     date: this.date,
-    //     isLandscape: this.isLandscape,
-    //     style: this.clockConfig.style,
-    //     colorsConfig: this.clockConfig.colors,
-    //   })
-    // } else if (this.clockConfig.type == 'rotate_clock_style4') {
-    //   RotateClock({
-    //     controller: this.clockController,
-    //     date: this.date,
-    //     isLandscape: this.isLandscape,
-    //     type: RotateClockType.Style3,
-    //     style: this.clockConfig.style,
-    //     lightOn: true
-    //   })
-    // } else if (this.clockConfig.type == 'rotate_clock_style5') {
-    //   RotateClock({
-    //     controller: this.clockController,
-    //     date: this.date,
-    //     isLandscape: this.isLandscape,
-    //     type: RotateClockType.Style3,
-    //     style: this.clockConfig.style,
-    //     lightOn: true
-    //   })
-    // } else if (this.clockConfig.type == 'lunar_calendar_clock_style1') {
-    //   LunarCalendarClock({
-    //     controller: this.clockController,
-    //     date: this.date,
-    //     isLandscape: this.isLandscape,
-    //     style: this.clockConfig.style,
-    //   })
-    // } else if (this.clockConfig.type == 'lunar_calendar_clock_style2') {
-    //   LunarCalendarClock({
-    //     controller: this.clockController,
-    //     date: this.date,
-    //     isLandscape: this.isLandscape,
-    //     type: LunarCalendarClockType.Style2,
-    //     style: this.clockConfig.style,
-    //   })
-    // }
   }
 
   @Builder

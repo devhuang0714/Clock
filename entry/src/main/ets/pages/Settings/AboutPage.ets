@@ -58,52 +58,48 @@ export default struct AboutPage {
       NavigationBar({
         title: '关于我们'
       })
-
-      Scroll() {
-        Column() {
+      List({ space: 12 }) {
+        ListItem() {
           this.HeaderView()
-
-          List({ space: 12 }) {
-            ForEach(this.items, (item: AboutItem) => {
-              ListItem() {
-                Row() {
-                  Text(item.icon)
-                    .fontFamily(Icons.FONT_FAMILY)
-                    .fontSize(24)
-                    .fontColor($r('app.color.main_text_color'))
-                    .margin(8)
-
-                  Text(item.title)
-                    .fontSize(18)
-                    .fontWeight(FontWeight.Medium)
-                    .textAlign(TextAlign.Start)
-                    .fontColor($r('app.color.main_text_color'))
-                    .layoutWeight(1)
-
-                  Text(Icons.ARROW_RIGHT)
-                    .fontFamily(Icons.FONT_FAMILY)
-                    .fontSize(16)
-                }
-                .height(60)
-                .padding({ left: 12, right: 12 })
-                .margin({ left: 12, right: 12 })
-                .borderRadius(12)
-                .backgroundColor($r('app.color.flip_card_bg_color'))
-              }
-              .onClick(() => {
-                router.pushUrl({ url: item.url })
-              })
-            })
-          }
-
-          Blank()
-            .height(AppConstants.DEFAULT_NAV_HEIGHT)
         }
-        .height('100%')
-        .justifyContent(FlexAlign.Start)
+
+        ForEach(this.items, (item: AboutItem) => {
+          ListItem() {
+            Row() {
+              Text(item.icon)
+                .fontFamily(Icons.FONT_FAMILY)
+                .fontSize(24)
+                .fontColor($r('app.color.main_text_color'))
+                .margin(8)
+
+              Text(item.title)
+                .fontSize(18)
+                .fontWeight(FontWeight.Medium)
+                .textAlign(TextAlign.Start)
+                .fontColor($r('app.color.main_text_color'))
+                .layoutWeight(1)
+
+              Text(Icons.ARROW_RIGHT)
+                .fontFamily(Icons.FONT_FAMILY)
+                .fontSize(16)
+            }
+            .height(60)
+            .padding({ left: 12, right: 12 })
+            .margin({ left: 12, right: 12 })
+            .borderRadius(12)
+            .backgroundColor($r('app.color.flip_card_bg_color'))
+          }
+          .onClick(() => {
+            router.pushUrl({ url: item.url })
+          })
+        })
+
+        ListItem()
+          .height(AppConstants.DEFAULT_NAV_HEIGHT)
       }
       .width('100%')
       .layoutWeight(1)
+      .scrollBar(BarState.Off)
     }
     .width('100%')
     .height('100%')
