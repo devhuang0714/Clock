@@ -63,7 +63,7 @@ export default class EntryAbility extends UIAbility {
       })
 
       let windowClass: window.Window = windowStage.getMainWindowSync(); // 获取应用主窗口
-
+      console.log(`windowClass.getWindowProperties(): ${JSON.stringify(windowClass.getWindowProperties())}`)
       // 获取布局避让遮挡的区域
       let avoidArea = windowClass.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM); // 状态栏避让
       let topRectHeight = avoidArea.topRect.height; // 获取到状态栏区域的高度

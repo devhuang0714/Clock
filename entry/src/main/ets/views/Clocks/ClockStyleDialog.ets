@@ -1,5 +1,7 @@
 import { Icons } from '../../common/constants/Constants'
 import { ClockConfig, CLOCK_CONFIGS } from './ClockConfig'
+import { window } from '@kit.ArkUI';
+import display from '@ohos.display';
 
 const CONTENT_HEIGHT = 160
 
@@ -43,6 +45,7 @@ export struct ClockStyleDialog {
   @State clockItems: ClockConfig[] = CLOCK_CONFIGS
   @Watch('changeConfig') @Prop selectedConfig: ClockConfig = CLOCK_CONFIGS[0]
   @State selectedTabItem: TabItem = this.tabItems[0]
+  private scroller: Scroller = new Scroller()
 
   aboutToAppear(): void {
     // 深拷贝，防止直接修改原数据
@@ -82,6 +85,17 @@ export struct ClockStyleDialog {
 
   isSelected(item: ClockConfig): boolean {
     return this.selectedConfig.id == item.id
+  }
+
+  scrollToCenter(index: number) {
+    const width = px2vp(display.getDefaultDisplaySync().width)
+    let itemRect = this.scroller.getItemRect(index)
+    let targetXOffset = this.scroller.currentOffset().xOffset + itemRect.x - (width - itemRect.width) / 2
+    this.scroller.scrollTo({
+      xOffset: targetXOffset, yOffset: 0, animation: {
+        duration: 300
+      }
+    })
   }
 
   build() {
@@ -175,7 +189,7 @@ export struct ClockStyleDialog {
 
   @Builder
   ClockStylesView(type: TabType) {
-    Grid() {
+    Grid(this.scroller) {
       ForEach(this.clockItems, (item: ClockConfig) => {
         GridItem() {
           Stack() {
@@ -200,6 +214,9 @@ export struct ClockStyleDialog {
           if (!this.isSelected(item)) {
             this.selectedConfig = this.deepCopy(item)
             this.onSelected(item)
+
+            let index = this.clockItems.indexOf(item)
+            this.scrollToCenter(index)
           }
         })
       })
@@ -229,9 +246,21 @@ struct ColorsView {
     "#333333", "#e6ccff", "#cc99ff", "#b366ff", "#9933ff", "#8000ff", "#7b00f5", "#6c00d6", "#5200a3", "#2e005c",
     "#191919", "#ffccff", "#ff99ff", "#ff66ff", "#ff33ff", "#ff00ff", "#f500f5", "#d600d6", "#a300a3", "#5c005c"
   ]
+  private scroller: Scroller = new Scroller()
+
+  scrollToCenter(index: number) {
+    const width = px2vp(display.getDefaultDisplaySync().width)
+    let itemRect = this.scroller.getItemRect(index)
+    let targetXOffset = this.scroller.currentOffset().xOffset + itemRect.x - (width - itemRect.width) / 2
+    this.scroller.scrollTo({
+      xOffset: targetXOffset, yOffset: 0, animation: {
+        duration: 300
+      }
+    })
+  }
 
   build() {
-    Grid() {
+    Grid(this.scroller) {
       ForEach(this.colors, (color: string) => {
         GridItem() {
           Stack() {
@@ -257,6 +286,9 @@ struct ColorsView {
         .onClick(() => {
           this.selectedColor = color
           this.onSelected(color)
+
+          let index = this.colors.indexOf(this.selectedColor)
+          this.scrollToCenter(index)
         })
       })
     }
