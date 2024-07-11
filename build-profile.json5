@@ -1,6 +1,20 @@
 {
   "app": {
-    "signingConfigs": [],
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "storePassword": "000000190515BC2D3F27D5D51D7D68E7452056B4195D0A894664804C0B26935305CF80EC48722896B3",
+          "certpath": "/Users/huangyuxun/Desktop/Projects/Clock/resources/key/release/book_release.cer",
+          "keyAlias": "book_release",
+          "keyPassword": "000000199C144BC781AF2075A2B8B6029B2ADA2C0A4F87A273F8928D794E0C1ADF74823D8C84F89791",
+          "profile": "/Users/huangyuxun/Desktop/Projects/Clock/resources/key/release/clock_release.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/huangyuxun/Desktop/Projects/Clock/resources/key/release/book_release.p12"
+        }
+      }
+    ],
     "products": [
       {
         "name": "default",
