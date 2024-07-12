@@ -76,114 +76,30 @@ export struct FlipClock {
   }
 
   build() {
-    if (this.isLandscape) {
-      this.LandscapeLayout()
-    } else {
-      this.PortraitLayout()
+    Flex({
+      direction: this.isLandscape ? FlexDirection.Row : FlexDirection.Column,
+      justifyContent: FlexAlign.Center,
+      alignItems: ItemAlign.Center
+    }) {
+      Text(this.isPM ? 'PM' : 'AM')
+        .fontSize(24)
+        .fontWeight(FontWeight.Medium)
+        .fontColor(this.colorsConfig.fontColor)
+        .textAlign(TextAlign.Center)
+        .width(50)
+        .height(50)
+        .offset({
+          x: this.isLandscape ? 0 : (this.isPM ? 24 : -24),
+          y: this.isLandscape ? (this.isPM ? 24 : -24) : 0
+        })
+
+      this.FlipCards()
+
+      // 为了让时钟居中，所以放个空元素
+      Row()
+        .width(50)
+        .height(50)
     }
-  }
-
-  @Builder
-  PortraitLayout() {
-    RelativeContainer() {
-      Row() {
-        this.Period()
-      }
-      .alignRules({
-        left: {
-          anchor: 'clock', align: HorizontalAlign.Start
-        },
-        right: {
-          anchor: 'clock', align: HorizontalAlign.End
-        },
-        bottom: {
-          anchor: 'clock', align: VerticalAlign.Top
-        }
-      })
-      .offset({
-        x: 0,
-        y: -12
-      })
-      .id('period')
-      .visibility(this.getPeriodVisible())
-
-      Column({ space: 24 }) {
-        this.FlipCards()
-      }
-      .alignRules({
-        center: {
-          anchor: '__container__', align: VerticalAlign.Center,
-        },
-        middle: {
-          anchor: '__container__', align: HorizontalAlign.Center
-        }
-      })
-      .id('clock')
-    }
-    .width('100%')
-    .height('100%')
-  }
-
-  @Builder
-  LandscapeLayout() {
-    RelativeContainer() {
-      Column() {
-        this.Period()
-      }
-      .alignRules({
-        right: {
-          anchor: 'clock', align: HorizontalAlign.Start
-        },
-        top: {
-          anchor: 'clock', align: VerticalAlign.Top
-        },
-        bottom: {
-          anchor: 'clock', align: VerticalAlign.Bottom
-        }
-      })
-      .offset({
-        x: -12,
-        y: 0
-      })
-      .id('period')
-      .visibility(this.getPeriodVisible())
-
-      Row({ space: 24 }) {
-        this.FlipCards()
-      }
-      .alignRules({
-        center: {
-          anchor: '__container__', align: VerticalAlign.Center,
-        },
-        middle: {
-          anchor: '__container__', align: HorizontalAlign.Center
-        }
-      })
-      .id('clock')
-    }
-  }
-
-  @Builder
-  Period() {
-    Blank()
-
-    Text('AM')
-      .fontSize(24)
-      .fontWeight(FontWeight.Medium)
-      .fontColor(this.colorsConfig.fontColor)
-      .visibility(this.isPM ? Visibility.Hidden : Visibility.Visible)
-
-    Blank()
-      .width(12)
-      .height(12)
-
-    Text('PM')
-      .fontSize(24)
-      .fontWeight(FontWeight.Medium)
-      .fontColor(this.colorsConfig.fontColor)
-      .visibility(this.isPM ? Visibility.Visible : Visibility.Hidden)
-
-    Blank()
   }
 
   @Builder
@@ -197,6 +113,10 @@ export struct FlipClock {
       controller: this.hourController
     })
 
+    Blank()
+      .width(24)
+      .height(24)
+
     FlipCard({
       fontSize: this.fontSize,
       fontColor: this.colorsConfig.fontColor,
@@ -205,6 +125,10 @@ export struct FlipClock {
       current: this.minutes,
       controller: this.minuteController
     })
+
+    Blank()
+      .width(24)
+      .height(24)
 
     FlipCard({
       fontSize: this.fontSize,
