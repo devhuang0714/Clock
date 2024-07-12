@@ -140,6 +140,7 @@ export struct RotateClock {
     if (this.isLandscape) {
       Text(':')
         .fontSize(120)
+        .fontColor(this.colorsConfig.fontColor)
         .margin({ left: 8, right: 8 })
     }
 
@@ -169,6 +170,7 @@ export struct RotateClock {
       if (this.isLandscape) {
         Text(':')
           .fontSize(120)
+          .fontColor(this.colorsConfig.fontColor)
           .margin({ left: 8, right: 8 })
       }
 

@@ -91,6 +91,7 @@ export struct LunarCalendarClock {
         }
         .fontSize(28)
         .fontColor(this.colorsConfig.fontColor)
+        .visibility(this.globalConfig.showLunarCalendar ? Visibility.Visible : Visibility.None)
 
         Blank()
           .layoutWeight(1)
@@ -103,6 +104,7 @@ export struct LunarCalendarClock {
         }
         .fontSize(28)
         .fontColor(this.colorsConfig.fontColor)
+        .visibility(this.globalConfig.showWeek ? Visibility.Visible : Visibility.None)
       }
       .alignItems(VerticalAlign.Bottom)
 
@@ -123,6 +125,7 @@ export struct LunarCalendarClock {
       .fontSize(28)
       .fontColor(this.colorsConfig.fontColor)
       .width('100%')
+      .visibility(this.globalConfig.showDate ? Visibility.Visible : Visibility.None)
     }
     .width('100%')
     .padding({ left: this.isLandscape ? 40 : 24, right: this.isLandscape ? 40 : 24 })
@@ -164,6 +167,7 @@ export struct LunarCalendarClock {
           .fontColor(this.colorsConfig.fontColor)
         }
         .alignItems(VerticalAlign.Bottom)
+        .visibility(this.globalConfig.showDate ? Visibility.Visible : Visibility.None)
 
         Row() {
           Text('农\n历')
@@ -184,6 +188,7 @@ export struct LunarCalendarClock {
           .fontSize(28)
           .fontColor(this.colorsConfig.fontColor)
         }
+        .visibility(this.globalConfig.showLunarCalendar ? Visibility.Visible : Visibility.None)
 
         Text() {
           Span('星期')
@@ -193,6 +198,7 @@ export struct LunarCalendarClock {
         }
         .fontSize(28)
         .fontColor(this.colorsConfig.fontColor)
+        .visibility(this.globalConfig.showWeek ? Visibility.Visible : Visibility.None)
       }
     }
     .padding({ left: this.isLandscape ? 40 : 24, right: this.isLandscape ? 40 : 24 })
