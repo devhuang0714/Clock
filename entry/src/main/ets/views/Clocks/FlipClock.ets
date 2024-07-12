@@ -92,6 +92,7 @@ export struct FlipClock {
           x: this.isLandscape ? 0 : (this.isPM ? 24 : -24),
           y: this.isLandscape ? (this.isPM ? 24 : -24) : 0
         })
+        .visibility(this.getPeriodVisible())
 
       this.FlipCards()
 

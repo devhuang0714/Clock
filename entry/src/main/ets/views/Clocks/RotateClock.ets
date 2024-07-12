@@ -31,6 +31,7 @@ export struct RotateClock {
   @Prop globalConfig: GlobalClockConfig = DEFAULT_GLOBAL_CONFIG
   @Prop isLandscape: boolean = false
   @Prop lightOn: boolean = false
+  @State isPM: boolean = false
   @State hoursTens: number = 0 // 十位
   @State hoursUnits: number = 0 // 个位
   @State minutesTens: number = 0
@@ -59,6 +60,8 @@ export struct RotateClock {
       this.secondsTensController.change(this.secondsTens)
       this.secondsUnitsController.change(this.secondsUnits)
       this.secondsController.change(this.seconds)
+
+      this.isPM = date.getHours() >= 12
     }
   }
   private hoursTensController: RotateCardController = new RotateCardController()
@@ -78,30 +81,36 @@ export struct RotateClock {
     this.controller.unregisterListener(this.listener)
   }
 
+  getPeriodVisible(): Visibility {
+    return this.globalConfig.showAMPM && !this.globalConfig.use24HourFormat ? Visibility.Visible : Visibility.Hidden
+  }
+
   build() {
-    if (this.isLandscape) {
-      this.LandscapeLayout()
-    } else {
-      this.PortraitLayout()
-    }
-  }
+    Flex({
+      direction: this.isLandscape ? FlexDirection.Row : FlexDirection.Column,
+      justifyContent: FlexAlign.Center,
+      alignItems: ItemAlign.Center
+    }) {
+      Text(this.isPM ? 'PM' : 'AM')
+        .fontSize(24)
+        .fontWeight(FontWeight.Medium)
+        .fontColor(this.colorsConfig.fontColor)
+        .textAlign(TextAlign.Center)
+        .width(50)
+        .height(50)
+        .offset({
+          x: this.isLandscape ? 0 : (this.isPM ? 24 : -24),
+          y: this.isLandscape ? (this.isPM ? 24 : -24) : 0
+        })
+        .visibility(this.getPeriodVisible())
 
-  @Builder
-  PortraitLayout() {
-    Column({ space: 24 }) {
       this.RotateCards()
-    }
-    .width('100%')
-    .justifyContent(FlexAlign.Center)
-  }
 
-  @Builder
-  LandscapeLayout() {
-    Row({ space: 12 }) {
-      this.RotateCards()
+      // 为了让时钟居中，所以放个空元素
+      Row()
+        .width(50)
+        .height(50)
     }
-    .width('100%')
-    .justifyContent(FlexAlign.Center)
   }
 
   @Builder
@@ -124,9 +133,14 @@ export struct RotateClock {
       })
     }
 
+    Blank()
+      .width(0)
+      .height(24)
+
     if (this.isLandscape) {
       Text(':')
         .fontSize(120)
+        .margin({ left: 8, right: 8 })
     }
 
     Row({ space: 12 }) {
@@ -147,10 +161,15 @@ export struct RotateClock {
       })
     }
 
+    Blank()
+      .width(0)
+      .height(24)
+
     if (this.style == ClockStyle.Style1) {
       if (this.isLandscape) {
         Text(':')
           .fontSize(120)
+          .margin({ left: 8, right: 8 })
       }
 
       Row({ space: 12 }) {
