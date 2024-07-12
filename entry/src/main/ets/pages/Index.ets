@@ -1,7 +1,7 @@
 import { ConfigurationConstant } from '@kit.AbilityKit';
 import window from '@ohos.window';
 import common from '@ohos.app.ability.common';
-import mediaquery from '@ohos.mediaquery';
+import mediaQuery from '@ohos.mediaquery';
 import router from '@ohos.router';
 import { AppConstants, Icons } from '../common/constants/Constants';
 import { ClockController } from '../views/Clocks/ClockController'
@@ -12,6 +12,7 @@ import { LunarCalendarClock } from '../views/Clocks/LunarCalendarClock'
 import { RotateClock } from '../views/Clocks/RotateClock'
 import { ClockStyleDialog } from '../views/Clocks/ClockStyleDialog'
 import { ClockConfig, ClockType, CLOCK_CONFIGS } from '../views/Clocks/ClockConfig'
+import { NormalDigitalClock } from '../views/Clocks/NormalDigitalClock';
 
 // 持久化存储UI状态
 PersistentStorage.persistProp('defaultClockConfig', CLOCK_CONFIGS[0])
@@ -20,7 +21,7 @@ PersistentStorage.persistProp('defaultClockConfig', CLOCK_CONFIGS[0])
 @Component
 struct Index {
   // 当设备横屏时条件成立
-  listener: mediaquery.MediaQueryListener = mediaquery.matchMediaSync('(orientation: landscape)');
+  listener: mediaQuery.MediaQueryListener = mediaQuery.matchMediaSync('(orientation: landscape)');
   @StorageProp('currentColorMode') @Watch('onColorModeChange') currentMode: number = ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT;
   @State isDark: boolean = false // 是否暗黑模式
   @State isLandscape: boolean = false // 当前是否横屏
@@ -46,12 +47,16 @@ struct Index {
     },
     closeAnimation: {
       duration: 0
-    }
+    },
+    offset: {
+      dx: 0,
+      dy: AppConstants.DEFAULT_NAV_HEIGHT
+    },
   })
 
   aboutToAppear(): void {
     // 绑定横竖屏切换回调函数
-    this.listener.on('change', (mediaQueryResult: mediaquery.MediaQueryResult) => {
+    this.listener.on('change', (mediaQueryResult: mediaQuery.MediaQueryResult) => {
       console.log(`mediaQueryResult: ${mediaQueryResult.matches as boolean}`)
       this.isLandscape = mediaQueryResult.matches as boolean
       AppStorage.setOrCreate('isLandscape', this.isLandscape)
@@ -113,7 +118,7 @@ struct Index {
   }
 
   updateTimes() {
-    this.date = new Date()
+    this.date = new Date("2020-09-22 09:22:00")
     this.clockController.update(this.date)
   }
 
@@ -142,7 +147,7 @@ struct Index {
       this.isClean = !this.isClean
     })
     .onAppear(() => {
-      this.changeOrientation(true)
+      // this.changeOrientation(true)
     })
   }
 
@@ -182,6 +187,12 @@ struct Index {
         style: this.clockConfig.style,
         colorsConfig: this.clockConfig.colors,
         isLandscape: this.isLandscape,
+      })
+    } else if (this.clockConfig.type == ClockType.NormalDigital) {
+      NormalDigitalClock({
+        controller: this.clockController,
+        date: this.date,
+        colorsConfig: this.clockConfig.colors,
       })
     }
   }

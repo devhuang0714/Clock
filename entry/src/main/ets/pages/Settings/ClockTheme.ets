@@ -49,7 +49,7 @@ struct ClockTheme {
       .width('100%')
       .height(40)
       .justifyContent(FlexAlign.End)
-      .margin({ top: AppConstants.DEFAULT_STATUS_HEIGHT, bottom: 24 })
+      .margin({ top: AppConstants.DEFAULT_STATUS_HEIGHT, bottom: 12 })
 
       Grid() {
         ForEach(this.clockItems, (item: ClockConfig) => {

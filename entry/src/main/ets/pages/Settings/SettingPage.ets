@@ -11,15 +11,15 @@ interface SettingItem {
 @Component
 export struct SettingPage {
   @State items: SettingItem[] = [
-    // {
-    //   title: '自定义',
-    //   unicode: Icons.CUSTOM,
-    //   url: ''
-    // },
     {
       title: '表盘风格',
       unicode: Icons.CLOCK,
       url: 'pages/Settings/ClockTheme'
+    },
+    {
+      title: '自定义',
+      unicode: Icons.CUSTOM,
+      url: 'pages/Settings/CustomPage'
     },
     {
       title: '意见反馈',

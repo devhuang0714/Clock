@@ -6,6 +6,7 @@
     "pages/Settings/PrivacyPage",
     "pages/Settings/ClockTheme",
     "pages/Settings/FeedbackPage",
-    "pages/Settings/AboutPage"
+    "pages/Settings/AboutPage",
+    "pages/Settings/CustomPage"
   ]
 }

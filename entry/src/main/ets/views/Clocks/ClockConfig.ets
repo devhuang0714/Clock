@@ -6,6 +6,7 @@ export enum ClockType {
   Digital,       // 数码时钟
   Rotate,        // 旋转时钟
   LunarCalendar, // 农历数字时钟
+  NormalDigital  // 普通数字时钟
 }
 
 export enum ClockStyle {
@@ -181,6 +182,20 @@ export const CLOCK_CONFIGS: ClockConfig[] = [
     type: ClockType.LunarCalendar,
     style: ClockStyle.Style2,
     preview: $r('app.media.lunar_calendar_clock_style2'),
+    colors: {
+      backgroundColor: $r('app.color.main_background_color'),
+      cardColor: '',
+      fontColor: $r('app.color.flip_text_color')
+    },
+    ext: {
+      lightOn: false
+    }
+  },
+  {
+    id: 'normal_digital_clock_style1',
+    type: ClockType.NormalDigital,
+    style: ClockStyle.Style1,
+    preview: $r('app.media.normal_digital_clock_style1'),
     colors: {
       backgroundColor: $r('app.color.main_background_color'),
       cardColor: '',
