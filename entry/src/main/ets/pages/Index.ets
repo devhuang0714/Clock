@@ -11,11 +11,13 @@ import { DigitalClock } from '../views/Clocks/DigitalClock';
 import { LunarCalendarClock } from '../views/Clocks/LunarCalendarClock'
 import { RotateClock } from '../views/Clocks/RotateClock'
 import { ClockStyleDialog } from '../views/Clocks/ClockStyleDialog'
-import { ClockConfig, ClockType, CLOCK_CONFIGS } from '../views/Clocks/ClockConfig'
+import { ClockConfig, ClockType, CLOCK_CONFIGS, DEFAULT_GLOBAL_CONFIG,
+  GlobalClockConfig } from '../views/Clocks/ClockConfig'
 import { NormalDigitalClock } from '../views/Clocks/NormalDigitalClock';
 
 // 持久化存储UI状态
 PersistentStorage.persistProp('defaultClockConfig', CLOCK_CONFIGS[0])
+PersistentStorage.persistProp('globalClockConfig', DEFAULT_GLOBAL_CONFIG)
 
 @Entry
 @Component
@@ -29,6 +31,7 @@ struct Index {
   @State isPresentSetting: boolean = false
   @State selectedTabIndex: number = 0
   @StorageLink('defaultClockConfig') clockConfig: ClockConfig = CLOCK_CONFIGS[0]
+  @StorageLink('globalClockConfig') globalConfig: GlobalClockConfig = DEFAULT_GLOBAL_CONFIG
   private date: Date = new Date()
   private clockController: ClockController = new ClockController()
   private intervalId: number = 0;
@@ -118,7 +121,7 @@ struct Index {
   }
 
   updateTimes() {
-    this.date = new Date("2020-09-22 09:22:00")
+    this.date = new Date()
     this.clockController.update(this.date)
   }
 
@@ -147,7 +150,7 @@ struct Index {
       this.isClean = !this.isClean
     })
     .onAppear(() => {
-      // this.changeOrientation(true)
+      this.changeOrientation(true)
     })
   }
 
@@ -158,6 +161,7 @@ struct Index {
         controller: this.clockController,
         date: this.date,
         colorsConfig: this.clockConfig.colors,
+        globalConfig: this.globalConfig,
         isLandscape: this.isLandscape
       })
     } else if (this.clockConfig.type == ClockType.Round) {
@@ -170,6 +174,7 @@ struct Index {
         controller: this.clockController,
         date: this.date,
         colorsConfig: this.clockConfig.colors,
+        globalConfig: this.globalConfig,
       })
     } else if (this.clockConfig.type == ClockType.Rotate) {
       RotateClock({
@@ -177,6 +182,7 @@ struct Index {
         date: this.date,
         style: this.clockConfig.style,
         colorsConfig: this.clockConfig.colors,
+        globalConfig: this.globalConfig,
         lightOn: this.clockConfig.ext.lightOn,
         isLandscape: this.isLandscape,
       })
@@ -186,6 +192,7 @@ struct Index {
         date: this.date,
         style: this.clockConfig.style,
         colorsConfig: this.clockConfig.colors,
+        globalConfig: this.globalConfig,
         isLandscape: this.isLandscape,
       })
     } else if (this.clockConfig.type == ClockType.NormalDigital) {
@@ -193,6 +200,7 @@ struct Index {
         controller: this.clockController,
         date: this.date,
         colorsConfig: this.clockConfig.colors,
+        globalConfig: this.globalConfig,
       })
     }
   }

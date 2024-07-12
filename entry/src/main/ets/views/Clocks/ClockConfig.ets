@@ -1,4 +1,4 @@
-import { FaultLogger } from '@kit.PerformanceAnalysisKit'
+import { ClockController } from './ClockController'
 
 export enum ClockType {
   Flip,          // 翻页时钟
@@ -34,6 +34,22 @@ export interface ClockConfig {
   preview: Resource,
   colors: ClockColorsConfig,
   ext: ClockConfigExt
+}
+
+export interface GlobalClockConfig {
+  use24HourFormat: boolean,   // 24小时制
+  showAMPM: boolean,          // 显示AM/PM
+  showDate: boolean,          // 显示日期
+  showLunarCalendar: boolean, // 显示农历
+  showWeek: boolean,          // 显示周
+}
+
+export const DEFAULT_GLOBAL_CONFIG: GlobalClockConfig = {
+  use24HourFormat: true,
+  showAMPM: true,
+  showDate: true,
+  showLunarCalendar: true,
+  showWeek: true,
 }
 
 export const CLOCK_CONFIGS: ClockConfig[] = [

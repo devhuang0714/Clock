@@ -15,28 +15,25 @@ export struct NavigationBar {
 
   build() {
     Row() {
-      Button() {
+      Row() {
         Text(Icons.BACK)
           .fontFamily(Icons.FONT_FAMILY)
           .fontSize(24)
-          .onClick(() => {
-            if (this.onBack != undefined) {
-              this.onBack()
-            } else {
-              router.back()
-            }
-          })
-      }
-      .width(44)
-      .height(44)
-      .type(ButtonType.Normal)
-      .backgroundColor(Color.Transparent)
-      .borderRadius(3)
-      .margin({ left: 12 })
 
-      Text(this.title)
-        .fontSize(18)
-        .fontWeight(FontWeight.Medium)
+        Text(this.title)
+          .fontSize(18)
+          .fontWeight(FontWeight.Medium)
+      }
+      .height(44)
+      .backgroundColor(Color.Transparent)
+      .margin({ left: 12 })
+      .onClick(() => {
+        if (this.onBack != undefined) {
+          this.onBack()
+        } else {
+          router.back()
+        }
+      })
 
       Blank()
         .layoutWeight(1)

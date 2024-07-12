@@ -1,15 +1,15 @@
-// 天干和地支列表
+import I18n from '@ohos.i18n';
+
+// 天干地支
 const tiangan = ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"];
 const dizhi = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
-
-// 基准年及其干支（如1984年是甲子年）
-const baseYear = 1984;
-const baseTiangan = 0; // "甲"
-const baseDizhi = 0; // "子"
 
 // 定义数字到农历日表示的映射
 const chineseNumbers = ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"];
 const chineseDays = ["初", "十", "廿", "三"];
+
+// 日历，用来获取农历日期
+export const chinesCalendar: I18n.Calendar = I18n.getCalendar("zh-Hans", "chinese");
 
 export class DateUtils {
   /**
@@ -42,9 +42,9 @@ export class DateUtils {
    * @returns 农历日期
    */
   static formatLunarDate = (date: Date, format = 'yyyy年MM月dd日'): string => {
-    const year = DateUtils.getLunarYear(date.getFullYear())
-    const month = DateUtils.getLunarMonth(date.getMonth() + 1)
-    const day = DateUtils.getLunarDay(date.getDate())
+    const year = DateUtils.getLunarYear(date)
+    const month = DateUtils.getLunarMonth(date)
+    const day = DateUtils.getLunarDay(date)
     const formatMap: Record<string, string> = {
       'yyyy': year.toString(),
       'MM': month.toString(),
@@ -100,48 +100,64 @@ export class DateUtils {
    * @param year - 公历年
    * @returns 农历干支纪年
    */
-  static getLunarYear(year: number): string {
-    // 计算与基准年的差距
-    const offset = year - baseYear;
+  static getLunarYear(date: Date): string {
+    //将公历信息设置到calendar对象
+    chinesCalendar.setTime(date);
+    //获取农历年月日
+    const lunarYear = chinesCalendar.get("year"); // 返回干支纪年40，范围1-60
 
     // 计算天干和地支的位置
-    const tianganIndex = (baseTiangan + offset) % 10;
-    const dizhiIndex = (baseDizhi + offset) % 12;
-
-    // 处理负数情况
-    const tianganFinalIndex = (tianganIndex + 10) % 10;
-    const dizhiFinalIndex = (dizhiIndex + 12) % 12;
-
-    return `${tiangan[tianganFinalIndex]}${dizhi[dizhiFinalIndex]}`;
+    const tianganIndex = (lunarYear - 1) % 10;
+    const dizhiIndex = (lunarYear - 1) % 12;
+    return `${tiangan[tianganIndex]}${dizhi[dizhiIndex]}`;
   }
 
   /**
    * 将数字转换为农历月写法
-   * @param day - 农历月（1到12）
+   * @param date
    * @returns 农历日的中文写法
    */
-  static getLunarMonth(month: number): string {
-    return chineseNumbers[(month - 1) % 12]
+  static getLunarMonth(date: Date): string {
+    chinesCalendar.setTime(date);
+    const chineseMonth = chinesCalendar.get("month") // 结果为5，指6月
+    return chineseNumbers[chineseMonth % 12]
   }
 
   /**
    * 将数字转换为农历日写法
-   * @param day - 农历日（1到30）
+   * @param date
    * @returns 农历日的中文写法
    */
-  static getLunarDay(day: number): string {
-    if (day < 1 || day > 30) {
-      throw new Error("农历日应在1到30之间");
-    }
+  static getLunarDay(date: Date): string {
+    chinesCalendar.setTime(date);
+    const chineseDay = chinesCalendar.get("date")
 
-    if (day <= 10) {
-      return `初${chineseNumbers[day - 1]}`;
-    } else if (day <= 20) {
-      return `十${day === 20 ? "" : chineseNumbers[day - 11]}`;
-    } else if (day <= 30) {
-      return `${chineseDays[Math.floor(day / 10)]}${chineseNumbers[(day % 10) - 1]}`;
+    if (chineseDay <= 10) {
+      return `初${chineseNumbers[chineseDay - 1]}`;
+    } else if (chineseDay <= 20) {
+      return `十${chineseDay === 20 ? "" : chineseNumbers[chineseDay - 11]}`;
+    } else if (chineseDay <= 30) {
+      return `${chineseDays[Math.floor(chineseDay / 10)]}${chineseNumbers[(chineseDay % 10) - 1]}`;
     }
 
     return "";
+  }
+
+  /**
+   * 获取12小时制 时
+   * @param date
+   * @returns 12小时制 时
+   */
+  static get12Hour(date: Date): number {
+    return date.getHours() % 12 === 0 ? 12 : date.getHours() % 12
+  }
+
+  /**
+   * 获取 AM PM
+   * @param hours
+   * @returns AM ｜ PM
+   */
+  static getPeriod(hours: number): string {
+    return hours >= 12 ? 'PM' : 'AM'
   }
 }

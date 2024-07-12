@@ -1,4 +1,4 @@
-import { ClockColorsConfig } from './ClockConfig'
+import { ClockColorsConfig, DEFAULT_GLOBAL_CONFIG, GlobalClockConfig } from './ClockConfig'
 import { ClockController, ClockListener } from './ClockController'
 import { DateUtils } from '../../common/utils/DateUtils'
 
@@ -23,14 +23,20 @@ export struct NormalDigitalClock {
     cardColor: '',
     fontColor: $r('app.color.flip_text_color')
   }
+  @Prop globalConfig: GlobalClockConfig = DEFAULT_GLOBAL_CONFIG
   @State dateStr: string = '0000-00-00'
   @State lunarDate: string = '甲子年一月一日'
   @State time: string = '00:00:00'
   private listener: ClockListener = {
     onUpdate: (date) => {
-      this.dateStr = `${DateUtils.formatDate(date, 'yyyy-MM-dd')} ${DateUtils.getWeek_ZH(date.getDay())}`
+      if (this.globalConfig.showWeek) {
+        this.dateStr = `${DateUtils.formatDate(date, 'yyyy-MM-dd')} ${DateUtils.getWeek_ZH(date.getDay())}`
+      } else {
+        this.dateStr = DateUtils.formatDate(date, 'yyyy-MM-dd')
+      }
       this.lunarDate = DateUtils.formatLunarDate(date)
-      this.time = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes()
+      const hours = this.globalConfig.use24HourFormat ? date.getHours() : DateUtils.get12Hour(date)
+      this.time = `${hours.toString().padStart(2, '0')}:${date.getMinutes()
         .toString()
         .padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`
     }
@@ -53,11 +59,13 @@ export struct NormalDigitalClock {
           .maxFontSize(24)
           .fontColor(this.colorsConfig.fontColor)
           .maxLines(1)
+          .visibility(this.globalConfig.showDate ? Visibility.Visible : Visibility.Hidden)
 
         Text(this.lunarDate)
           .fontSize(18)
           .fontColor(this.colorsConfig.fontColor)
           .opacity(0.7)
+          .visibility(this.globalConfig.showLunarCalendar ? Visibility.Visible : Visibility.Hidden)
       }
       .height('25%')
       .justifyContent(FlexAlign.Center)

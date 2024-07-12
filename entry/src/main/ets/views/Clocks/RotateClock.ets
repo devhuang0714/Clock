@@ -1,7 +1,8 @@
 import { ClockController, ClockListener } from './ClockController'
 import animator, { AnimatorResult } from '@ohos.animator';
 import measure from '@ohos.measure'
-import { ClockColorsConfig, ClockStyle } from './ClockConfig';
+import { ClockColorsConfig, ClockStyle, DEFAULT_GLOBAL_CONFIG, GlobalClockConfig } from './ClockConfig';
+import { DateUtils } from '../../common/utils/DateUtils';
 
 @Extend(Text)
 function setTextStyles(fontSize: number, fontColor: ResourceColor) {
@@ -27,6 +28,7 @@ export struct RotateClock {
     cardColor: $r('app.color.flip_card_bg_color'),
     fontColor: $r('app.color.flip_text_color')
   }
+  @Prop globalConfig: GlobalClockConfig = DEFAULT_GLOBAL_CONFIG
   @Prop isLandscape: boolean = false
   @Prop lightOn: boolean = false
   @State hoursTens: number = 0 // 十位
@@ -38,8 +40,9 @@ export struct RotateClock {
   @State seconds: number = 0
   private listener: ClockListener = {
     onUpdate: (date) => {
-      this.hoursTens = Math.floor(date.getHours() / 10) % 10
-      this.hoursUnits = date.getHours() % 10
+      const hours = this.globalConfig.use24HourFormat ? date.getHours() : DateUtils.get12Hour(date)
+      this.hoursTens = Math.floor(hours / 10) % 10
+      this.hoursUnits = hours % 10
 
       this.minutesTens = Math.floor(date.getMinutes() / 10) % 10
       this.minutesUnits = date.getMinutes() % 10

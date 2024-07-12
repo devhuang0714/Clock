@@ -1,6 +1,6 @@
 import { ClockController, ClockListener } from './ClockController'
-import I18n from '@ohos.i18n';
-import { ClockColorsConfig, ClockStyle } from './ClockConfig';
+import { ClockColorsConfig, ClockStyle, DEFAULT_GLOBAL_CONFIG, GlobalClockConfig } from './ClockConfig';
+import { chinesCalendar, DateUtils } from '../../common/utils/DateUtils';
 
 const FONT_FAMILY = 'digital-num-font'
 
@@ -21,6 +21,7 @@ export struct LunarCalendarClock {
     cardColor: $r('app.color.flip_card_bg_color'),
     fontColor: $r('app.color.flip_text_color')
   }
+  @Prop globalConfig: GlobalClockConfig = DEFAULT_GLOBAL_CONFIG
   @Prop isLandscape: boolean = false
   @State year: string = '----'
   @State month: string = ''
@@ -36,19 +37,16 @@ export struct LunarCalendarClock {
       this.year = date.getFullYear().toString()
       this.month = (date.getMonth() + 1).toString().padStart(2, '0')
       this.day = date.getDate().toString().padStart(2, '0')
-      this.hours = date.getHours().toString().padStart(2, '0')
+
+      const hours = this.globalConfig.use24HourFormat ? date.getHours() : DateUtils.get12Hour(date)
+      this.hours = hours.toString().padStart(2, '0')
       this.minutes = date.getMinutes().toString().padStart(2, '0')
       this.seconds = date.getSeconds().toString().padStart(2, '0')
       this.week = date.getDay().toString()
 
-      // 获取农历日期
-      let calendar: I18n.Calendar = I18n.getCalendar("zh-Hans", "chinese");
-      //将公历信息设置到calendar对象
-      calendar.setTime(date);
-      //获取农历年月日
-      // calendar.get("year"); // 返回干支纪年40，范围1-60
-      this.chineseMonth = calendar.get("month").toString().padStart(2, '0'); // 结果为5，指6月
-      this.chineseDay = calendar.get("date").toString().padStart(2, '0'); // 8日
+      chinesCalendar.setTime(date)
+      this.chineseMonth = chinesCalendar.get('month').toString().padStart(2, '0')
+      this.chineseDay = chinesCalendar.get('date').toString().padStart(2, '0')
     }
   }
 

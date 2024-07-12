@@ -1,7 +1,8 @@
 import animator, { AnimatorResult } from '@ohos.animator';
 import measure from '@ohos.measure'
 import { ClockController, ClockListener } from './ClockController'
-import { ClockColorsConfig } from './ClockConfig'
+import { ClockColorsConfig, DEFAULT_GLOBAL_CONFIG, GlobalClockConfig } from './ClockConfig'
+import { DateUtils } from '../../common/utils/DateUtils';
 
 // const fontStyle = 'flip-num-font'
 const fontStyle = ''
@@ -36,20 +37,24 @@ export struct FlipClock {
     cardColor: $r('app.color.flip_card_bg_color'),
     fontColor: $r('app.color.flip_text_color')
   }
+  @Prop globalConfig: GlobalClockConfig = DEFAULT_GLOBAL_CONFIG
   @Prop isLandscape: boolean = false
   @Prop fontSize: number = 130
   @Prop space: number = 4
   @State hours: string = '00'
   @State minutes: string = '00'
   @State seconds: string = '00'
+  @State isPM: boolean = false
   private hourController: FlipCardController = new FlipCardController()
   private minuteController: FlipCardController = new FlipCardController()
   private secondController: FlipCardController = new FlipCardController()
   private listener: ClockListener = {
     onUpdate: (date) => {
-      this.hourController.change(date.getHours().toString().padStart(2, '0'))
+      const hours = this.globalConfig.use24HourFormat ? date.getHours() : DateUtils.get12Hour(date)
+      this.hourController.change(hours.toString().padStart(2, '0'))
       this.minuteController.change(date.getMinutes().toString().padStart(2, '0'))
       this.secondController.change(date.getSeconds().toString().padStart(2, '0'))
+      this.isPM = date.getHours() >= 12
     }
   }
 
@@ -66,6 +71,10 @@ export struct FlipClock {
     this.controller.unregisterListener(this.listener)
   }
 
+  getPeriodVisible(): Visibility {
+    return this.globalConfig.showAMPM && !this.globalConfig.use24HourFormat ? Visibility.Visible : Visibility.Hidden
+  }
+
   build() {
     if (this.isLandscape) {
       this.LandscapeLayout()
@@ -76,20 +85,105 @@ export struct FlipClock {
 
   @Builder
   PortraitLayout() {
-    Column({ space: 24 }) {
-      this.FlipCards()
+    RelativeContainer() {
+      Row() {
+        this.Period()
+      }
+      .alignRules({
+        left: {
+          anchor: 'clock', align: HorizontalAlign.Start
+        },
+        right: {
+          anchor: 'clock', align: HorizontalAlign.End
+        },
+        bottom: {
+          anchor: 'clock', align: VerticalAlign.Top
+        }
+      })
+      .offset({
+        x: 0,
+        y: -12
+      })
+      .id('period')
+      .visibility(this.getPeriodVisible())
+
+      Column({ space: 24 }) {
+        this.FlipCards()
+      }
+      .alignRules({
+        center: {
+          anchor: '__container__', align: VerticalAlign.Center,
+        },
+        middle: {
+          anchor: '__container__', align: HorizontalAlign.Center
+        }
+      })
+      .id('clock')
     }
     .width('100%')
-    .justifyContent(FlexAlign.Center)
+    .height('100%')
   }
 
   @Builder
   LandscapeLayout() {
-    Row({ space: 24 }) {
-      this.FlipCards()
+    RelativeContainer() {
+      Column() {
+        this.Period()
+      }
+      .alignRules({
+        right: {
+          anchor: 'clock', align: HorizontalAlign.Start
+        },
+        top: {
+          anchor: 'clock', align: VerticalAlign.Top
+        },
+        bottom: {
+          anchor: 'clock', align: VerticalAlign.Bottom
+        }
+      })
+      .offset({
+        x: -12,
+        y: 0
+      })
+      .id('period')
+      .visibility(this.getPeriodVisible())
+
+      Row({ space: 24 }) {
+        this.FlipCards()
+      }
+      .alignRules({
+        center: {
+          anchor: '__container__', align: VerticalAlign.Center,
+        },
+        middle: {
+          anchor: '__container__', align: HorizontalAlign.Center
+        }
+      })
+      .id('clock')
     }
-    .width('100%')
-    .justifyContent(FlexAlign.Center)
+  }
+
+  @Builder
+  Period() {
+    Blank()
+
+    Text('AM')
+      .fontSize(24)
+      .fontWeight(FontWeight.Medium)
+      .fontColor(this.colorsConfig.fontColor)
+      .visibility(this.isPM ? Visibility.Hidden : Visibility.Visible)
+
+    Blank()
+      .width(12)
+      .height(12)
+
+    Text('PM')
+      .fontSize(24)
+      .fontWeight(FontWeight.Medium)
+      .fontColor(this.colorsConfig.fontColor)
+      .visibility(this.isPM ? Visibility.Visible : Visibility.Hidden)
+
+    Blank()
   }
 
   @Builder

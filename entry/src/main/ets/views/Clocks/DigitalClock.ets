@@ -1,4 +1,4 @@
-import { ClockColorsConfig } from './ClockConfig'
+import { ClockColorsConfig, DEFAULT_GLOBAL_CONFIG, GlobalClockConfig } from './ClockConfig'
 import { ClockController, ClockListener } from './ClockController'
 import { DateUtils } from '../../common/utils/DateUtils'
 
@@ -21,6 +21,7 @@ export struct DigitalClock {
     cardColor: '',
     fontColor: $r('app.color.flip_text_color')
   }
+  @Prop globalConfig: GlobalClockConfig = DEFAULT_GLOBAL_CONFIG
   @State year: string = '----'
   @State day: string = '-----'
   @State week: string = '--'
