@@ -226,8 +226,10 @@ export struct ClockStyleDialog {
     .scrollBar(BarState.Off)
     .visibility(this.selectedTabItem.type == type ? Visibility.Visible : Visibility.Hidden)
     .onAppear(() => {
-      const index = this.clockItems.findIndex(item => item.id === this.selectedConfig.id)
-      this.scroller.scrollToIndex(index)
+      setTimeout(() => {
+        const index = this.clockItems.findIndex(item => item.id === this.selectedConfig.id)
+        this.scroller.scrollToIndex(index)
+      }, 100)
     })
   }
 }
@@ -300,8 +302,10 @@ struct ColorsView {
     .rowsTemplate('1fr')
     .scrollBar(BarState.Off)
     .onAppear(() => {
-      const index = this.colors.findIndex(color => color === this.selectedColor)
-      this.scroller.scrollToIndex(index)
+      setTimeout(() => {
+        const index = this.colors.findIndex(color => color === this.selectedColor)
+        this.scroller.scrollToIndex(index)
+      }, 100)
     })
   }
 }
