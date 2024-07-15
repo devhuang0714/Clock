@@ -41,7 +41,8 @@ export interface GlobalClockConfig {
   showAMPM: boolean,          // 显示AM/PM
   showDate: boolean,          // 显示日期
   showLunarCalendar: boolean, // 显示农历
-  showWeek: boolean,          // 显示周
+  showWeek: boolean,          // 显示星期
+  showMilliseconds: boolean   // 显示毫秒
 }
 
 export const DEFAULT_GLOBAL_CONFIG: GlobalClockConfig = {
@@ -50,6 +51,7 @@ export const DEFAULT_GLOBAL_CONFIG: GlobalClockConfig = {
   showDate: true,
   showLunarCalendar: true,
   showWeek: true,
+  showMilliseconds: false
 }
 
 export const CLOCK_CONFIGS: ClockConfig[] = [

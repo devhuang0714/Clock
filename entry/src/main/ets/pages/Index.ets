@@ -11,9 +11,15 @@ import { DigitalClock } from '../views/Clocks/DigitalClock';
 import { LunarCalendarClock } from '../views/Clocks/LunarCalendarClock'
 import { RotateClock } from '../views/Clocks/RotateClock'
 import { ClockStyleDialog } from '../views/Clocks/ClockStyleDialog'
-import { ClockConfig, ClockType, CLOCK_CONFIGS, DEFAULT_GLOBAL_CONFIG,
-  GlobalClockConfig } from '../views/Clocks/ClockConfig'
+import {
+  ClockConfig,
+  ClockType,
+  CLOCK_CONFIGS,
+  DEFAULT_GLOBAL_CONFIG,
+  GlobalClockConfig
+} from '../views/Clocks/ClockConfig'
 import { NormalDigitalClock } from '../views/Clocks/NormalDigitalClock';
+import { BusinessError } from '@kit.BasicServicesKit';
 
 // 持久化存储UI状态
 PersistentStorage.persistProp('currentColorMode', ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT)
@@ -25,14 +31,14 @@ PersistentStorage.persistProp('globalClockConfig', DEFAULT_GLOBAL_CONFIG)
 struct Index {
   // 当设备横屏时条件成立
   listener: mediaQuery.MediaQueryListener = mediaQuery.matchMediaSync('(orientation: landscape)');
-  @StorageProp('currentColorMode') @Watch('onColorModeChange') currentMode: number = ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT;
+  @Watch('onColorModeChange') @StorageProp('currentColorMode') currentMode: number = ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT;
   @State isDark: boolean = false // 是否暗黑模式
   @State isLandscape: boolean = false // 当前是否横屏
   @Watch('onCleanChange') @State isClean: boolean = false // 清屏
   @State isPresentSetting: boolean = false
   @State selectedTabIndex: number = 0
-  @StorageLink('defaultClockConfig') clockConfig: ClockConfig = CLOCK_CONFIGS[0]
-  @StorageLink('globalClockConfig') globalConfig: GlobalClockConfig = DEFAULT_GLOBAL_CONFIG
+  @Watch('onConfigChange') @StorageLink('defaultClockConfig') clockConfig: ClockConfig = CLOCK_CONFIGS[0]
+  @Watch('onConfigChange') @StorageLink('globalClockConfig') globalConfig: GlobalClockConfig = DEFAULT_GLOBAL_CONFIG
   private date: Date = new Date()
   private clockController: ClockController = new ClockController()
   private intervalId: number = 0;
@@ -68,7 +74,7 @@ struct Index {
     this.isDark = this.currentMode == ConfigurationConstant.ColorMode.COLOR_MODE_DARK
 
     this.updateTimes()
-    this.startClock()
+    this.onConfigChange()
     this.onCleanChange()
   }
 
@@ -105,6 +111,15 @@ struct Index {
     this.isDark = this.currentMode == ConfigurationConstant.ColorMode.COLOR_MODE_DARK
   }
 
+  onConfigChange() {
+    clearInterval(this.intervalId)
+    if (this.globalConfig.showMilliseconds && this.clockConfig.type == ClockType.NormalDigital) {
+      this.startClock(10)
+    } else {
+      this.startClock(1000)
+    }
+  }
+
   // 改变设备横竖屏状态函数
   changeOrientation(isLandscape: boolean) {
     // 获取UIAbility实例的上下文信息
@@ -115,15 +130,80 @@ struct Index {
     });
   }
 
-  startClock() {
+  startClock(interval: number) {
     this.intervalId = setInterval(() => {
       this.updateTimes()
-    }, 1000);
+    }, interval);
   }
 
   updateTimes() {
     this.date = new Date()
     this.clockController.update(this.date)
+  }
+
+  showFloatWindow() {
+    // 创建悬浮窗
+    let windowClass: window.Window | null = null
+    let config: window.Configuration = {
+      name: 'floatWindow',
+      windowType: window.WindowType.TYPE_FLOAT,
+      ctx: getContext()
+    }
+    window.createWindow(config, (err: BusinessError, data) => {
+      if (err.code) {
+        console.error('Failed to create the floatWindow. Cause: ' + JSON.stringify(err))
+        return
+      }
+      console.info('Succeeded in creating the floatWindow. Data: ' + JSON.stringify(data))
+
+      windowClass = data
+      // 设置位置、大小等相关信息
+      windowClass.moveWindowTo(300, 300, (err: BusinessError) => {
+        if (err.code) {
+          console.error('Failed to move the window. Cause: ' + JSON.stringify(err))
+          return
+        }
+        console.info('Succeeded in moving the window.')
+      })
+      // 设置尺寸
+      windowClass.resize(200, 100, (err: BusinessError) => {
+        if (err.code) {
+          console.error('Failed to change the window. Cause: ' + JSON.stringify(err))
+          return
+        }
+        console.info('Succeeded in changing the window.')
+      })
+      // 设置加载悬浮窗的目标页面
+      windowClass.setUIContent('pages/Index', (err: BusinessError) => {
+        if (err.code) {
+          console.error('Failed to load the content. Cause: ' + JSON.stringify(err))
+          return
+        }
+        console.info('Succeeded in loading the content.');
+        // 显示悬浮窗。
+        (windowClass as window.Window).showWindow((err: BusinessError) => {
+          let errCode: number = err.code;
+          if (errCode) {
+            console.error('Failed to show the window. Cause: ' + JSON.stringify(err));
+            return;
+          }
+          console.info('Succeeded in showing the window.');
+        });
+      })
+    })
+  }
+
+  destroyFloatWindow() {
+    // https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/application-window-stage-0000001820999885#ZH-CN_TOPIC_0000001811156966__%E8%AE%BE%E7%BD%AE%E6%82%AC%E6%B5%AE%E7%AA%97
+    // 4.销毁悬浮窗。当不再需要悬浮窗时，可根据具体实现逻辑，使用destroy对其进行销毁。
+    // windowClass.destroyWindow((err: BusinessError) => {
+    //   let errCode: number = err.code;
+    //   if (errCode) {
+    //     console.error('Failed to destroy the window. Cause: ' + JSON.stringify(err));
+    //     return;
+    //   }
+    //   console.info('Succeeded in destroying the window.');
+    // });
   }
 
   build() {
@@ -202,13 +282,14 @@ struct Index {
         date: this.date,
         colorsConfig: this.clockConfig.colors,
         globalConfig: this.globalConfig,
+        isLandscape: this.isLandscape,
       })
     }
   }
 
   @Builder
   TopTools() {
-    Row() {
+    Row({ space: 12 }) {
       ToolItem({
         unicode: this.isDark ? Icons.THEME_LIGHT : Icons.THEME_DARK,
         fontSize: this.isDark ? 28 : 32
@@ -220,6 +301,14 @@ struct Index {
           }
           getContext().getApplicationContext().setColorMode(mode);
         })
+      //
+      // ToolItem({
+      //   unicode: Icons.MINI_WINDOW,
+      //   fontSize: 28
+      // })
+      //   .onClick(() => {
+      //     this.showFloatWindow()
+      //   })
 
       Blank()
         .layoutWeight(1)

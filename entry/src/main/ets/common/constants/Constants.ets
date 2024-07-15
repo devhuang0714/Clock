@@ -27,4 +27,5 @@ export class Icons {
   static readonly THEME_FILL_ICON: string = '\ue860'
   static readonly CHECKED: string = '\ue61d'
   static readonly BACK: string = '\ue62e'
+  static readonly MINI_WINDOW: string = '\ue621'
 }

@@ -8,7 +8,7 @@ function setTextStyles(fontSize: number, fontColor: ResourceColor) {
   .fontColor(fontColor)
   .fontWeight(FontWeight.Medium)
   .textAlign(TextAlign.Center)
-  .minFontSize(50)
+  .minFontSize(36)
   .maxFontSize(fontSize)
   .maxLines(1)
   .width('100%')
@@ -24,9 +24,11 @@ export struct NormalDigitalClock {
     fontColor: $r('app.color.flip_text_color')
   }
   @Prop globalConfig: GlobalClockConfig = DEFAULT_GLOBAL_CONFIG
+  @Prop isLandscape: boolean = false
   @State dateStr: string = '0000-00-00'
   @State lunarDate: string = '甲子年一月一日'
   @State time: string = '00:00:00'
+  @State milliseconds: string = '000'
   private listener: ClockListener = {
     onUpdate: (date) => {
       if (this.globalConfig.showWeek) {
@@ -39,6 +41,12 @@ export struct NormalDigitalClock {
       this.time = `${hours.toString().padStart(2, '0')}:${date.getMinutes()
         .toString()
         .padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`
+
+      if (this.globalConfig.showMilliseconds) {
+        this.milliseconds = `.${date.getMilliseconds().toString().padStart(3, '0')}`
+      } else {
+        this.milliseconds = ''
+      }
     }
   }
 
@@ -70,7 +78,7 @@ export struct NormalDigitalClock {
       .height('25%')
       .justifyContent(FlexAlign.Center)
 
-      Text(this.time)
+      Text(this.time + this.milliseconds)
         .setTextStyles(130, this.colorsConfig.fontColor)
 
       Column()
