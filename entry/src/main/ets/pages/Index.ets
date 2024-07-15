@@ -16,6 +16,7 @@ import { ClockConfig, ClockType, CLOCK_CONFIGS, DEFAULT_GLOBAL_CONFIG,
 import { NormalDigitalClock } from '../views/Clocks/NormalDigitalClock';
 
 // 持久化存储UI状态
+PersistentStorage.persistProp('currentColorMode', ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT)
 PersistentStorage.persistProp('defaultClockConfig', CLOCK_CONFIGS[0])
 PersistentStorage.persistProp('globalClockConfig', DEFAULT_GLOBAL_CONFIG)
 

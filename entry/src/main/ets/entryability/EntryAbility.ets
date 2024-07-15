@@ -13,7 +13,7 @@ export default class EntryAbility extends UIAbility {
     GlobalContext.getContext().setObject('entryContext', this.context);
 
     AppStorage.setOrCreate('currentColorMode', this.context.config.colorMode);
-    this.context.getApplicationContext().setColorMode(ConfigurationConstant.ColorMode.COLOR_MODE_DARK);
+    this.context.getApplicationContext().setColorMode(this.context.config.colorMode);
 
     // 预初始化统计SDK
     UT.preInit({
