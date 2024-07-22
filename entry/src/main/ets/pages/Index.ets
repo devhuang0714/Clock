@@ -114,7 +114,7 @@ struct Index {
   onConfigChange() {
     clearInterval(this.intervalId)
     if (this.globalConfig.showMilliseconds && this.clockConfig.type == ClockType.NormalDigital) {
-      this.startClock(10)
+      this.startClock(20)
     } else {
       this.startClock(1000)
     }
@@ -292,7 +292,7 @@ struct Index {
     Row({ space: 12 }) {
       ToolItem({
         unicode: this.isDark ? Icons.THEME_LIGHT : Icons.THEME_DARK,
-        fontSize: this.isDark ? 28 : 32
+        fontSize: this.isDark ? 24 : 28
       })
         .onClick(() => {
           let mode = ConfigurationConstant.ColorMode.COLOR_MODE_DARK
@@ -304,7 +304,7 @@ struct Index {
       //
       // ToolItem({
       //   unicode: Icons.MINI_WINDOW,
-      //   fontSize: 28
+      //   fontSize: 24
       // })
       //   .onClick(() => {
       //     this.showFloatWindow()
@@ -315,7 +315,7 @@ struct Index {
 
       ToolItem({
         unicode: Icons.SETTINGS,
-        fontSize: 32
+        fontSize: 24
       })
         .onClick(() => {
           router.pushUrl({
@@ -342,7 +342,7 @@ struct Index {
     Row({ space: 24 }) {
       ToolItem({
         unicode: Icons.SCREEN_ORIENTATION,
-        fontSize: 28
+        fontSize: 20
       })
         .onClick(() => {
           this.changeOrientation(!this.isLandscape)
@@ -353,7 +353,7 @@ struct Index {
 
       ToolItem({
         unicode: Icons.THEME_FILL_ICON,
-        fontSize: 32
+        fontSize: 24
       })
         .onClick(() => {
           this.clockStyleDialog.open()
@@ -374,7 +374,7 @@ struct Index {
 @Component
 struct ToolItem {
   @Prop unicode: string = Icons.SETTINGS
-  @Prop fontSize: number = 28
+  @Prop fontSize: number = 20
 
   build() {
     Button() {
@@ -384,8 +384,8 @@ struct ToolItem {
         .fontColor($r('app.color.tool_item_color'))
     }
     .backgroundColor($r('app.color.tool_item_bg_color'))
-    .width(54)
-    .height(54)
-    .borderRadius(27)
+    .width(44)
+    .height(44)
+    .borderRadius(22)
   }
 }

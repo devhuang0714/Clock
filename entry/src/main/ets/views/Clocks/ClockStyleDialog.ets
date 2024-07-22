@@ -1,6 +1,7 @@
 import { Icons } from '../../common/constants/Constants'
 import { ClockConfig, CLOCK_CONFIGS } from './ClockConfig'
 import display from '@ohos.display';
+import { startVibration } from '../../common/utils/Vibrator'
 
 const CONTENT_HEIGHT = 180
 
@@ -211,6 +212,8 @@ export struct ClockStyleDialog {
         })
         .onClick(() => {
           if (!this.isSelected(item)) {
+            startVibration()
+
             this.selectedConfig = this.deepCopy(item)
             this.onSelected(item)
 
@@ -272,7 +275,6 @@ struct ColorsView {
             Row()
               .height('100%')
               .aspectRatio(1)
-              .backgroundColor(color)
 
             if (this.selectedColor == color) {
               Text(Icons.CHECKED)
@@ -283,12 +285,14 @@ struct ColorsView {
           }
           .alignContent(Alignment.BottomEnd)
         }
+        .backgroundColor(color)
         .border({
           width: 3,
           color: this.selectedColor == color ? Color.Green : color,
           radius: 8
         })
         .onClick(() => {
+          startVibration()
           this.selectedColor = color
           this.onSelected(color)
 
