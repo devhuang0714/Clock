@@ -73,7 +73,7 @@ export default struct AboutPage {
                 .margin(8)
 
               Text(item.title)
-                .fontSize(18)
+                .fontSize(16)
                 .fontWeight(FontWeight.Medium)
                 .textAlign(TextAlign.Start)
                 .fontColor($r('app.color.main_text_color'))

@@ -36,7 +36,7 @@ struct ClockTheme {
         Button('完成')
           .type(ButtonType.Normal)
           .padding(0)
-          .fontSize(22)
+          .fontSize(18)
           .fontColor($r('app.color.flip_text_color'))
           .backgroundColor(Color.Transparent)
           .onClick(() => {
@@ -49,7 +49,7 @@ struct ClockTheme {
       .width('100%')
       .height(40)
       .justifyContent(FlexAlign.End)
-      .margin({ top: AppConstants.DEFAULT_STATUS_HEIGHT, bottom: 12 })
+      .margin({ top: 12, bottom: 12 })
 
       Grid() {
         ForEach(this.clockItems, (item: ClockConfig) => {
@@ -68,7 +68,7 @@ struct ClockTheme {
             .alignContent(Alignment.BottomEnd)
           }
           .border({
-            width: 3,
+            width: 2,
             color: this.isSelected(item) ? Color.Green : $r('app.color.flip_card_bg_color'),
             radius: 8
           })
@@ -79,17 +79,18 @@ struct ClockTheme {
       }
       .rowsGap(12)
       .columnsGap(24)
-      .columnsTemplate(this.isLandscape ? '1fr 1fr 1fr 1fr' : '1fr 1fr')
+      .columnsTemplate(this.isLandscape ? '1fr 1fr 1fr 1fr 1fr' : '1fr 1fr')
       .scrollBar(BarState.Off)
       .layoutWeight(1)
 
       Button() {
         Text(Icons.PACK_UP)
           .fontFamily(Icons.FONT_FAMILY)
-          .fontSize(40)
+          .fontSize(28)
           .fontColor($r('app.color.flip_text_color'))
       }
       .type(ButtonType.Normal)
+      .padding(8)
       .backgroundColor(Color.Transparent)
       .onClick(() => {
         router.back()

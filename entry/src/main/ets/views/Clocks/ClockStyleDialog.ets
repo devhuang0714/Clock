@@ -7,7 +7,7 @@ const CONTENT_HEIGHT = 180
 
 @Extend(Text)
 function setTabTextStyles(selected: boolean) {
-  .fontSize(22)
+  .fontSize(18)
   .fontColor($r('app.color.flip_text_color'))
   .borderWidth({
     top: 0,
@@ -16,7 +16,7 @@ function setTabTextStyles(selected: boolean) {
     bottom: 2
   })
   .borderColor(selected ? $r('app.color.flip_text_color') : Color.Transparent)
-  .height(36)
+  .height(32)
 }
 
 enum TabType {
@@ -102,7 +102,7 @@ export struct ClockStyleDialog {
     Column() {
       Column() {
         Scroll() {
-          Row({ space: 24 }) {
+          Row({ space: 16 }) {
             ForEach(this.tabItems, (item: TabItem) => {
               Text(item.title)
                 .setTabTextStyles(this.selectedTabItem.type == item.type)
@@ -206,7 +206,7 @@ export struct ClockStyleDialog {
           .alignContent(Alignment.BottomEnd)
         }
         .border({
-          width: 3,
+          width: 2,
           color: this.isSelected(item) ? Color.Green : $r('app.color.flip_card_bg_color'),
           radius: 8
         })
@@ -287,7 +287,7 @@ struct ColorsView {
         }
         .backgroundColor(color)
         .border({
-          width: 3,
+          width: 2,
           color: this.selectedColor == color ? Color.Green : color,
           radius: 8
         })
@@ -301,7 +301,7 @@ struct ColorsView {
         })
       })
     }
-    .height(46)
+    .height(40)
     .columnsGap(12)
     .rowsTemplate('1fr')
     .scrollBar(BarState.Off)

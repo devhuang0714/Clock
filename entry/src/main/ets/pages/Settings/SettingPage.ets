@@ -62,9 +62,9 @@ export struct SettingPage {
           })
         })
       }
-      .columnsGap(24)
-      .rowsGap(24)
-      .padding({ left: 24, right: 24 })
+      .columnsGap(12)
+      .rowsGap(12)
+      .padding({ left: 12, right: 12 })
 
       Blank()
         .layoutWeight(1)
@@ -72,10 +72,11 @@ export struct SettingPage {
       Button() {
         Text(Icons.PACK_UP)
           .fontFamily(Icons.FONT_FAMILY)
-          .fontSize(40)
+          .fontSize(28)
           .fontColor($r('app.color.flip_text_color'))
       }
       .type(ButtonType.Normal)
+      .padding(8)
       .backgroundColor(Color.Transparent)
       .onClick(() => {
         router.back()
@@ -95,14 +96,14 @@ export struct SettingPage {
     Column({ space: 24 }) {
       Text(unicode)
         .fontFamily(Icons.FONT_FAMILY)
-        .fontSize(40)
+        .fontSize(36)
         .fontColor($r('app.color.flip_text_color'))
 
       Text(title)
-        .fontSize(20)
+        .fontSize(16)
         .fontColor($r('app.color.flip_text_color'))
     }
-    .width(140)
+    .width(120)
     .aspectRatio(1)
     .justifyContent(FlexAlign.Center)
     .alignItems(HorizontalAlign.Center)

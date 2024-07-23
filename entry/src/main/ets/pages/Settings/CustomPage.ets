@@ -81,27 +81,27 @@ struct CustomPage {
     ListItem() {
       Row() {
         Text('表盘字体')
-          .fontSize(18)
+          .fontSize(16)
           .fontColor($r('app.color.flip_text_color'))
 
         Blank()
 
         Row() {
           Text('中号')
-            .fontSize(18)
+            .fontSize(16)
             .fontColor($r('app.color.flip_text_color'))
             .padding(6)
             .height('100%')
             .backgroundColor(Color.Green)
 
           Text('大号')
-            .fontSize(20)
+            .fontSize(18)
             .fontColor($r('app.color.flip_text_color'))
             .padding(6)
             .height('100%')
 
           Text('超大号')
-            .fontSize(22)
+            .fontSize(20)
             .fontColor($r('app.color.flip_text_color'))
             .padding(6)
             .height('100%')
@@ -126,7 +126,7 @@ struct CustomPage {
     ListItem() {
       Row() {
         Text(options.title)
-          .fontSize(18)
+          .fontSize(16)
           .fontColor($r('app.color.flip_text_color'))
 
         Blank()

@@ -20,6 +20,7 @@ import {
 } from '../views/Clocks/ClockConfig'
 import { NormalDigitalClock } from '../views/Clocks/NormalDigitalClock';
 import { BusinessError } from '@kit.BasicServicesKit';
+import dataPreferences from '@ohos.data.preferences';
 
 // 持久化存储UI状态
 PersistentStorage.persistProp('currentColorMode', ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT)
@@ -109,6 +110,9 @@ struct Index {
 
   onColorModeChange(): void {
     this.isDark = this.currentMode == ConfigurationConstant.ColorMode.COLOR_MODE_DARK
+    const preferences = dataPreferences.getPreferencesSync(getContext(), { name: AppConstants.BUNDLE_NAME })
+    preferences.putSync('defaultColorMode', this.currentMode)
+    preferences.flush()
   }
 
   onConfigChange() {

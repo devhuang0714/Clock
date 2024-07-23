@@ -5,20 +5,33 @@
         "name": "default",
         "type": "HarmonyOS",
         "material": {
-          "storePassword": "000000190515BC2D3F27D5D51D7D68E7452056B4195D0A894664804C0B26935305CF80EC48722896B3",
           "certpath": "/Users/huangyuxun/Desktop/Projects/Clock/resources/key/release/book_release.cer",
+          "storePassword": "00000019D186E45E3BDDDA44537CE389EE272A5C1AF93DF146A4D25C0B37AB31097AC1FDB1639139CB",
           "keyAlias": "book_release",
-          "keyPassword": "000000199C144BC781AF2075A2B8B6029B2ADA2C0A4F87A273F8928D794E0C1ADF74823D8C84F89791",
+          "keyPassword": "00000019B0C804B0C879441B81693AAEAB5C4E67D8896E74176E390AF688F7955722C40247E26D8469",
           "profile": "/Users/huangyuxun/Desktop/Projects/Clock/resources/key/release/clock_release.p7b",
           "signAlg": "SHA256withECDSA",
           "storeFile": "/Users/huangyuxun/Desktop/Projects/Clock/resources/key/release/book_release.p12"
+        }
+      },
+      {
+        "name": "debug",
+        "type": "HarmonyOS",
+        "material": {
+          "storePassword": "00000019B1E8F692CBDB6A7405B005932A94992A2FBCBC2CDE517F54C86A3588FF64223AE5844006C7",
+          "certpath": "/Users/huangyuxun/Desktop/Projects/Clock/resources/key/debug/book_debug.cer",
+          "keyAlias": "debug",
+          "keyPassword": "000000197BD527850014725EB08F544716754E3BEE1754C32480ED6BB94821F5E61CE388B57CC8195F",
+          "profile": "/Users/huangyuxun/Desktop/Projects/Clock/resources/key/debug/clock_debug.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/huangyuxun/Desktop/Projects/Clock/resources/key/debug/book_debug.p12"
         }
       }
     ],
     "products": [
       {
         "name": "default",
-        "signingConfig": "default",
+        "signingConfig": "debug",
         "compileSdkVersion": "4.1.0(11)",
         "compatibleSdkVersion": "4.1.0(11)",
         "runtimeOS": "HarmonyOS",

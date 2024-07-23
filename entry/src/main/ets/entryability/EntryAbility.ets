@@ -6,14 +6,19 @@ import font from '@ohos.font';
 import { GlobalContext } from 'utils/Index'
 import { AppConstants } from '../common/constants/Constants';
 import { UT } from '../common/usertrack/UserTrack'
+import dataPreferences from '@ohos.data.preferences';
 
 export default class EntryAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onCreate');
     GlobalContext.getContext().setObject('entryContext', this.context);
 
-    AppStorage.setOrCreate('currentColorMode', this.context.config.colorMode);
-    this.context.getApplicationContext().setColorMode(this.context.config.colorMode);
+    const preferences = dataPreferences.getPreferencesSync(this.context, {
+      name: AppConstants.BUNDLE_NAME
+    })
+    const colorMode = preferences.getSync('defaultColorMode', this.context.config.colorMode) as ConfigurationConstant.ColorMode
+    AppStorage.setOrCreate('currentColorMode', colorMode);
+    this.context.getApplicationContext().setColorMode(colorMode);
 
     // 预初始化统计SDK
     UT.preInit({
