@@ -13,7 +13,7 @@ function setTextStyles(fontSize: number, fontColor: ResourceColor) {
   .width('100%')
 }
 
-@Component
+@Component({ freezeWhenInactive: true })
 export struct RotateClock {
   controller: ClockController = new ClockController()
   date: Date = new Date()
@@ -196,6 +196,7 @@ export struct RotateClock {
     } else if (this.style == ClockStyle.Style2) {
       Blank()
         .width(36)
+        .aspectRatio(1)
 
       RotateCard({
         controller: this.secondsController,
@@ -222,7 +223,7 @@ class RotateCardController {
   }
 }
 
-@Component({ freezeWhenInactive: true })
+@Component
 struct RotateCard {
   controller: RotateCardController = new RotateCardController()
   duration: number = 1000

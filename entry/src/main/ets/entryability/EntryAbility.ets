@@ -64,6 +64,10 @@ export default class EntryAbility extends UIAbility {
           'name': 'digital-num-font',
           'rawfile': 'digital-num-font.ttf'
         },
+        {
+          'name': 'digital-num-font1',
+          'rawfile': 'digital-num-font1.ttf'
+        },
       ]
       // 注册IconFont
       fonts.map((item) => {
