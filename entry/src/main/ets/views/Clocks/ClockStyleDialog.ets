@@ -108,6 +108,7 @@ export struct ClockStyleDialog {
                 .setTabTextStyles(this.selectedTabItem.type == item.type)
                 .onClick(() => {
                   this.selectedTabItem = item
+                  startVibration()
                 })
             })
           }

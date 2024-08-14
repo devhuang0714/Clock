@@ -319,9 +319,10 @@ export struct HalfCard {
   build() {
     Column() {
       Text(this.text)
-        .setTextStyles(this.fontSize, this.fontColor, this.type === HalfCardType.Top ? this.fontSize * 0.5 : 0, this.space)
+        .setTextStyles(this.fontSize, this.fontColor, this.type === HalfCardType.Top ? -this.fontSize * 0.5 : 0, this.space)
         .width(this.textWidth)
     }
+    .clip(true)
     .padding({
       left: this.horizontalMargin,
       right: this.horizontalMargin,

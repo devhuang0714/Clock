@@ -7,6 +7,7 @@ import { BusinessError } from '@kit.BasicServicesKit';
 import { Icons } from '../../common/constants/Constants';
 import { AppInfo } from '../../common/utils/AppInfo'
 import pasteboard from '@ohos.pasteboard';
+import { deviceInfo } from '@kit.BasicServicesKit';
 
 @Entry
 @Component
@@ -15,6 +16,14 @@ struct FeedbackPage {
   controller: TextAreaController = new TextAreaController()
 
   async commit() {
+    const extInfo = `
+    appVersion: v${AppInfo.getVersion()}
+    deviceType: ${deviceInfo.deviceType}
+    manufactureInfo: ${deviceInfo.manufacture}
+    osFullName: ${deviceInfo.osFullName}
+    sdkApiVersionInfo: ${deviceInfo.sdkApiVersion}
+    firstApiVersionInfo: ${deviceInfo.firstApiVersion}`
+
     if (!this.content.trim().length) {
       Toast.show('请输入反馈内容')
       return
@@ -33,7 +42,7 @@ struct FeedbackPage {
       [], // 暗送列表
       "【翻页时钟】意见反馈", // 邮件标题
       '', // 富文本正文
-      this.content.trim() + '\n\n' + `v${AppInfo.getVersion()}`, // 纯文本正文
+      this.content.trim() + '\n\n' + extInfo, // 纯文本正文
       [], // 内联图片
       []
     );
@@ -113,14 +122,19 @@ struct FeedbackPage {
 
   @Builder
   CommitItem() {
-    Row({ space: 18 }) {
-      Text(Icons.EMAIL)
-        .fontFamily(Icons.FONT_FAMILY)
-        .fontSize(24)
-        .fontColor($r('app.color.flip_text_color'))
-        .onClick(() => {
-          this.sendEmail()
-        })
+    Row({ space: 6 }) {
+      Button() {
+        Text(Icons.EMAIL)
+          .fontFamily(Icons.FONT_FAMILY)
+          .fontSize(24)
+          .fontColor($r('app.color.flip_text_color'))
+      }
+      .type(ButtonType.Normal)
+      .backgroundColor(Color.Transparent)
+      .padding(8)
+      .onClick(() => {
+        this.sendEmail()
+      })
 
       Button() {
         Text('提交')
@@ -135,7 +149,8 @@ struct FeedbackPage {
       }
       .type(ButtonType.Normal)
       .backgroundColor(Color.Transparent)
-      .margin({ right: 24 })
+      .padding(8)
+      .margin({ right: 16 })
     }
     .alignItems(VerticalAlign.Center)
     .height('100%')
