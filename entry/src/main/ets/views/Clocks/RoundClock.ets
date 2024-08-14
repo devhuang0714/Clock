@@ -26,7 +26,7 @@ export struct RoundClock {
   }
 
   aboutToAppear() {
-    this.getSize();
+    // this.getSize();
     this.controller.registerListener(this.listener)
   }
 
