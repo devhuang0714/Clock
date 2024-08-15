@@ -17,12 +17,14 @@ struct FeedbackPage {
 
   async commit() {
     const extInfo = `
-    appVersion: v${AppInfo.getVersion()}
+    appVersion: ${AppInfo.getVersion()}
     deviceType: ${deviceInfo.deviceType}
     manufactureInfo: ${deviceInfo.manufacture}
+    marketName: ${deviceInfo.marketName}
     osFullName: ${deviceInfo.osFullName}
     sdkApiVersionInfo: ${deviceInfo.sdkApiVersion}
-    firstApiVersionInfo: ${deviceInfo.firstApiVersion}`
+    firstApiVersionInfo: ${deviceInfo.firstApiVersion}
+    odid: ${deviceInfo.ODID}`
 
     if (!this.content.trim().length) {
       Toast.show('请输入反馈内容')

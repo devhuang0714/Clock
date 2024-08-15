@@ -207,7 +207,7 @@ export struct RotateClock {
         fontSize: 30,
         horizontalMargin: 3,
         verticalMargin: 5,
-        duration: 950,
+        duration: 985,
         maxLength: 2
       })
     }

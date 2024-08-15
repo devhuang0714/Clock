@@ -1,6 +1,4 @@
 import webview from '@ohos.web.webview'
-import { GlobalContext } from 'utils/Index'
-import { Icons } from '../../common/constants/Constants';
 import router from '@ohos.router';
 import { NavigationBar } from '../../views/NavigationBar'
 
@@ -34,6 +32,5 @@ struct PrivacyPage {
       this.webviewController.backward()
       return true
     }
-    GlobalContext.getContext().setObject('isJumpPrivacy', false);
   }
 }
