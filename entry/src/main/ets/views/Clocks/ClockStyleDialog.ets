@@ -1,9 +1,13 @@
 import { Icons } from '../../common/constants/Constants'
-import { ClockConfig, CLOCK_CONFIGS } from './ClockConfig'
+import { ClockConfig, ClockType, CLOCK_CONFIGS } from './ClockConfig'
 import display from '@ohos.display';
 import { startVibration } from '../../common/utils/Vibrator'
-
-const CONTENT_HEIGHT = 180
+import { FlipClock } from './FlipClock';
+import { RoundClock } from './RoundClock';
+import { DigitalClock } from './DigitalClock';
+import { RotateClock } from './RotateClock';
+import { LunarCalendarClock } from './LunarCalendarClock';
+import { NormalDigitalClock } from './NormalDigitalClock';
 
 @Extend(Text)
 function setTabTextStyles(selected: boolean) {
@@ -34,10 +38,12 @@ interface TabItem {
 
 @CustomDialog
 export struct ClockStyleDialog {
+  static CONTENT_HEIGHT: number = 120
   controller: CustomDialogController
   onSelected: (config: ClockConfig) => void = () => {
   }
-  @State offsetY: number = CONTENT_HEIGHT
+  @State clockStyleHeight: number = 60
+  @State offsetY: number = ClockStyleDialog.CONTENT_HEIGHT
   @State tabItems: TabItem[] = [{
     title: '主题皮肤',
     type: TabType.Theme
@@ -46,10 +52,15 @@ export struct ClockStyleDialog {
   @Watch('changeConfig') @Prop selectedConfig: ClockConfig = CLOCK_CONFIGS[0]
   @State selectedTabItem: TabItem = this.tabItems[0]
   private scroller: Scroller = new Scroller()
+  private previewDate: Date = new Date('2024-09-22 09:22:00')
 
   aboutToAppear(): void {
     // 深拷贝，防止直接修改原数据
     this.selectedConfig = this.deepCopy(this.selectedConfig)
+
+    // this.clockStyleHeight = Math.max(AppInfo.getScreenHeight() * 0.11, 60)
+    this.clockStyleHeight = 60
+    ClockStyleDialog.CONTENT_HEIGHT = this.clockStyleHeight + 120
   }
 
   deepCopy<T>(item: T): T {
@@ -157,7 +168,7 @@ export struct ClockStyleDialog {
           })
         }
       }
-      .height(CONTENT_HEIGHT)
+      .height(ClockStyleDialog.CONTENT_HEIGHT)
       .width('100%')
       .padding(12)
       .backgroundColor($r('app.color.cover_bg_color'))
@@ -168,7 +179,7 @@ export struct ClockStyleDialog {
       .animation({
         duration: 400,
         onFinish: () => {
-          if (this.offsetY == CONTENT_HEIGHT) {
+          if (this.offsetY == ClockStyleDialog.CONTENT_HEIGHT) {
             this.controller.close()
           }
         }
@@ -184,18 +195,17 @@ export struct ClockStyleDialog {
       this.offsetY = 0
     })
     .onClick(() => {
-      this.offsetY = CONTENT_HEIGHT
+      this.offsetY = ClockStyleDialog.CONTENT_HEIGHT
     })
   }
 
   @Builder
   ClockStylesView(type: TabType) {
     Grid(this.scroller) {
-      ForEach(this.clockItems, (item: ClockConfig) => {
+      ForEach(this.clockItems, (item: ClockConfig, index: number) => {
         GridItem() {
           Stack() {
-            Image(item.preview)
-              .objectFit(ImageFit.Contain)
+            this.PreviewClockView(item)
 
             if (this.isSelected(item)) {
               Text(Icons.CHECKED)
@@ -206,6 +216,7 @@ export struct ClockStyleDialog {
           }
           .alignContent(Alignment.BottomEnd)
         }
+        .width(this.clockStyleHeight * 1150 / 534)
         .border({
           width: 2,
           color: this.isSelected(item) ? Color.Green : $r('app.color.flip_card_bg_color'),
@@ -224,7 +235,7 @@ export struct ClockStyleDialog {
         })
       })
     }
-    .height(60)
+    .height(this.clockStyleHeight)
     .columnsGap(12)
     .rowsTemplate('1fr')
     .scrollBar(BarState.Off)
@@ -234,6 +245,69 @@ export struct ClockStyleDialog {
         const index = this.clockItems.findIndex(item => item.id === this.selectedConfig.id)
         this.scroller.scrollToIndex(index)
       }, 100)
+    })
+  }
+
+  @Builder
+  PreviewClockView(clockConfig: ClockConfig) {
+    RelativeContainer() {
+      Column() {
+        if (clockConfig.type == ClockType.Flip) {
+          FlipClock({
+            date: this.previewDate,
+            colorsConfig: clockConfig.colors,
+            isLandscape: true
+          })
+        } else if (clockConfig.type == ClockType.Round) {
+          RoundClock({
+            date: this.previewDate
+          })
+        } else if (clockConfig.type == ClockType.Digital) {
+          DigitalClock({
+            date: this.previewDate,
+            colorsConfig: clockConfig.colors,
+          })
+        } else if (clockConfig.type == ClockType.Rotate) {
+          RotateClock({
+            date: this.previewDate,
+            style: clockConfig.style,
+            colorsConfig: clockConfig.colors,
+            lightOn: clockConfig.ext.lightOn,
+            isLandscape: true,
+          })
+        } else if (clockConfig.type == ClockType.LunarCalendar) {
+          LunarCalendarClock({
+            date: this.previewDate,
+            style: clockConfig.style,
+            colorsConfig: clockConfig.colors,
+            isLandscape: true,
+          })
+        } else if (clockConfig.type == ClockType.NormalDigital) {
+          NormalDigitalClock({
+            date: this.previewDate,
+            colorsConfig: clockConfig.colors,
+            isLandscape: true,
+          })
+        }
+      }
+      .justifyContent(FlexAlign.Center)
+      .backgroundColor(clockConfig.colors.backgroundColor)
+      .alignRules({
+        top: { anchor: "__container__", align: VerticalAlign.Top },
+        left: { anchor: "__container__", align: HorizontalAlign.Start },
+        right: { anchor: "__container__", align: HorizontalAlign.End },
+        bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
+      })
+      .id("preview_clock")
+      .height(534)
+      .width(1150)
+    }
+    .width('100%')
+    .height('100%')
+    .backgroundColor(Color.Transparent)
+    .scale({
+      x: this.clockStyleHeight / 534,
+      y: this.clockStyleHeight / 534
     })
   }
 }

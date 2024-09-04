@@ -1,9 +1,9 @@
 import bundleManager from '@ohos.bundle.bundleManager';
 import { BusinessError } from '@ohos.base';
 import HYLogger from './HYLogger'
+import {display} from '@kit.ArkUI'
 
 export class AppInfo {
-
   static getVersion(): string {
     let bundleFlags = bundleManager.BundleFlag.GET_BUNDLE_INFO_WITH_HAP_MODULE | bundleManager.BundleFlag.GET_BUNDLE_INFO_WITH_ABILITY | bundleManager.BundleFlag.GET_BUNDLE_INFO_WITH_REQUESTED_PERMISSION;
 
@@ -17,5 +17,13 @@ export class AppInfo {
       HYLogger.error('testTag', 'getBundleInfoForSelfSync failed: %{public}s', message);
     }
     return version
+  }
+
+  static getScreenWidth(): number {
+    return px2vp(display.getDefaultDisplaySync().width)
+  }
+
+  static getScreenHeight(): number {
+    return px2vp(display.getDefaultDisplaySync().height)
   }
 }

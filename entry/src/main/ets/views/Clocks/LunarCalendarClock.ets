@@ -42,7 +42,11 @@ export struct LunarCalendarClock {
       this.hours = hours.toString().padStart(2, '0')
       this.minutes = date.getMinutes().toString().padStart(2, '0')
       this.seconds = date.getSeconds().toString().padStart(2, '0')
-      this.week = date.getDay().toString()
+      if (date.getDay() === 7) {
+        this.week = '日'
+      } else {
+        this.week = date.getDay().toString()
+      }
 
       chinesCalendar.setTime(date)
       this.chineseMonth = chinesCalendar.get('month').toString().padStart(2, '0')

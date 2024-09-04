@@ -1,7 +1,6 @@
 import { AppConstants } from '../../common/constants/Constants'
 import { DEFAULT_GLOBAL_CONFIG, GlobalClockConfig } from '../../views/Clocks/ClockConfig'
 import { NavigationBar } from '../../views/NavigationBar'
-import { ConfigurationConstant } from '@kit.AbilityKit'
 
 interface CustomOptions {
   title: string,
@@ -135,6 +134,8 @@ struct CustomPage {
           type: ToggleType.Switch,
           isOn: options.isOn
         })
+          .width(60)
+          .height(40)
           .selectedColor(Color.Green)
           .onChange(onChange)
       }

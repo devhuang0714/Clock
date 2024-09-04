@@ -1,6 +1,12 @@
 import { AppConstants, Icons } from '../../common/constants/Constants'
 import router from '@ohos.router';
-import { ClockConfig, CLOCK_CONFIGS } from '../../views/Clocks/ClockConfig';
+import { ClockConfig, ClockType, CLOCK_CONFIGS } from '../../views/Clocks/ClockConfig';
+import { FlipClock } from '../../views/Clocks/FlipClock';
+import { RoundClock } from '../../views/Clocks/RoundClock';
+import { DigitalClock } from '../../views/Clocks/DigitalClock';
+import { RotateClock } from '../../views/Clocks/RotateClock';
+import { LunarCalendarClock } from '../../views/Clocks/LunarCalendarClock';
+import { NormalDigitalClock } from '../../views/Clocks/NormalDigitalClock';
 
 @Entry
 @Component
@@ -8,6 +14,7 @@ struct ClockTheme {
   @State clockItems: ClockConfig[] = CLOCK_CONFIGS
   @State selectedConfig: ClockConfig = CLOCK_CONFIGS[0]
   @StorageProp('isLandscape') isLandscape: boolean = false
+  private previewDate: Date = new Date('2024-09-22 09:22:00')
 
   pageTransition() {
     PageTransitionEnter({ type: RouteType.Push, duration: 300 })
@@ -55,8 +62,7 @@ struct ClockTheme {
         ForEach(this.clockItems, (item: ClockConfig) => {
           GridItem() {
             Stack() {
-              Image(item.preview)
-                .objectFit(ImageFit.Contain)
+              this.PreviewClockView(item)
 
               if (this.isSelected(item)) {
                 Text(Icons.CHECKED)
@@ -67,6 +73,8 @@ struct ClockTheme {
             }
             .alignContent(Alignment.BottomEnd)
           }
+          .height(60)
+          .width(60 * 1150 / 534)
           .border({
             width: 2,
             color: this.isSelected(item) ? Color.Green : $r('app.color.flip_card_bg_color'),
@@ -103,6 +111,69 @@ struct ClockTheme {
       bottom: AppConstants.DEFAULT_NAV_HEIGHT,
       left: 24,
       right: 24
+    })
+  }
+
+  @Builder
+  PreviewClockView(clockConfig: ClockConfig) {
+    RelativeContainer() {
+      Column() {
+        if (clockConfig.type == ClockType.Flip) {
+          FlipClock({
+            date: this.previewDate,
+            colorsConfig: clockConfig.colors,
+            isLandscape: true
+          })
+        } else if (clockConfig.type == ClockType.Round) {
+          RoundClock({
+            date: this.previewDate
+          })
+        } else if (clockConfig.type == ClockType.Digital) {
+          DigitalClock({
+            date: this.previewDate,
+            colorsConfig: clockConfig.colors,
+          })
+        } else if (clockConfig.type == ClockType.Rotate) {
+          RotateClock({
+            date: this.previewDate,
+            style: clockConfig.style,
+            colorsConfig: clockConfig.colors,
+            lightOn: clockConfig.ext.lightOn,
+            isLandscape: true,
+          })
+        } else if (clockConfig.type == ClockType.LunarCalendar) {
+          LunarCalendarClock({
+            date: this.previewDate,
+            style: clockConfig.style,
+            colorsConfig: clockConfig.colors,
+            isLandscape: true,
+          })
+        } else if (clockConfig.type == ClockType.NormalDigital) {
+          NormalDigitalClock({
+            date: this.previewDate,
+            colorsConfig: clockConfig.colors,
+            isLandscape: true,
+          })
+        }
+      }
+      .justifyContent(FlexAlign.Center)
+      .backgroundColor(clockConfig.colors.backgroundColor)
+      .alignRules({
+        top: { anchor: "__container__", align: VerticalAlign.Top },
+        left: { anchor: "__container__", align: HorizontalAlign.Start },
+        right: { anchor: "__container__", align: HorizontalAlign.End },
+        bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
+      })
+      .id("preview_clock")
+      .height(534)
+      .width(1150)
+    }
+    .width('100%')
+    .height('100%')
+    .backgroundColor(Color.Transparent)
+    .scale({
+      x: 60 / 534,
+      y: 60 / 534
     })
   }
 }

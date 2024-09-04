@@ -143,16 +143,16 @@ struct FeedbackPage {
           .fontSize(18)
           .fontColor($r('app.color.blue'))
           .fontWeight(FontWeight.Medium)
-          .onClick(() => {
-            this.controller.stopEditing()
-            this.content = this.content.trim()
-            this.commit()
-          })
       }
       .type(ButtonType.Normal)
       .backgroundColor(Color.Transparent)
       .padding(8)
       .margin({ right: 16 })
+      .onClick(() => {
+        this.controller.stopEditing()
+        this.content = this.content.trim()
+        this.commit()
+      })
     }
     .alignItems(VerticalAlign.Center)
     .height('100%')
