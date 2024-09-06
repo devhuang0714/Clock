@@ -14,7 +14,7 @@ struct ClockTheme {
   @State clockItems: ClockConfig[] = CLOCK_CONFIGS
   @State selectedConfig: ClockConfig = CLOCK_CONFIGS[0]
   @StorageProp('isLandscape') isLandscape: boolean = false
-  private previewDate: Date = new Date('2024-09-22 09:22:00')
+  private previewDate: Date = new Date('2022-09-22 09:22:00')
 
   pageTransition() {
     PageTransitionEnter({ type: RouteType.Push, duration: 300 })
@@ -80,6 +80,7 @@ struct ClockTheme {
             color: this.isSelected(item) ? Color.Green : $r('app.color.flip_card_bg_color'),
             radius: 8
           })
+          .clip(true)
           .onClick(() => {
             this.selectedConfig = item
           })

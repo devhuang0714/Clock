@@ -52,7 +52,7 @@ export struct ClockStyleDialog {
   @Watch('changeConfig') @Prop selectedConfig: ClockConfig = CLOCK_CONFIGS[0]
   @State selectedTabItem: TabItem = this.tabItems[0]
   private scroller: Scroller = new Scroller()
-  private previewDate: Date = new Date('2024-09-22 09:22:00')
+  private previewDate: Date = new Date('2022-09-22 09:22:00')
 
   aboutToAppear(): void {
     // 深拷贝，防止直接修改原数据
@@ -222,6 +222,7 @@ export struct ClockStyleDialog {
           color: this.isSelected(item) ? Color.Green : $r('app.color.flip_card_bg_color'),
           radius: 8
         })
+        .clip(true)
         .onClick(() => {
           if (!this.isSelected(item)) {
             startVibration()
