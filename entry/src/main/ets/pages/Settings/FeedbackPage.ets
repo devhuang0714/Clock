@@ -38,11 +38,11 @@ struct FeedbackPage {
     });
     const transport = engine.getTransport();
     await transport.sendMail(
-      { name: "数字翻页时钟", email: 'hytest2020@yeah.net' }, // 发件人
+      { name: "小布丁时钟", email: 'hytest2020@yeah.net' }, // 发件人
       [{ name: "development", email: "devhuang0714@gmail.com" }], // 收件人列表
       [], // 抄送列表
       [], // 暗送列表
-      "【数字翻页时钟】意见反馈", // 邮件标题
+      "【小布丁时钟】意见反馈", // 邮件标题
       '', // 富文本正文
       this.content.trim() + '\n\n' + extInfo, // 纯文本正文
       [], // 内联图片

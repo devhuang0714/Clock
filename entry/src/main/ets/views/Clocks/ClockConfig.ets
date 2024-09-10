@@ -1,7 +1,7 @@
 import { ClockController } from './ClockController'
 
 export enum ClockType {
-  Flip,          // 数字翻页时钟
+  Flip,          // 小布丁时钟
   Round,         // 圆形时钟
   Digital,       // 数码时钟
   Rotate,        // 旋转时钟
