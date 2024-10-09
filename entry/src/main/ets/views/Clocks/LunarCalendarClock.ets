@@ -1,8 +1,9 @@
 import { ClockController, ClockListener } from './ClockController'
 import { ClockColorsConfig, ClockStyle, DEFAULT_GLOBAL_CONFIG, GlobalClockConfig } from './ClockConfig';
 import { chinesCalendar, DateUtils } from '../../common/utils/DateUtils';
+import { Icons } from '../../common/constants/Constants';
 
-const FONT_FAMILY = 'digital-num-font'
+const FONT_FAMILY = Icons.DIGITAL_NUM_FONT_FAMILY
 
 @Extend(Text)
 function setTextStyles(fontSize: number, fontColor: ResourceColor) {

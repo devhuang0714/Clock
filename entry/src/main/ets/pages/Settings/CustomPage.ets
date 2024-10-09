@@ -136,6 +136,7 @@ struct CustomPage {
         })
           .width(60)
           .height(40)
+          .padding(8)
           .selectedColor(Color.Green)
           .onChange(onChange)
       }

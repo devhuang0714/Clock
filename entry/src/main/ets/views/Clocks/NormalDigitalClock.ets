@@ -1,10 +1,11 @@
 import { ClockColorsConfig, DEFAULT_GLOBAL_CONFIG, GlobalClockConfig } from './ClockConfig'
 import { ClockController, ClockListener } from './ClockController'
 import { DateUtils } from '../../common/utils/DateUtils'
+import { Icons } from '../../common/constants/Constants'
 
 @Extend(Text)
 function setTextStyles(fontSize: number, fontColor: ResourceColor) {
-  .fontFamily('digital-num-font')
+  .fontFamily(Icons.DIGITAL_NUM_FONT_FAMILY)
   .fontColor(fontColor)
   .fontWeight(FontWeight.Medium)
   .textAlign(TextAlign.Center)

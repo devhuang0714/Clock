@@ -81,7 +81,7 @@ struct Index {
 
   aboutToDisappear(): void {
     clearInterval(this.intervalId)
-    clearTimeout(this.cleanTimeoutId)
+    // clearTimeout(this.cleanTimeoutId)
   }
 
   onPageShow(): void {
@@ -98,14 +98,14 @@ struct Index {
   }
 
   onCleanChange() {
-    if (this.cleanTimeoutId != 0) {
-      clearTimeout(this.cleanTimeoutId)
-    }
-    if (!this.isClean) {
-      this.cleanTimeoutId = setTimeout(() => {
-        this.isClean = true
-      }, 8000)
-    }
+    // if (this.cleanTimeoutId != 0) {
+    //   clearTimeout(this.cleanTimeoutId)
+    // }
+    // if (!this.isClean) {
+    //   this.cleanTimeoutId = setTimeout(() => {
+    //     this.isClean = true
+    //   }, 8000)
+    // }
   }
 
   onColorModeChange(): void {

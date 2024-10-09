@@ -5,8 +5,16 @@ export class AppConstants {
 }
 
 export class Icons {
-  static readonly FONT_FAMILY: string = 'iconfont'
-  static readonly FAMILY_SRC: ResourceStr = $rawfile('iconfont.ttf')
+  static readonly FONT_FAMILY: string = AppConstants.BUNDLE_NAME + 'iconfont'
+  static readonly FAMILY_SRC: ResourceStr = $rawfile('com.hyx.clock.iconfont.ttf')
+
+  static readonly FLIP_NUM_FONT_FAMILY: string = AppConstants.BUNDLE_NAME + 'flip-num-font'
+  static readonly DIGITAL_NUM_FONT_FAMILY: string = AppConstants.BUNDLE_NAME + 'digital-num-font'
+  static readonly DIGITAL_NUM1_FONT_FAMILY: string = AppConstants.BUNDLE_NAME + 'digital-num-font1'
+
+  static readonly FLIP_NUM_FONT_FAMILY_SRC: ResourceStr = $rawfile('flip-num-font.ttf')
+  static readonly DIGITAL_NUM_FONT_FAMILY_SRC: ResourceStr = $rawfile('digital-num-font.ttf')
+  static readonly DIGITAL_NUM1_FONT_FAMILY_SRC: ResourceStr = $rawfile('digital-num-font1.ttf')
 
   static readonly SETTINGS: string = '\ue785'
   static readonly THEME_DARK: string = '\ue634'

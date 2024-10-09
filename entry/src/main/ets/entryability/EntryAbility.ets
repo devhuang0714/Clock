@@ -4,7 +4,7 @@ import { window } from '@kit.ArkUI';
 import { BusinessError } from '@ohos.base';
 import font from '@ohos.font';
 import { GlobalContext } from 'utils/Index'
-import { AppConstants } from '../common/constants/Constants';
+import { AppConstants, Icons } from '../common/constants/Constants';
 import { UT } from '../common/usertrack/UserTrack'
 import dataPreferences from '@ohos.data.preferences';
 
@@ -51,29 +51,29 @@ export default class EntryAbility extends UIAbility {
       }
       hilog.info(0x0000, 'testTag', 'Succeeded in loading the content.');
 
-      const fonts: Record<string, string>[] = [
+      const fonts: Record<string, ResourceStr>[] = [
         {
-          'name': 'iconfont',
-          'rawfile': 'iconfont.ttf'
+          'name':  Icons.FONT_FAMILY,
+          'rawfile': Icons.FAMILY_SRC
         },
         {
-          'name': 'flip-num-font',
-          'rawfile': 'flip-num-font.ttf'
+          'name': Icons.FLIP_NUM_FONT_FAMILY,
+          'rawfile': Icons.FLIP_NUM_FONT_FAMILY_SRC
         },
         {
-          'name': 'digital-num-font',
-          'rawfile': 'digital-num-font.ttf'
+          'name': Icons.DIGITAL_NUM_FONT_FAMILY,
+          'rawfile': Icons.DIGITAL_NUM_FONT_FAMILY_SRC,
         },
         {
-          'name': 'digital-num-font1',
-          'rawfile': 'digital-num-font1.ttf'
+          'name': Icons.DIGITAL_NUM1_FONT_FAMILY,
+          'rawfile': Icons.DIGITAL_NUM1_FONT_FAMILY_SRC,
         },
       ]
       // 注册IconFont
       fonts.map((item) => {
         font.registerFont({
           familyName: item.name,
-          familySrc: $rawfile(item.rawfile)
+          familySrc: item.rawfile
         })
       })
 
