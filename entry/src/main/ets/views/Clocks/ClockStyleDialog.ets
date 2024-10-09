@@ -8,6 +8,7 @@ import { DigitalClock } from './DigitalClock';
 import { RotateClock } from './RotateClock';
 import { LunarCalendarClock } from './LunarCalendarClock';
 import { NormalDigitalClock } from './NormalDigitalClock';
+import { StereoscopicClock } from './StereoscopicClock';
 
 @Extend(Text)
 function setTabTextStyles(selected: boolean) {
@@ -29,6 +30,7 @@ enum TabType {
   Font,
   CardColor,
   FontColor,
+  ShadowColor,
 }
 
 interface TabItem {
@@ -84,10 +86,16 @@ export struct ClockStyleDialog {
         type: TabType.FontColor
       })
     }
-    if (this.selectedConfig.colors.cardColor != '') {
+    if (this.selectedConfig.colors.cardColor != undefined) {
       tabItems.push({
         title: '卡片颜色',
         type: TabType.CardColor
+      })
+    }
+    if (this.selectedConfig.colors.shadowColor != undefined) {
+      tabItems.push({
+        title: '阴影颜色',
+        type: TabType.ShadowColor
       })
     }
     this.tabItems = tabItems
@@ -164,6 +172,15 @@ export struct ClockStyleDialog {
                 }
               })
                 .visibility(this.selectedTabItem.type == TabType.FontColor ? Visibility.Visible : Visibility.Hidden)
+            } else if (item.type == TabType.ShadowColor) {
+              ColorsView({
+                selectedColor: (this.selectedConfig.colors.shadowColor ?? '') as string,
+                onSelected: (color) => {
+                  this.selectedConfig.colors.shadowColor = color
+                  this.onSelected(this.selectedConfig)
+                }
+              })
+                .visibility(this.selectedTabItem.type == TabType.ShadowColor ? Visibility.Visible : Visibility.Hidden)
             }
           })
         }
@@ -273,7 +290,7 @@ export struct ClockStyleDialog {
             date: this.previewDate,
             style: clockConfig.style,
             colorsConfig: clockConfig.colors,
-            lightOn: clockConfig.ext.lightOn,
+            lightOn: clockConfig.ext?.lightOn ?? false,
             isLandscape: true,
           })
         } else if (clockConfig.type == ClockType.LunarCalendar) {
@@ -285,6 +302,12 @@ export struct ClockStyleDialog {
           })
         } else if (clockConfig.type == ClockType.NormalDigital) {
           NormalDigitalClock({
+            date: this.previewDate,
+            colorsConfig: clockConfig.colors,
+            isLandscape: true,
+          })
+        } else if (clockConfig.type == ClockType.Stereoscopic) {
+          StereoscopicClock({
             date: this.previewDate,
             colorsConfig: clockConfig.colors,
             isLandscape: true,

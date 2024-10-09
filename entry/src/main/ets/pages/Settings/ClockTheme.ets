@@ -7,6 +7,7 @@ import { DigitalClock } from '../../views/Clocks/DigitalClock';
 import { RotateClock } from '../../views/Clocks/RotateClock';
 import { LunarCalendarClock } from '../../views/Clocks/LunarCalendarClock';
 import { NormalDigitalClock } from '../../views/Clocks/NormalDigitalClock';
+import { StereoscopicClock } from '../../views/Clocks/StereoscopicClock';
 
 @Entry
 @Component
@@ -139,7 +140,7 @@ struct ClockTheme {
             date: this.previewDate,
             style: clockConfig.style,
             colorsConfig: clockConfig.colors,
-            lightOn: clockConfig.ext.lightOn,
+            lightOn: clockConfig.ext?.lightOn ?? false,
             isLandscape: true,
           })
         } else if (clockConfig.type == ClockType.LunarCalendar) {
@@ -151,6 +152,12 @@ struct ClockTheme {
           })
         } else if (clockConfig.type == ClockType.NormalDigital) {
           NormalDigitalClock({
+            date: this.previewDate,
+            colorsConfig: clockConfig.colors,
+            isLandscape: true,
+          })
+        } else if (clockConfig.type == ClockType.Stereoscopic) {
+          StereoscopicClock({
             date: this.previewDate,
             colorsConfig: clockConfig.colors,
             isLandscape: true,

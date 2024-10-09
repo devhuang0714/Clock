@@ -31,6 +31,10 @@
     {
       "name": "tool_item_color",
       "value": "#000000"
+    },
+    {
+      "name": "card_shadow_color",
+      "value": "#55acacac"
     }
   ]
 }

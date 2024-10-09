@@ -21,6 +21,7 @@ import {
 import { NormalDigitalClock } from '../views/Clocks/NormalDigitalClock';
 import { BusinessError } from '@kit.BasicServicesKit';
 import dataPreferences from '@ohos.data.preferences';
+import { StereoscopicClock } from '../views/Clocks/StereoscopicClock';
 
 // 持久化存储UI状态
 PersistentStorage.persistProp('currentColorMode', ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT)
@@ -268,7 +269,7 @@ struct Index {
         style: this.clockConfig.style,
         colorsConfig: this.clockConfig.colors,
         globalConfig: this.globalConfig,
-        lightOn: this.clockConfig.ext.lightOn,
+        lightOn: this.clockConfig.ext?.lightOn,
         isLandscape: this.isLandscape,
       })
     } else if (this.clockConfig.type == ClockType.LunarCalendar) {
@@ -282,6 +283,14 @@ struct Index {
       })
     } else if (this.clockConfig.type == ClockType.NormalDigital) {
       NormalDigitalClock({
+        controller: this.clockController,
+        date: this.date,
+        colorsConfig: this.clockConfig.colors,
+        globalConfig: this.globalConfig,
+        isLandscape: this.isLandscape,
+      })
+    } else if (this.clockConfig.type == ClockType.Stereoscopic) {
+      StereoscopicClock({
         controller: this.clockController,
         date: this.date,
         colorsConfig: this.clockConfig.colors,
