@@ -14,7 +14,7 @@ function setTextStyles(fontSize: number, fontColor: ResourceColor, space: number
 
 @Extend(Text)
 function setCardStyles(backgroundColor?: ResourceColor, shadowColor?: ResourceColor) {
-  .shadow({ radius: 30, color: shadowColor ?? $r('app.color.card_shadow_color'), offsetY: 10 })
+  .shadow({ radius: 30, color: shadowColor ?? Color.Transparent, offsetY: 10 })
   .borderRadius(12)
   .backgroundColor(backgroundColor ?? $r('app.color.flip_card_bg_color'))
 }
@@ -68,12 +68,6 @@ export struct StereoscopicClock {
       direction: this.isLandscape ? FlexDirection.Row : FlexDirection.Column,
       justifyContent: FlexAlign.Center,
       alignItems: ItemAlign.Center,
-      space: {
-        main: {
-          value: this.isLandscape ? 0 : 30,
-          unit: LengthUnit.VP
-        }
-      }
     }) {
       Text(this.isPM ? 'PM' : 'AM')
         .fontSize(24)
@@ -92,17 +86,13 @@ export struct StereoscopicClock {
         .setTextStyles(this.fontSize, this.colorsConfig.fontColor, 8)
         .setCardStyles(this.colorsConfig.cardColor, this.colorsConfig.shadowColor)
 
-      Text(':')
-        .setTextStyles(this.fontSize, this.colorsConfig.fontColor, 8)
-        .visibility(this.isLandscape ? Visibility.Visible : Visibility.None)
+      this.Colon()
 
       Text(this.minutes)
         .setTextStyles(this.fontSize, this.colorsConfig.fontColor, 8)
         .setCardStyles(this.colorsConfig.cardColor, this.colorsConfig.shadowColor)
 
-      Text(':')
-        .setTextStyles(this.fontSize, this.colorsConfig.fontColor, 8)
-        .visibility(this.isLandscape ? Visibility.Visible : Visibility.None)
+      this.Colon()
 
       Text(this.seconds)
         .setTextStyles(this.fontSize, this.colorsConfig.fontColor, 8)
@@ -112,6 +102,17 @@ export struct StereoscopicClock {
       Row()
         .width(50)
         .height(50)
+    }
+  }
+
+  @Builder
+  Colon() {
+    if (this.isLandscape) {
+      Text(':')
+        .setTextStyles(this.fontSize, this.colorsConfig.fontColor, 8)
+    } else {
+      Blank()
+        .height(30)
     }
   }
 }

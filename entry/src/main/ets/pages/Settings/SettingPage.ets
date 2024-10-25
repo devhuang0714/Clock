@@ -14,7 +14,7 @@ export struct SettingPage {
     {
       title: '表盘风格',
       unicode: Icons.CLOCK,
-      url: 'pages/Settings/ClockTheme'
+      url: 'pages/Settings/ClockThemesPage'
     },
     {
       title: '自定义',

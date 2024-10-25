@@ -34,7 +34,7 @@
     },
     {
       "name": "card_shadow_color",
-      "value": "#55acacac"
+      "value": "#00000000"
     }
   ]
 }

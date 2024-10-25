@@ -4,7 +4,7 @@
     "pages/LauncherPage",
     "pages/Settings/SettingPage",
     "pages/Settings/PrivacyPage",
-    "pages/Settings/ClockTheme",
+    "pages/Settings/ClockThemesPage",
     "pages/Settings/FeedbackPage",
     "pages/Settings/AboutPage",
     "pages/Settings/CustomPage"

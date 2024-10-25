@@ -63,7 +63,8 @@ export const CLOCK_CONFIGS: ClockConfig[] = [
     colors: {
       backgroundColor: $r('app.color.main_background_color'),
       cardColor: $r('app.color.flip_card_bg_color'),
-      fontColor: $r('app.color.flip_text_color')
+      fontColor: $r('app.color.flip_text_color'),
+      shadowColor: $r('app.color.card_shadow_color')
     }
   },
   {

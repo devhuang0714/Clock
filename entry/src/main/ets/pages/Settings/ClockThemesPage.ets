@@ -11,7 +11,7 @@ import { StereoscopicClock } from '../../views/Clocks/StereoscopicClock';
 
 @Entry
 @Component
-struct ClockTheme {
+struct ClockThemesPage {
   @State clockItems: ClockConfig[] = CLOCK_CONFIGS
   @State selectedConfig: ClockConfig = CLOCK_CONFIGS[0]
   @StorageProp('isLandscape') isLandscape: boolean = false

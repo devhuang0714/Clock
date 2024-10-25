@@ -109,6 +109,7 @@ export struct FlipClock {
       fontSize: this.fontSize,
       fontColor: this.colorsConfig.fontColor,
       color: this.colorsConfig.cardColor,
+      shadowColor: this.colorsConfig.shadowColor,
       space: this.space,
       current: this.hours,
       controller: this.hourController
@@ -122,6 +123,7 @@ export struct FlipClock {
       fontSize: this.fontSize,
       fontColor: this.colorsConfig.fontColor,
       color: this.colorsConfig.cardColor,
+      shadowColor: this.colorsConfig.shadowColor,
       space: this.space,
       current: this.minutes,
       controller: this.minuteController
@@ -135,6 +137,7 @@ export struct FlipClock {
       fontSize: this.fontSize,
       fontColor: this.colorsConfig.fontColor,
       color: this.colorsConfig.cardColor,
+      shadowColor: this.colorsConfig.shadowColor,
       space: this.space,
       current: this.seconds,
       next: this.seconds,
@@ -149,6 +152,7 @@ export struct FlipCard {
   @Prop fontSize: number = 60
   @Prop fontColor: ResourceColor = $r('app.color.flip_text_color')
   @Prop color: ResourceColor = $r('app.color.flip_card_bg_color')
+  @Prop shadowColor?: ResourceColor = $r('app.color.card_shadow_color')
   @State horizontalMargin: number = 12
   @State verticalMargin: number = 20
   @State prev: string = '00'
@@ -277,6 +281,8 @@ export struct FlipCard {
           .visibility(this.isFlipping ? Visibility.Visible : Visibility.Hidden)
       }
     }
+    .borderRadius(8)
+    .shadow({ radius: 30, color: this.shadowColor ?? Color.Transparent, offsetY: 10 })
   }
 }
 
