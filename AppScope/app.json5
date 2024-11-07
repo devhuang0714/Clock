@@ -1,9 +1,9 @@
 {
   "app": {
     "bundleName": "com.hyx.clock",
-    "vendor": "example",
-    "versionCode": 1000000,
-    "versionName": "1.0.0",
+    "vendor": "hyx",
+    "versionCode": 1000010,
+    "versionName": "1.0.1",
     "icon": "$media:app_icon",
     "label": "$string:app_name"
   }
