@@ -130,14 +130,18 @@ export class DateUtils {
    */
   static getLunarDay(date: Date): string {
     chinesCalendar.setTime(date);
-    const chineseDay = chinesCalendar.get("date")
+    const chineseDay = chinesCalendar.get("date");
 
     if (chineseDay <= 10) {
       return `初${chineseNumbers[chineseDay - 1]}`;
-    } else if (chineseDay <= 20) {
-      return `十${chineseDay === 20 ? "" : chineseNumbers[chineseDay - 11]}`;
-    } else if (chineseDay <= 30) {
-      return `${chineseDays[Math.floor(chineseDay / 10)]}${chineseNumbers[(chineseDay % 10) - 1]}`;
+    } else if (chineseDay <= 19) {
+      return `十${chineseNumbers[(chineseDay % 10) - 1]}`;
+    } else if (chineseDay === 20) {
+      return "二十";
+    } else if (chineseDay <= 29) {
+      return `廿${chineseNumbers[(chineseDay % 10) - 1]}`;
+    } else if (chineseDay === 30) {
+      return "三十";
     }
 
     return "";

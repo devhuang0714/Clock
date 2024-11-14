@@ -22,6 +22,7 @@ import { NormalDigitalClock } from '../views/Clocks/NormalDigitalClock';
 import { BusinessError } from '@kit.BasicServicesKit';
 import dataPreferences from '@ohos.data.preferences';
 import { StereoscopicClock } from '../views/Clocks/StereoscopicClock';
+import { UpdateManager } from '../common/utils/UpdateManager';
 
 // 持久化存储UI状态
 PersistentStorage.persistProp('currentColorMode', ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT)
@@ -107,6 +108,10 @@ struct Index {
     //     this.isClean = true
     //   }, 8000)
     // }
+  }
+
+  checkUpdate() {
+    UpdateManager.checkUpdate()
   }
 
   onColorModeChange(): void {
@@ -237,6 +242,7 @@ struct Index {
     })
     .onAppear(() => {
       this.changeOrientation(true)
+      this.checkUpdate()
     })
   }
 

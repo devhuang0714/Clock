@@ -5,11 +5,13 @@ import hilog from '@ohos.hilog';
 import common from '@ohos.app.ability.common'
 import { AppConstants, Icons } from '../../common/constants/Constants';
 import { NavigationBar } from '../../views/NavigationBar'
+import Want from '@ohos.app.ability.Want';
 
 interface AboutItem {
-  icon: string,
-  title: string,
-  url: string
+  title: string
+  unicode: string
+  url?: string
+  action?: () => void
 }
 
 @Entry
@@ -19,15 +21,22 @@ export default struct AboutPage {
   @State versionName: string = 'v1.0.0'
   @State items: AboutItem[] = [
     {
-      icon: Icons.PRIVACY,
+      unicode: Icons.PRIVACY,
       title: '隐私协议',
       url: 'pages/Settings/PrivacyPage',
     },
     {
-      icon: Icons.FEEDBACK,
+      unicode: Icons.FEEDBACK,
       title: '意见反馈',
       url: 'pages/Settings/FeedbackPage',
-    }
+    },
+    {
+      unicode: Icons.CHECK_UPDATE,
+      title: '检查更新',
+      action: () => {
+        this.onCheckUpdate()
+      }
+    },
   ]
 
   aboutToAppear(): void {
@@ -53,6 +62,14 @@ export default struct AboutPage {
     }
   }
 
+  onCheckUpdate() {
+    let context: common.UIAbilityContext = getContext(this) as common.UIAbilityContext;
+    let want: Want = {
+      uri: 'store://appgallery.huawei.com/app/detail?id=com.hyx.clock'
+    }
+    context.startAbility(want)
+  }
+
   build() {
     Column() {
       NavigationBar({
@@ -66,7 +83,7 @@ export default struct AboutPage {
         ForEach(this.items, (item: AboutItem) => {
           ListItem() {
             Row() {
-              Text(item.icon)
+              Text(item.unicode)
                 .fontFamily(Icons.FONT_FAMILY)
                 .fontSize(24)
                 .fontColor($r('app.color.main_text_color'))
@@ -90,7 +107,11 @@ export default struct AboutPage {
             .backgroundColor($r('app.color.flip_card_bg_color'))
           }
           .onClick(() => {
-            router.pushUrl({ url: item.url })
+            if (item.action) {
+              item.action()
+            } else if (item.url) {
+              router.pushUrl({ url: item.url })
+            }
           })
         })
 
