@@ -18,7 +18,7 @@ interface AboutItem {
 @Component
 export default struct AboutPage {
   private context?: common.UIAbilityContext
-  @State versionName: string = 'v1.0.0'
+  @State versionName: string = '1.0.0'
   @State items: AboutItem[] = [
     {
       unicode: Icons.PRIVACY,
@@ -52,7 +52,7 @@ export default struct AboutPage {
         if (err) {
           hilog.error(0x0000, 'testTag', 'getBundleInfoForSelf failed: %{public}s', err.message);
         } else {
-          this.versionName = `v${data.versionName}`
+          this.versionName = data.versionName
           hilog.info(0x0000, 'testTag', 'getBundleInfoForSelf successfully: %{public}s', JSON.stringify(data));
         }
       });
