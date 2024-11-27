@@ -1,9 +1,10 @@
 {
   "app": {
-    "bundleName": "com.hyx.clock",
+    "bundleName": "com.atomicservice.5765880207856072335",
+    "bundleType": "atomicService",
     "vendor": "hyx",
-    "versionCode": 1000020,
-    "versionName": "1.0.2",
+    "versionCode": 1000000,
+    "versionName": "1.0.0",
     "icon": "$media:app_icon",
     "label": "$string:app_name"
   }

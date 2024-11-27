@@ -26,11 +26,11 @@ export struct SettingPage {
       unicode: Icons.FEEDBACK,
       url: 'pages/Settings/FeedbackPage'
     },
-    {
-      title: '分享',
-      unicode: Icons.SHARE,
-      url: 'pages/Settings/SharePage'
-    },
+    // {
+    //   title: '分享',
+    //   unicode: Icons.SHARE,
+    //   url: 'pages/Settings/SharePage'
+    // },
     {
       title: '关于我们',
       unicode: Icons.ABOUT,

@@ -30,13 +30,13 @@ export default struct AboutPage {
       title: '意见反馈',
       url: 'pages/Settings/FeedbackPage',
     },
-    {
-      unicode: Icons.CHECK_UPDATE,
-      title: '检查更新',
-      action: () => {
-        this.onCheckUpdate()
-      }
-    },
+    // {
+    //   unicode: Icons.CHECK_UPDATE,
+    //   title: '检查更新',
+    //   action: () => {
+    //     this.onCheckUpdate()
+    //   }
+    // },
   ]
 
   aboutToAppear(): void {

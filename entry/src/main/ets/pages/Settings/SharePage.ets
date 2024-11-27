@@ -2,10 +2,10 @@ import pasteboard from '@ohos.pasteboard';
 import { Toast } from 'utils/Index';
 import { AppConstants, Icons } from '../../common/constants/Constants';
 import { common } from '@kit.AbilityKit';
-import { systemShare } from '@kit.ShareKit';
+// import { systemShare } from '@kit.ShareKit';
 import { uniformTypeDescriptor as utd } from '@kit.ArkData';
 import fs from '@ohos.file.fs';
-import { fileUri } from '@kit.CoreFileKit';
+// import { fileUri } from '@kit.CoreFileKit';
 import { NavigationBar } from '../../views/NavigationBar';
 
 const downloadUrl: string = `https://appgallery.huawei.com/app/detail?id=${AppConstants.BUNDLE_NAME}`;
@@ -24,61 +24,61 @@ struct SharePage {
   }
 
   getShareImageUri(): string {
-    let context = getContext(this) as common.UIAbilityContext;
-    try {
-      // 沙箱路径
-      let filePath = context.filesDir + '/' + downloadImageName
-      let uri = fileUri.getUriFromPath(filePath)
-      if (fs.accessSync(filePath)) {
-        console.log(`${filePath} 文件已存在`)
-        return uri
-      }
-
-      // 从rawfile中写入沙盒
-      let file = fs.openSync(filePath, fs.OpenMode.CREATE | fs.OpenMode.READ_WRITE)
-      let array = getContext().resourceManager.getRawFileContentSync(`images/${downloadImageName}`)
-      fs.writeSync(file.fd, array.buffer)
-      fs.closeSync(file.fd)
-      console.log(`${filePath} 写入成功`)
-
-      return uri
-    } catch (error) {
-      console.log(`getRawFileContentSync failed: ${error}`)
-    }
+    // let context = getContext(this) as common.UIAbilityContext;
+    // try {
+    //   // 沙箱路径
+    //   let filePath = context.filesDir + '/' + downloadImageName
+    //   let uri = fileUri.getUriFromPath(filePath)
+    //   if (fs.accessSync(filePath)) {
+    //     console.log(`${filePath} 文件已存在`)
+    //     return uri
+    //   }
+    //
+    //   // 从rawfile中写入沙盒
+    //   let file = fs.openSync(filePath, fs.OpenMode.CREATE | fs.OpenMode.READ_WRITE)
+    //   let array = getContext().resourceManager.getRawFileContentSync(`images/${downloadImageName}`)
+    //   fs.writeSync(file.fd, array.buffer)
+    //   fs.closeSync(file.fd)
+    //   console.log(`${filePath} 写入成功`)
+    //
+    //   return uri
+    // } catch (error) {
+    //   console.log(`getRawFileContentSync failed: ${error}`)
+    // }
     return ''
   }
 
   shareAction() {
     // 构造ShareData，需配置一条有效数据信息
-    let data: systemShare.SharedData = new systemShare.SharedData({
-      utd: utd.UniformDataType.PLAIN_TEXT,
-      content: downloadUrl
-    });
-
-    let uri = this.getShareImageUri()
-    if (uri.length > 0) {
-      // 额外再添加一条记录
-      data.addRecord({
-        utd: utd.UniformDataType.PNG,
-        uri: uri
-      });
-    }
-
-    // 构建ShareController
-    let controller: systemShare.ShareController = new systemShare.ShareController(data);
-    // 注册分享面板关闭监听
-    controller.on('dismiss', () => {
-      console.info('Share panel closed');
-      // 分享结束，可处理其他业务。
-    });
-
-    // 获取UIAbility上下文对象
-    let context: common.UIAbilityContext = getContext(this) as common.UIAbilityContext;
-    // 进行分享面板显示
-    controller.show(context, {
-      previewMode: systemShare.SharePreviewMode.DETAIL,
-      selectionMode: systemShare.SelectionMode.SINGLE
-    });
+    // let data: systemShare.SharedData = new systemShare.SharedData({
+    //   utd: utd.UniformDataType.PLAIN_TEXT,
+    //   content: downloadUrl
+    // });
+    //
+    // let uri = this.getShareImageUri()
+    // if (uri.length > 0) {
+    //   // 额外再添加一条记录
+    //   data.addRecord({
+    //     utd: utd.UniformDataType.PNG,
+    //     uri: uri
+    //   });
+    // }
+    //
+    // // 构建ShareController
+    // let controller: systemShare.ShareController = new systemShare.ShareController(data);
+    // // 注册分享面板关闭监听
+    // controller.on('dismiss', () => {
+    //   console.info('Share panel closed');
+    //   // 分享结束，可处理其他业务。
+    // });
+    //
+    // // 获取UIAbility上下文对象
+    // let context: common.UIAbilityContext = getContext(this) as common.UIAbilityContext;
+    // // 进行分享面板显示
+    // controller.show(context, {
+    //   previewMode: systemShare.SharePreviewMode.DETAIL,
+    //   selectionMode: systemShare.SelectionMode.SINGLE
+    // });
   }
 
   build() {

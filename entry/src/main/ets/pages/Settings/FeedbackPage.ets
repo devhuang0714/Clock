@@ -1,4 +1,4 @@
-import { MailEngine } from "@coremail/mail_base";
+// import { MailEngine } from "@coremail/mail_base";
 import router from '@ohos.router';
 import { Toast } from 'utils'
 import { NavigationBar } from '../../views/NavigationBar'
@@ -16,38 +16,38 @@ struct FeedbackPage {
   controller: TextAreaController = new TextAreaController()
 
   async commit() {
-    const extInfo = `
-    appVersion: ${AppInfo.getVersion()}
-    deviceType: ${deviceInfo.deviceType}
-    manufactureInfo: ${deviceInfo.manufacture}
-    marketName: ${deviceInfo.marketName}
-    osFullName: ${deviceInfo.osFullName}
-    sdkApiVersionInfo: ${deviceInfo.sdkApiVersion}
-    firstApiVersionInfo: ${deviceInfo.firstApiVersion}
-    odid: ${deviceInfo.ODID}`
-
-    if (!this.content.trim().length) {
-      Toast.show('请输入反馈内容')
-      return
-    }
-    const engine = new MailEngine();
-    engine.setProperties({
-      imap: { host: 'imap.yeah.net', port: 993, secure: true },
-      smtp: { host: 'smtp.yeah.net', port: 25, secure: false },
-      userInfo: { username: 'hytest2020@yeah.net', password: 'VBZCBPEPKYFTPBRN' },
-    });
-    const transport = engine.getTransport();
-    await transport.sendMail(
-      { name: "小布丁时钟", email: 'hytest2020@yeah.net' }, // 发件人
-      [{ name: "development", email: "devhuang0714@gmail.com" }], // 收件人列表
-      [], // 抄送列表
-      [], // 暗送列表
-      "【小布丁时钟】意见反馈", // 邮件标题
-      '', // 富文本正文
-      this.content.trim() + '\n\n' + extInfo, // 纯文本正文
-      [], // 内联图片
-      []
-    );
+    // const extInfo = `
+    // appVersion: ${AppInfo.getVersion()}
+    // deviceType: ${deviceInfo.deviceType}
+    // manufactureInfo: ${deviceInfo.manufacture}
+    // marketName: ${deviceInfo.marketName}
+    // osFullName: ${deviceInfo.osFullName}
+    // sdkApiVersionInfo: ${deviceInfo.sdkApiVersion}
+    // firstApiVersionInfo: ${deviceInfo.firstApiVersion}
+    // odid: ${deviceInfo.ODID}`
+    //
+    // if (!this.content.trim().length) {
+    //   Toast.show('请输入反馈内容')
+    //   return
+    // }
+    // const engine = new MailEngine();
+    // engine.setProperties({
+    //   imap: { host: 'imap.yeah.net', port: 993, secure: true },
+    //   smtp: { host: 'smtp.yeah.net', port: 25, secure: false },
+    //   userInfo: { username: 'hytest2020@yeah.net', password: 'VBZCBPEPKYFTPBRN' },
+    // });
+    // const transport = engine.getTransport();
+    // await transport.sendMail(
+    //   { name: "小布丁时钟", email: 'hytest2020@yeah.net' }, // 发件人
+    //   [{ name: "development", email: "devhuang0714@gmail.com" }], // 收件人列表
+    //   [], // 抄送列表
+    //   [], // 暗送列表
+    //   "【小布丁时钟】意见反馈", // 邮件标题
+    //   '', // 富文本正文
+    //   this.content.trim() + '\n\n' + extInfo, // 纯文本正文
+    //   [], // 内联图片
+    //   []
+    // );
     router.back()
   }
 
@@ -100,22 +100,31 @@ struct FeedbackPage {
         }
       })
 
-      TextArea({
-        text: $$this.content,
-        placeholder: '快说出您宝贵的意见或建议吧，您的反馈是我改进的动力。\n\n您也可以发送邮件至：devhuang0714@gmail.com',
-        controller: this.controller
-      })
-        .placeholderFont({
-          size: 16
-        })
-        .placeholderColor('#999999')
-        .fontSize(16)
-        .fontColor($r('app.color.main_text_color'))
-        .caretColor('#09AFFF')
-        .margin({ top: 24, left: 12, right: 12 })
-        .padding({ left: 8, right: 8 })
-        .borderRadius(8)
-        .height(200)
+      Row() {
+        Text("快说出您宝贵的意见或建议吧，您的反馈是我改进的动力。\n\n您也可以发送邮件至：devhuang0714@gmail.com")
+          .fontSize(14)
+          .fontColor($r('app.color.main_text_color'))
+      }
+      .padding(24)
+      .width('100%')
+      .justifyContent(FlexAlign.Start)
+
+      // TextArea({
+      //   text: $$this.content,
+      //   placeholder: '快说出您宝贵的意见或建议吧，您的反馈是我改进的动力。\n\n您也可以发送邮件至：devhuang0714@gmail.com',
+      //   controller: this.controller
+      // })
+      //   .placeholderFont({
+      //     size: 16
+      //   })
+      //   .placeholderColor('#999999')
+      //   .fontSize(16)
+      //   .fontColor($r('app.color.main_text_color'))
+      //   .caretColor('#09AFFF')
+      //   .margin({ top: 24, left: 12, right: 12 })
+      //   .padding({ left: 8, right: 8 })
+      //   .borderRadius(8)
+      //   .height(200)
     }
     .width('100%')
     .height('100%')
@@ -138,21 +147,21 @@ struct FeedbackPage {
         this.sendEmail()
       })
 
-      Button() {
-        Text('提交')
-          .fontSize(18)
-          .fontColor($r('app.color.blue'))
-          .fontWeight(FontWeight.Medium)
-      }
-      .type(ButtonType.Normal)
-      .backgroundColor(Color.Transparent)
-      .padding(8)
-      .margin({ right: 16 })
-      .onClick(() => {
-        this.controller.stopEditing()
-        this.content = this.content.trim()
-        this.commit()
-      })
+      // Button() {
+      //   Text('提交')
+      //     .fontSize(18)
+      //     .fontColor($r('app.color.blue'))
+      //     .fontWeight(FontWeight.Medium)
+      // }
+      // .type(ButtonType.Normal)
+      // .backgroundColor(Color.Transparent)
+      // .padding(8)
+      // .margin({ right: 16 })
+      // .onClick(() => {
+      //   this.controller.stopEditing()
+      //   this.content = this.content.trim()
+      //   this.commit()
+      // })
     }
     .alignItems(VerticalAlign.Center)
     .height('100%')

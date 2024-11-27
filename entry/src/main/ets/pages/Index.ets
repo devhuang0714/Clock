@@ -34,7 +34,8 @@ PersistentStorage.persistProp('globalClockConfig', DEFAULT_GLOBAL_CONFIG)
 struct Index {
   // 当设备横屏时条件成立
   listener: mediaQuery.MediaQueryListener = mediaQuery.matchMediaSync('(orientation: landscape)');
-  @Watch('onColorModeChange') @StorageProp('currentColorMode') currentMode: number = ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT;
+  @Watch('onColorModeChange') @StorageProp('currentColorMode') currentMode: number =
+    ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT;
   @State isDark: boolean = false // 是否暗黑模式
   @State isLandscape: boolean = false // 当前是否横屏
   @Watch('onCleanChange') @State isClean: boolean = false // 清屏
@@ -353,6 +354,7 @@ struct Index {
       y: AppConstants.DEFAULT_STATUS_HEIGHT
     })
     .padding({ left: 24, right: 24 })
+    .margin({ top: 24 })
     .id('previews')
   }
 

@@ -5,11 +5,11 @@
         "name": "default",
         "type": "HarmonyOS",
         "material": {
+          "storePassword": "00000019C0A4D67E6D87B32792B5CB9A03150576B92B4CF73A38F46D46625888E0C0907436CE8B4D67",
           "certpath": "/Users/huangyuxun/Desktop/Projects/Clock/resources/key/release/book_release.cer",
-          "storePassword": "00000019D186E45E3BDDDA44537CE389EE272A5C1AF93DF146A4D25C0B37AB31097AC1FDB1639139CB",
           "keyAlias": "book_release",
-          "keyPassword": "00000019B0C804B0C879441B81693AAEAB5C4E67D8896E74176E390AF688F7955722C40247E26D8469",
-          "profile": "/Users/huangyuxun/Desktop/Projects/Clock/resources/key/release/clock_release.p7b",
+          "keyPassword": "0000001980DC6652BF23B7B96470D5D5F970C5AD4CC02C2CC29EB3084802C9D1BA49B34CAE27D041F7",
+          "profile": "/Users/huangyuxun/Desktop/Projects/ClockAtomic/resources/key/release/atomic_book_releaseRelease.p7b",
           "signAlg": "SHA256withECDSA",
           "storeFile": "/Users/huangyuxun/Desktop/Projects/Clock/resources/key/release/book_release.p12"
         }
@@ -18,11 +18,11 @@
         "name": "debug",
         "type": "HarmonyOS",
         "material": {
-          "storePassword": "00000019B1E8F692CBDB6A7405B005932A94992A2FBCBC2CDE517F54C86A3588FF64223AE5844006C7",
+          "storePassword": "000000190E97DA7CFFBBCD7DB8025D5F3AE50941A042E4795E6C85F1EA1FF588E30936BEB45F944B12",
           "certpath": "/Users/huangyuxun/Desktop/Projects/Clock/resources/key/debug/book_debug.cer",
           "keyAlias": "debug",
-          "keyPassword": "000000197BD527850014725EB08F544716754E3BEE1754C32480ED6BB94821F5E61CE388B57CC8195F",
-          "profile": "/Users/huangyuxun/Desktop/Projects/Clock/resources/key/debug/clock_debug.p7b",
+          "keyPassword": "00000019197B0459202107536F10D38030B0C6F72EEA1D740C4B48D1808BD66CEA651ACBBCFF439AC3",
+          "profile": "/Users/huangyuxun/Desktop/Projects/ClockAtomic/resources/key/debug/atomic_book_debugDebug.p7b",
           "signAlg": "SHA256withECDSA",
           "storeFile": "/Users/huangyuxun/Desktop/Projects/Clock/resources/key/debug/book_debug.p12"
         }
@@ -31,7 +31,7 @@
     "products": [
       {
         "name": "default",
-        "signingConfig": "default",
+        "signingConfig": "debug",
         "compatibleSdkVersion": "5.0.0(12)",
         "runtimeOS": "HarmonyOS",
         "buildOption": {
