@@ -20,11 +20,13 @@ export default struct AboutPage {
   private context?: common.UIAbilityContext
   @State versionName: string = '1.0.0'
   @State items: AboutItem[] = [
-    {
-      unicode: Icons.PRIVACY,
-      title: '隐私协议',
-      url: 'pages/Settings/PrivacyPage',
-    },
+    // {
+    //   unicode: Icons.PRIVACY,
+    //   title: '隐私协议',
+    //   action: () => {
+    //     this.openPrivacy()
+    //   }
+    // },
     {
       unicode: Icons.FEEDBACK,
       title: '意见反馈',
@@ -60,6 +62,22 @@ export default struct AboutPage {
       let message = (err as BusinessError).message;
       hilog.error(0x0000, 'testTag', 'getBundleInfoForSelf failed: %{public}s', message);
     }
+  }
+
+  openPrivacy() {
+    let context: common.UIAbilityContext = getContext(this) as common.UIAbilityContext;
+    let want: Want = {
+      action: 'ohos.want.action.viewData',
+      entities: ['entity.system.browsable'],
+      uri: 'https://www.huawei.com/'
+    };
+    context.startAbility(want)
+      .then(() => {
+        console.error('Start browsableAbility successfully.');
+      })
+      .catch((err: BusinessError) => {
+        console.error(`Failed to startAbility. Code: ${err.code}, message: ${err.message}`);
+      });
   }
 
   onCheckUpdate() {

@@ -57,16 +57,17 @@ struct LauncherPage {
   }
 
   onPageShow() {
-    this.getDataPreferences(this).then((preferences: preferences.Preferences) => {
-      preferences.get('agreedPrivacy', false).then((value: preferences.ValueType) => {
-        Logger.info('onPageShow value: ' + value);
-        if (!value) {
-          this.showPrivacy = true
-        } else {
-          this.jumpToRootPage();
-        }
-      });
-    });
+    // this.getDataPreferences(this).then((preferences: preferences.Preferences) => {
+    //   preferences.get('agreedPrivacy', false).then((value: preferences.ValueType) => {
+    //     Logger.info('onPageShow value: ' + value);
+    //     if (!value) {
+    //       this.showPrivacy = true
+    //     } else {
+    //       this.jumpToRootPage();
+    //     }
+    //   });
+    // });
+    this.jumpToRootPage();
   }
 
   getDataPreferences(common: Object) {

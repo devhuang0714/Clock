@@ -5,9 +5,21 @@
     "description": "$string:module_desc",
     "mainElement": "EntryAbility",
     "deviceTypes": [
-      "phone",
-      "tablet",
-      "2in1"
+      "phone"
+    ],
+    "metadata": [
+      {
+        "name": "appgallery_privacy_hosted",
+        "value": "1"
+      },
+      {
+        "name": "appgallery_privacy_link_privacy_statement",
+        "value": "https://agreement-drcn.hispace.dbankcloud.cn/index.html?lang=zh&agreementId=1563816600463754560"
+      },
+      {
+        "name": "appgallery_privacy_link_user_agreement",
+        "value": "https://fm.onezen.cc/folder/hyx/apps/clock/privacy/v1/privacy_policy.html"
+      }
     ],
     "deliveryWithInstall": true,
     "installationFree": false,

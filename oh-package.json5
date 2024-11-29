@@ -7,8 +7,6 @@
   "author": "",
   "license": "",
   "dependencies": {
-    "@umeng/common": "^1.0.22",
-    "@umeng/analytics": "^1.0.19"
   },
   "devDependencies": {
     "@ohos/hypium": "1.0.16",
