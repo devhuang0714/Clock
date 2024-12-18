@@ -69,7 +69,7 @@ export class DateUtils {
         return 'FRIDAY'
       case 6:
         return 'SATURDAY'
-      case 7:
+      case 0:
         return 'SUNDAY'
     }
     return ''
@@ -89,7 +89,7 @@ export class DateUtils {
         return '星期五'
       case 6:
         return '星期六'
-      case 7:
+      case 0:
         return '星期日'
     }
     return ''

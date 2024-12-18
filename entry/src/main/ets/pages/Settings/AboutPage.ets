@@ -6,6 +6,8 @@ import common from '@ohos.app.ability.common'
 import { AppConstants, Icons } from '../../common/constants/Constants';
 import { NavigationBar } from '../../views/NavigationBar'
 import Want from '@ohos.app.ability.Want';
+import { privacyManager } from '@kit.StoreKit';
+import Logger from '../../common/utils/HYLogger'
 
 interface AboutItem {
   title: string
@@ -13,6 +15,9 @@ interface AboutItem {
   url?: string
   action?: () => void
 }
+
+const DEFAULT_PRIVACY = "https://agreement-drcn.hispace.dbankcloud.cn/index.html?lang=zh&agreementId=1565146210803664192"
+const DEFAULT_USER_AGREEMENT = "https://fm.onezen.cc/folder/hyx/apps/clock/privacy/v1/privacy_policy.html"
 
 @Entry
 @Component
@@ -23,19 +28,21 @@ export default struct AboutPage {
     {
       unicode: Icons.PRIVACY,
       title: '隐私协议',
-      url: 'pages/Settings/PrivacyPage',
+      action: () => {
+        this.openPrivacy()
+      }
+    },
+    {
+      unicode: Icons.USER_AGREEMENT,
+      title: '用户协议',
+      action: () => {
+        this.openUserAgreement()
+      }
     },
     {
       unicode: Icons.FEEDBACK,
       title: '意见反馈',
       url: 'pages/Settings/FeedbackPage',
-    },
-    {
-      unicode: Icons.CHECK_UPDATE,
-      title: '检查更新',
-      action: () => {
-        this.onCheckUpdate()
-      }
     },
   ]
 
@@ -62,12 +69,48 @@ export default struct AboutPage {
     }
   }
 
-  onCheckUpdate() {
-    let context: common.UIAbilityContext = getContext(this) as common.UIAbilityContext;
+  openPrivacy() {
+    // 隐私协议
+    let privacyStatementUrl = this.getPrivacyUrl(privacyManager.AppPrivacyLinkType.PRIVACY_STATEMENT_LINK) ?? DEFAULT_PRIVACY
+    this.openBrowsable(privacyStatementUrl)
+  }
+
+  openUserAgreement() {
+    // 用户协议
+    let userAgreementUrl = this.getPrivacyUrl(privacyManager.AppPrivacyLinkType.USER_AGREEMENT_LINK) ?? DEFAULT_USER_AGREEMENT
+    this.openBrowsable(userAgreementUrl)
+  }
+
+  openBrowsable(url: string) {
     let want: Want = {
-      uri: 'store://appgallery.huawei.com/app/detail?id=com.hyx.clock'
-    }
+      action: 'ohos.want.action.viewData',
+      entities: ['entity.system.browsable'],
+      uri: url
+    };
+    const context: common.UIAbilityContext = getContext(this) as common.UIAbilityContext;
     context.startAbility(want)
+      .then(() => {
+        console.error('Start browsableAbility successfully.');
+      })
+      .catch((err: BusinessError) => {
+        console.error(`Failed to startAbility. Code: ${err.code}, message: ${err.message}`);
+      });
+  }
+
+  getPrivacyUrl(type: privacyManager.AppPrivacyLinkType): string | null {
+    try {
+      let appPrivacyManageInfo: privacyManager.AppPrivacyMgmtInfo = privacyManager.getAppPrivacyMgmtInfo();
+      let privacyLinkInfoArray : privacyManager.AppPrivacyLink[] = appPrivacyManageInfo.privacyInfo;
+      for (let i = 0; i < privacyLinkInfoArray.length; i++) {
+        const privacyLinkInfo = privacyLinkInfoArray[i]
+        if (privacyLinkInfo.type == type) {
+          return privacyLinkInfo.url
+        }
+      }
+    } catch (error) {
+      Logger.error("GetAppPrivacyManageInfoPublic exception code: " + error.code + ", exception message: " + error.message);
+    }
+    return null
   }
 
   build() {

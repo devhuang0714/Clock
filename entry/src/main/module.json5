@@ -9,6 +9,20 @@
       "tablet",
       "2in1"
     ],
+    "metadata": [
+      {
+        "name": "appgallery_privacy_hosted",
+        "value": "1"
+      },
+      {
+        "name": "appgallery_privacy_link_privacy_statement",
+        "value": "https://agreement-drcn.hispace.dbankcloud.cn/index.html?lang=zh&agreementId=1565146210803664192"
+      },
+      {
+        "name": "appgallery_privacy_link_user_agreement",
+        "value": "https://fm.onezen.cc/folder/hyx/apps/clock/privacy/v1/privacy_policy.html"
+      }
+    ],
     "deliveryWithInstall": true,
     "installationFree": false,
     "pages": "$profile:main_pages",

@@ -1,10 +1,13 @@
 import { AppConstants, Icons } from '../../common/constants/Constants';
 import router from '@ohos.router';
+import Want from '@ohos.app.ability.Want';
+import common from '@ohos.app.ability.common';
 
 interface SettingItem {
-  title: string,
-  unicode: string,
-  url: string
+  title: string
+  unicode: string
+  url?: string
+  action?: () => void
 }
 
 @Entry
@@ -32,6 +35,13 @@ export struct SettingPage {
       url: 'pages/Settings/SharePage'
     },
     {
+      unicode: Icons.CHECK_UPDATE,
+      title: '检查更新',
+      action: () => {
+        this.onCheckUpdate()
+      }
+    },
+    {
       title: '关于我们',
       unicode: Icons.ABOUT,
       url: 'pages/Settings/AboutPage'
@@ -48,6 +58,14 @@ export struct SettingPage {
     PageTransitionExit({ type: RouteType.Push, duration: 1000 })
   }
 
+  onCheckUpdate() {
+    let context: common.UIAbilityContext = getContext(this) as common.UIAbilityContext;
+    let want: Want = {
+      uri: 'https://appgallery.huawei.com/app/detail?id=C5765880207854789059'//通过这种方式跳转，可以评分
+    }
+    context.startAbility(want)
+  }
+
   build() {
     Column() {
       Grid() {
@@ -56,9 +74,11 @@ export struct SettingPage {
             this.SettingItem(item.unicode, item.title)
           }
           .onClick(() => {
-            router.pushUrl({
-              url: item.url
-            })
+            if (item.action) {
+              item.action()
+            } else if (item.url) {
+              router.pushUrl({ url: item.url })
+            }
           })
         })
       }

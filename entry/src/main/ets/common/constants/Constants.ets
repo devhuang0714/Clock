@@ -38,4 +38,5 @@ export class Icons {
   static readonly MINI_WINDOW: string = '\ue621'
   static readonly SHARE: string = '\ue8b0'
   static readonly CHECK_UPDATE: string = '\ue823'
+  static readonly USER_AGREEMENT: string = '\ue702'
 }
