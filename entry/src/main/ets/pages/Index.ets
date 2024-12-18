@@ -23,6 +23,7 @@ import { BusinessError } from '@kit.BasicServicesKit';
 import dataPreferences from '@ohos.data.preferences';
 import { StereoscopicClock } from '../views/Clocks/StereoscopicClock';
 import { UpdateManager } from '../common/utils/UpdateManager';
+import { PrivacyManage } from '../common/utils/PrivacyManage';
 
 // 持久化存储UI状态
 PersistentStorage.persistProp('currentColorMode', ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT)
@@ -83,7 +84,7 @@ struct Index {
 
   aboutToDisappear(): void {
     clearInterval(this.intervalId)
-    // clearTimeout(this.cleanTimeoutId)
+    clearTimeout(this.cleanTimeoutId)
   }
 
   onPageShow(): void {
@@ -100,18 +101,20 @@ struct Index {
   }
 
   onCleanChange() {
-    // if (this.cleanTimeoutId != 0) {
-    //   clearTimeout(this.cleanTimeoutId)
-    // }
-    // if (!this.isClean) {
-    //   this.cleanTimeoutId = setTimeout(() => {
-    //     this.isClean = true
-    //   }, 8000)
-    // }
+    if (this.cleanTimeoutId != 0) {
+      clearTimeout(this.cleanTimeoutId)
+    }
+    if (!this.isClean) {
+      this.cleanTimeoutId = setTimeout(() => {
+        this.isClean = true
+      }, 8000)
+    }
   }
 
   checkUpdate() {
-    UpdateManager.checkUpdate()
+    if (PrivacyManage.isAgree()) {
+      UpdateManager.checkUpdate()
+    }
   }
 
   onColorModeChange(): void {
