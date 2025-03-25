@@ -15,7 +15,7 @@ struct ClockThemesPage {
   @State clockItems: ClockConfig[] = CLOCK_CONFIGS
   @State selectedConfig: ClockConfig = CLOCK_CONFIGS[0]
   @StorageProp('isLandscape') isLandscape: boolean = false
-  private previewDate: Date = new Date('2022-09-22 09:22:00')
+  private previewDate: Date = new Date('2022-09-22 00:22:00')
 
   pageTransition() {
     PageTransitionEnter({ type: RouteType.Push, duration: 300 })

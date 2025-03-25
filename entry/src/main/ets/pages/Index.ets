@@ -24,9 +24,12 @@ import dataPreferences from '@ohos.data.preferences';
 import { StereoscopicClock } from '../views/Clocks/StereoscopicClock';
 import { UpdateManager } from '../common/utils/UpdateManager';
 import { PrivacyManage } from '../common/utils/PrivacyManage';
+import { GlobalContext } from 'utils';
+import { AlertDialog } from '../views/AlertDialog'
+import { AppInfo } from '../common/utils/AppInfo';
 
 // 持久化存储UI状态
-PersistentStorage.persistProp('currentColorMode', ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT)
+PersistentStorage.persistProp('currentColorMode', ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET)
 PersistentStorage.persistProp('defaultClockConfig', CLOCK_CONFIGS[0])
 PersistentStorage.persistProp('globalClockConfig', DEFAULT_GLOBAL_CONFIG)
 
@@ -35,7 +38,8 @@ PersistentStorage.persistProp('globalClockConfig', DEFAULT_GLOBAL_CONFIG)
 struct Index {
   // 当设备横屏时条件成立
   listener: mediaQuery.MediaQueryListener = mediaQuery.matchMediaSync('(orientation: landscape)');
-  @Watch('onColorModeChange') @StorageProp('currentColorMode') currentMode: number = ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT;
+  @Watch('onColorModeChange') @StorageLink('currentColorMode') currentMode: number =
+    ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET;
   @State isDark: boolean = false // 是否暗黑模式
   @State isLandscape: boolean = false // 当前是否横屏
   @Watch('onCleanChange') @State isClean: boolean = false // 清屏
@@ -67,6 +71,38 @@ struct Index {
       dy: AppConstants.DEFAULT_NAV_HEIGHT
     },
   })
+  goStoreDialogController: CustomDialogController = new CustomDialogController({
+    builder: AlertDialog({
+      message: '开发不易，去给开发者一个好评以资鼓励吧',
+      cancelText: '以后再说',
+      confirmText: '马上去',
+      confirm: () => {
+        AppInfo.goStore()
+
+        let options: dataPreferences.Options = { name: AppConstants.BUNDLE_NAME };
+        let preferences = dataPreferences.getPreferencesSync(getContext(), options);
+
+        // 记录去评分事件
+        preferences.putSync('goStoreGuideConfirm', true)
+        preferences.flush()
+      },
+      cancel: () => {
+        let options: dataPreferences.Options = { name: AppConstants.BUNDLE_NAME };
+        let preferences = dataPreferences.getPreferencesSync(getContext(), options);
+
+        // 记录取消评分事件时间
+        preferences.putSync('goStoreGuideCancelTime', new Date().getTime())
+        preferences.flush()
+      }
+    }),
+    autoCancel: false,
+    alignment: DialogAlignment.Bottom,
+    offset: {
+      dx: 0,
+      dy: -12
+    },
+    customStyle: false
+  })
 
   aboutToAppear(): void {
     // 绑定横竖屏切换回调函数
@@ -89,6 +125,7 @@ struct Index {
 
   onPageShow(): void {
     this.onCleanChange()
+    this.checkNeedTipsGoStore()
   }
 
   onPageHide(): void {
@@ -100,15 +137,40 @@ struct Index {
     PageTransitionExit({ duration: 1000 })
   }
 
+  checkNeedTipsGoStore() {
+    let options: dataPreferences.Options = { name: AppConstants.BUNDLE_NAME };
+    let preferences = dataPreferences.getPreferencesSync(getContext(), options);
+
+    const installTimestamps = preferences.getSync('installTimestamps', 0) as number
+    if (installTimestamps === 0) {
+      preferences.putSync('installTimestamps', new Date().getTime())
+      preferences.flush()
+      return
+    }
+
+    const goStoreGuide = preferences.getSync('goStoreGuide', false) as boolean
+    if (goStoreGuide) {
+      return
+    }
+
+    const now = new Date().getTime()
+    if (now - installTimestamps > 3600 * 24 * 3 * 1000) {
+      this.goStoreDialogController.open()
+
+      preferences.putSync('goStoreGuide', true)
+      preferences.flush()
+    }
+  }
+
   onCleanChange() {
-    if (this.cleanTimeoutId != 0) {
-      clearTimeout(this.cleanTimeoutId)
-    }
-    if (!this.isClean) {
-      this.cleanTimeoutId = setTimeout(() => {
-        this.isClean = true
-      }, 8000)
-    }
+    // if (this.cleanTimeoutId != 0) {
+    //   clearTimeout(this.cleanTimeoutId)
+    // }
+    // if (!this.isClean) {
+    //   this.cleanTimeoutId = setTimeout(() => {
+    //     this.isClean = true
+    //   }, 8000)
+    // }
   }
 
   checkUpdate() {
@@ -131,15 +193,25 @@ struct Index {
     } else {
       this.startClock(1000)
     }
+    if (this.globalConfig.autoRotation) {
+      this.changeOrientation(window.Orientation.AUTO_ROTATION)
+    } else {
+      this.changeOrientation(this.isLandscape ? window.Orientation.LANDSCAPE : window.Orientation.PORTRAIT)
+    }
+    if (this.globalConfig.themeMode === ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET) {
+      const preferences = dataPreferences.getPreferencesSync(getContext(), { name: AppConstants.BUNDLE_NAME })
+      preferences.deleteSync('defaultColorMode')
+      preferences.flush()
+    }
   }
 
   // 改变设备横竖屏状态函数
-  changeOrientation(isLandscape: boolean) {
+  changeOrientation(orientation: window.Orientation) {
     // 获取UIAbility实例的上下文信息
     let context: common.UIAbilityContext = getContext(this) as common.UIAbilityContext;
     // 调用该接口手动改变设备横竖屏状态
     window.getLastWindow(context).then((lastWindow) => {
-      lastWindow.setPreferredOrientation(isLandscape ? window.Orientation.LANDSCAPE : window.Orientation.PORTRAIT)
+      lastWindow.setPreferredOrientation(orientation)
     });
   }
 
@@ -244,7 +316,6 @@ struct Index {
       this.isClean = !this.isClean
     })
     .onAppear(() => {
-      this.changeOrientation(true)
       this.checkUpdate()
     })
   }
@@ -321,6 +392,7 @@ struct Index {
           if (this.isDark) {
             mode = ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT
           }
+          this.globalConfig.themeMode = mode
           getContext().getApplicationContext().setColorMode(mode);
         })
       //
@@ -367,7 +439,8 @@ struct Index {
         fontSize: 20
       })
         .onClick(() => {
-          this.changeOrientation(!this.isLandscape)
+          this.globalConfig.autoRotation = false
+          this.changeOrientation(!this.isLandscape ? window.Orientation.LANDSCAPE : window.Orientation.PORTRAIT)
         })
 
       Blank()

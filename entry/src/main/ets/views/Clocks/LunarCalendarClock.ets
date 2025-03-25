@@ -43,14 +43,15 @@ export struct LunarCalendarClock {
       this.hours = hours.toString().padStart(2, '0')
       this.minutes = date.getMinutes().toString().padStart(2, '0')
       this.seconds = date.getSeconds().toString().padStart(2, '0')
-      if (date.getDay() === 7) {
-        this.week = '日'
-      } else {
-        this.week = date.getDay().toString()
-      }
+      this.week = DateUtils.getWeek_ZH(date.getDay())
+      // if (date.getDay() === 7) {
+      //   this.week = '日'
+      // } else {
+      //   this.week = date.getDay().toString()
+      // }
 
       chinesCalendar.setTime(date)
-      this.chineseMonth = chinesCalendar.get('month').toString().padStart(2, '0')
+      this.chineseMonth = (chinesCalendar.get('month') + 1).toString().padStart(2, '0')
       this.chineseDay = chinesCalendar.get('date').toString().padStart(2, '0')
     }
   }
@@ -101,12 +102,7 @@ export struct LunarCalendarClock {
         Blank()
           .layoutWeight(1)
 
-        Text() {
-          Span('星期')
-          Span(this.week)
-            .fontFamily(FONT_FAMILY)
-            .fontSize(40)
-        }
+        Text(this.week)
         .fontSize(28)
         .fontColor(this.colorsConfig.fontColor)
         .visibility(this.globalConfig.showWeek ? Visibility.Visible : Visibility.None)
@@ -195,12 +191,7 @@ export struct LunarCalendarClock {
         }
         .visibility(this.globalConfig.showLunarCalendar ? Visibility.Visible : Visibility.None)
 
-        Text() {
-          Span('星期')
-          Span(this.week)
-            .fontFamily(FONT_FAMILY)
-            .fontSize(40)
-        }
+        Text(this.week)
         .fontSize(28)
         .fontColor(this.colorsConfig.fontColor)
         .visibility(this.globalConfig.showWeek ? Visibility.Visible : Visibility.None)

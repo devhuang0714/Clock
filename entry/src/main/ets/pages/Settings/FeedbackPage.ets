@@ -14,8 +14,13 @@ import { deviceInfo } from '@kit.BasicServicesKit';
 struct FeedbackPage {
   @State content: string = ''
   controller: TextAreaController = new TextAreaController()
+  private sending: boolean = false
 
   async commit() {
+    if (this.sending) {
+      return
+    }
+
     const extInfo = `
     appVersion: ${AppInfo.getVersion()}
     deviceType: ${deviceInfo.deviceType}
@@ -30,6 +35,8 @@ struct FeedbackPage {
       Toast.show('请输入反馈内容')
       return
     }
+    this.sending = true
+
     const engine = new MailEngine();
     engine.setProperties({
       imap: { host: 'imap.yeah.net', port: 993, secure: true },

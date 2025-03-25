@@ -27,7 +27,7 @@ export struct NormalDigitalClock {
   @Prop globalConfig: GlobalClockConfig = DEFAULT_GLOBAL_CONFIG
   @Prop isLandscape: boolean = false
   @State dateStr: string = '0000-00-00'
-  @State lunarDate: string = '甲子年一月一日'
+  @State lunarDate: string = '甲子年一月初一'
   @State time: string = '00:00:00'
   @State milliseconds: string = '000'
   private listener: ClockListener = {

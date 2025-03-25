@@ -41,7 +41,7 @@ export class DateUtils {
    * @param date
    * @returns 农历日期
    */
-  static formatLunarDate = (date: Date, format = 'yyyy年MM月dd日'): string => {
+  static formatLunarDate = (date: Date, format = 'yyyy年MM月dd'): string => {
     const year = DateUtils.getLunarYear(date)
     const month = DateUtils.getLunarMonth(date)
     const day = DateUtils.getLunarDay(date)

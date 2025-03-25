@@ -21,6 +21,10 @@
       "value": "#000000"
     },
     {
+      "name": "flip_preview_text_color",
+      "value": "#000000"
+    },
+    {
       "name": "cover_bg_color",
       "value": "#CCFFFFFF"
     },
@@ -39,6 +43,14 @@
     {
       "name": "card_shadow_color",
       "value": "#ffacacac"
+    },
+    {
+      "name": "divider_color",
+      "value": "#FFFFFF"
+    },
+    {
+      "name": "confirm",
+      "value": "#09AFFF"
     }
   ]
 }

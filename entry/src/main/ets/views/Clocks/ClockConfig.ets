@@ -38,6 +38,8 @@ export interface ClockConfig {
 }
 
 export interface GlobalClockConfig {
+  autoRotation: boolean,      // 跟随系统切换横竖屏
+  themeMode: number,          // 主题
   use24HourFormat: boolean,   // 24小时制
   showAMPM: boolean,          // 显示AM/PM
   showDate: boolean,          // 显示日期
@@ -47,6 +49,8 @@ export interface GlobalClockConfig {
 }
 
 export const DEFAULT_GLOBAL_CONFIG: GlobalClockConfig = {
+  autoRotation: true,
+  themeMode: -1,
   use24HourFormat: true,
   showAMPM: true,
   showDate: true,

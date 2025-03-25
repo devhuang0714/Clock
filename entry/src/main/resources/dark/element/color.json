@@ -18,6 +18,10 @@
     },
     {
       "name": "flip_text_color",
+      "value": "#FFFFFF"
+    },
+    {
+      "name": "flip_preview_text_color",
       "value": "#BAB6B9"
     },
     {
@@ -35,6 +39,14 @@
     {
       "name": "card_shadow_color",
       "value": "#00000000"
+    },
+    {
+      "name": "divider_color",
+      "value": "#000000"
+    },
+    {
+      "name": "confirm",
+      "value": "#09AFFF"
     }
   ]
 }

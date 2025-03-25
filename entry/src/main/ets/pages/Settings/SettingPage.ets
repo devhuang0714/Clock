@@ -2,6 +2,8 @@ import { AppConstants, Icons } from '../../common/constants/Constants';
 import router from '@ohos.router';
 import Want from '@ohos.app.ability.Want';
 import common from '@ohos.app.ability.common';
+import { AppInfo } from '../../common/utils/AppInfo';
+import { NavigationBar } from '../../views/NavigationBar';
 
 interface SettingItem {
   title: string
@@ -38,7 +40,7 @@ export struct SettingPage {
       unicode: Icons.CHECK_UPDATE,
       title: '检查更新',
       action: () => {
-        this.onCheckUpdate()
+        AppInfo.goStore()
       }
     },
     {
@@ -58,16 +60,15 @@ export struct SettingPage {
     PageTransitionExit({ type: RouteType.Push, duration: 1000 })
   }
 
-  onCheckUpdate() {
-    let context: common.UIAbilityContext = getContext(this) as common.UIAbilityContext;
-    let want: Want = {
-      uri: 'https://appgallery.huawei.com/app/detail?id=C5765880207854789059'//通过这种方式跳转，可以评分
-    }
-    context.startAbility(want)
-  }
-
   build() {
     Column() {
+      NavigationBar({
+        title: ''
+      })
+
+      Blank()
+        .height(12)
+
       Grid() {
         ForEach(this.items, (item: SettingItem) => {
           GridItem() {
@@ -106,7 +107,6 @@ export struct SettingPage {
     .height('100%')
     .backgroundColor($r('app.color.main_background_color'))
     .padding({
-      top: AppConstants.DEFAULT_STATUS_HEIGHT,
       bottom: AppConstants.DEFAULT_NAV_HEIGHT
     })
   }
