@@ -57,7 +57,7 @@ struct ClockThemesPage {
       .width('100%')
       .height(40)
       .justifyContent(FlexAlign.End)
-      .margin({ top: 12, bottom: 12 })
+      .margin({ top: 40, bottom: 12, right: 12 })
 
       Grid() {
         ForEach(this.clockItems, (item: ClockConfig) => {

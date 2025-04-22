@@ -3,6 +3,7 @@ import router from '@ohos.router';
 
 @Component
 export struct NavigationBar {
+  @Prop backIcon: ResourceStr = Icons.BACK
   @Prop title: ResourceStr = ''
   onBack: (() => void) | undefined = undefined
 
@@ -16,7 +17,7 @@ export struct NavigationBar {
   build() {
     Row() {
       Row() {
-        Text(Icons.BACK)
+        Text(this.backIcon)
           .fontFamily(Icons.FONT_FAMILY)
           .fontSize(24)
 

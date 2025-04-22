@@ -39,4 +39,5 @@ export class Icons {
   static readonly SHARE: string = '\ue8b0'
   static readonly CHECK_UPDATE: string = '\ue823'
   static readonly USER_AGREEMENT: string = '\ue702'
+  static readonly CLOSE: string = '\ue627'
 }

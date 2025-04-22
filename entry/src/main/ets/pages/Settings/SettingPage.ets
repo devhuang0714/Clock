@@ -63,6 +63,7 @@ export struct SettingPage {
   build() {
     Column() {
       NavigationBar({
+        backIcon: Icons.CLOSE,
         title: ''
       })
 
