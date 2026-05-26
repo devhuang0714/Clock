@@ -5,26 +5,26 @@
         "name": "default",
         "type": "HarmonyOS",
         "material": {
-          "certpath": "/Users/huangyuxun/Desktop/Projects/Clock/resources/key/release/book_release.cer",
-          "storePassword": "00000019D186E45E3BDDDA44537CE389EE272A5C1AF93DF146A4D25C0B37AB31097AC1FDB1639139CB",
+          "storeFile": "./resources/key/release/book_release.p12",
+          "storePassword": "00000019B75327ECFFEB11CCA9A265211A3A0A6A17E701E7C1E438F9606A578853049B11A2EA04CDB1",
           "keyAlias": "book_release",
-          "keyPassword": "00000019B0C804B0C879441B81693AAEAB5C4E67D8896E74176E390AF688F7955722C40247E26D8469",
-          "profile": "/Users/huangyuxun/Desktop/Projects/Clock/resources/key/release/clock_release.p7b",
+          "keyPassword": "00000019B40C3A7D56ABD4CFB6B5BBEA38E8B408630DB87FC9EE715812B64B73BF2BC42F9476D286C8",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "/Users/huangyuxun/Desktop/Projects/Clock/resources/key/release/book_release.p12"
+          "profile": "./resources/key/release/clock_release.p7b",
+          "certpath": "./resources/key/release/book_release.cer"
         }
       },
       {
         "name": "debug",
         "type": "HarmonyOS",
         "material": {
-          "storePassword": "00000019B1E8F692CBDB6A7405B005932A94992A2FBCBC2CDE517F54C86A3588FF64223AE5844006C7",
-          "certpath": "/Users/huangyuxun/Desktop/Projects/Clock/resources/key/debug/book_debug.cer",
-          "keyAlias": "debug",
-          "keyPassword": "000000197BD527850014725EB08F544716754E3BEE1754C32480ED6BB94821F5E61CE388B57CC8195F",
-          "profile": "/Users/huangyuxun/Desktop/Projects/Clock/resources/key/debug/clock_debug.p7b",
+          "storeFile": "./resources/key/debug/debug.p12",
+          "storePassword": "00000019C86F24F01CF23D76A1B90F7BADD468975D6539A287D7B9B45483122A2B0F3C599C4CED9BBE",
+          "keyAlias": "book_debug",
+          "keyPassword": "00000019917785BDE08BB82A14385CF2331BE04B3733CC4D49281E68A3E2520F615A5AE28D161A7C8B",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "/Users/huangyuxun/Desktop/Projects/Clock/resources/key/debug/book_debug.p12"
+          "profile": "./resources/key/debug/debug.p7b",
+          "certpath": "./resources/key/debug/debug.cer"
         }
       }
     ],
@@ -32,13 +32,26 @@
       {
         "name": "default",
         "signingConfig": "default",
-        "compatibleSdkVersion": "5.0.0(12)",
+        "compatibleSdkVersion": "6.1.0(23)",
         "runtimeOS": "HarmonyOS",
         "buildOption": {
           "strictMode": {
             "useNormalizedOHMUrl": true,
+            "harLocalDependencyCheck": false
           }
         }
+      },
+      {
+        "name": "debug",
+        "signingConfig": "debug",
+        "compatibleSdkVersion": "6.1.0(23)",
+        "runtimeOS": "HarmonyOS",
+        "buildOption": {
+          "strictMode": {
+            "useNormalizedOHMUrl": true,
+            "harLocalDependencyCheck": false
+          }
+        },
       }
     ],
     "buildModeSet": [
@@ -58,7 +71,8 @@
         {
           "name": "default",
           "applyToProducts": [
-            "default"
+            "default",
+            "debug"
           ]
         }
       ]
