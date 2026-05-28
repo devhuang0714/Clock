@@ -2,6 +2,7 @@ import { AppConstants, Icons } from '../../common/constants/Constants';
 import router from '@ohos.router';
 import Want from '@ohos.app.ability.Want';
 import common from '@ohos.app.ability.common';
+import { DEBUG } from 'utils/BuildProfile';
 import { AppInfo } from '../../common/utils/AppInfo';
 import { NavigationBar } from '../../views/NavigationBar';
 
@@ -10,6 +11,7 @@ interface SettingItem {
   unicode: string
   url?: string
   action?: () => void
+  debugOnly?: boolean
 }
 
 @Entry
@@ -20,6 +22,12 @@ export struct SettingPage {
       title: '表盘风格',
       unicode: Icons.CLOCK,
       url: 'pages/Settings/ClockThemesPage'
+    },
+    {
+      title: '字体预览',
+      unicode: Icons.FLIP,
+      url: 'pages/Settings/FontPreviewPage',
+      debugOnly: true
     },
     {
       title: '自定义',
@@ -72,16 +80,18 @@ export struct SettingPage {
 
       Grid() {
         ForEach(this.items, (item: SettingItem) => {
-          GridItem() {
-            this.SettingItem(item.unicode, item.title)
-          }
-          .onClick(() => {
-            if (item.action) {
-              item.action()
-            } else if (item.url) {
-              router.pushUrl({ url: item.url })
+          if (!item.debugOnly || DEBUG) {
+            GridItem() {
+              this.SettingItem(item.unicode, item.title)
             }
-          })
+            .onClick(() => {
+              if (item.action) {
+                item.action()
+              } else if (item.url) {
+                router.pushUrl({ url: item.url })
+              }
+            })
+          }
         })
       }
       .columnsGap(12)

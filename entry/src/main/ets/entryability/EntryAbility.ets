@@ -68,6 +68,66 @@ export default class EntryAbility extends UIAbility {
           'name': Icons.DIGITAL_NUM1_FONT_FAMILY,
           'rawfile': Icons.DIGITAL_NUM1_FONT_FAMILY_SRC,
         },
+        {
+          'name': Icons.FONT_ERBOS_DRACO_1ST_OPEN_NBP,
+          'rawfile': Icons.FONT_ERBOS_DRACO_1ST_OPEN_NBP_SRC,
+        },
+        {
+          'name': Icons.FONT_JURA,
+          'rawfile': Icons.FONT_JURA_SRC,
+        },
+        {
+          'name': Icons.FONT_ICELAND,
+          'rawfile': Icons.FONT_ICELAND_SRC,
+        },
+        {
+          'name': Icons.FONT_RALEWAY_DOTS,
+          'rawfile': Icons.FONT_RALEWAY_DOTS_SRC,
+        },
+        {
+          'name': Icons.FONT_NOVA_SQUARE,
+          'rawfile': Icons.FONT_NOVA_SQUARE_SRC,
+        },
+        {
+          'name': Icons.FONT_NOVA_MONO,
+          'rawfile': Icons.FONT_NOVA_MONO_SRC,
+        },
+        {
+          'name': Icons.FONT_GEO,
+          'rawfile': Icons.FONT_GEO_SRC,
+        },
+        {
+          'name': Icons.FONT_MEGRIM,
+          'rawfile': Icons.FONT_MEGRIM_SRC,
+        },
+        {
+          'name': Icons.FONT_MONOFETT,
+          'rawfile': Icons.FONT_MONOFETT_SRC,
+        },
+        {
+          'name': Icons.FONT_ORBITRON,
+          'rawfile': Icons.FONT_ORBITRON_SRC,
+        },
+        {
+          'name': Icons.FONT_EXO2,
+          'rawfile': Icons.FONT_EXO2_SRC,
+        },
+        {
+          'name': Icons.FONT_AUDIOWIDE,
+          'rawfile': Icons.FONT_AUDIOWIDE_SRC,
+        },
+        {
+          'name': Icons.FONT_DSEG7_CLASSIC,
+          'rawfile': Icons.FONT_DSEG7_CLASSIC_SRC,
+        },
+        {
+          'name': Icons.FONT_IBM_PLEX_MONO,
+          'rawfile': Icons.FONT_IBM_PLEX_MONO_SRC,
+        },
+        {
+          'name': Icons.FONT_SPACE_MONO,
+          'rawfile': Icons.FONT_SPACE_MONO_SRC,
+        },
       ]
       // 注册IconFont
       fonts.map((item) => {

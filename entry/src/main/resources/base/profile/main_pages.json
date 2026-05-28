@@ -5,6 +5,7 @@
     "pages/Settings/SettingPage",
     "pages/Settings/PrivacyPage",
     "pages/Settings/ClockThemesPage",
+    "pages/Settings/FontPreviewPage",
     "pages/Settings/FeedbackPage",
     "pages/Settings/AboutPage",
     "pages/Settings/CustomPage",

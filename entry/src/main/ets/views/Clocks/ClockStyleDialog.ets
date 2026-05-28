@@ -9,6 +9,7 @@ import { RotateClock } from './RotateClock';
 import { LunarCalendarClock } from './LunarCalendarClock';
 import { NormalDigitalClock } from './NormalDigitalClock';
 import { StereoscopicClock } from './StereoscopicClock';
+import { PosterClock } from './PosterClock';
 
 @Extend(Text)
 function setTabTextStyles(selected: boolean) {
@@ -278,7 +279,8 @@ export struct ClockStyleDialog {
           })
         } else if (clockConfig.type == ClockType.Round) {
           RoundClock({
-            date: this.previewDate
+            date: this.previewDate,
+            style: clockConfig.style
           })
         } else if (clockConfig.type == ClockType.Digital) {
           DigitalClock({
@@ -309,6 +311,13 @@ export struct ClockStyleDialog {
         } else if (clockConfig.type == ClockType.Stereoscopic) {
           StereoscopicClock({
             date: this.previewDate,
+            colorsConfig: clockConfig.colors,
+            isLandscape: true,
+          })
+        } else if (clockConfig.type == ClockType.Poster) {
+          PosterClock({
+            date: this.previewDate,
+            style: clockConfig.style,
             colorsConfig: clockConfig.colors,
             isLandscape: true,
           })

@@ -8,6 +8,7 @@ export enum ClockType {
   LunarCalendar, // 农历数字时钟
   NormalDigital, // 普通数字时钟
   Stereoscopic,  // 立体感时钟
+  Poster,        // 整屏主题时钟
 }
 
 export enum ClockStyle {
@@ -16,6 +17,12 @@ export enum ClockStyle {
   Style3,
   Style4,
   Style5,
+  Style6,
+  Style7,
+  Style8,
+  Style9,
+  Style10,
+  Style11,
 }
 
 export interface ClockColorsConfig {
@@ -77,6 +84,51 @@ export const CLOCK_CONFIGS: ClockConfig[] = [
     style: ClockStyle.Style1,
     colors: {
       backgroundColor: $r('app.color.main_background_color'),
+      fontColor: ''
+    }
+  },
+  {
+    id: 'round_clock_style2',
+    type: ClockType.Round,
+    style: ClockStyle.Style2,
+    colors: {
+      backgroundColor: '#061018',
+      fontColor: ''
+    }
+  },
+  {
+    id: 'round_clock_style3',
+    type: ClockType.Round,
+    style: ClockStyle.Style3,
+    colors: {
+      backgroundColor: '#080411',
+      fontColor: ''
+    }
+  },
+  {
+    id: 'round_clock_style4',
+    type: ClockType.Round,
+    style: ClockStyle.Style4,
+    colors: {
+      backgroundColor: '#fff3fb',
+      fontColor: ''
+    }
+  },
+  {
+    id: 'round_clock_style5',
+    type: ClockType.Round,
+    style: ClockStyle.Style5,
+    colors: {
+      backgroundColor: '#e8d6ae',
+      fontColor: ''
+    }
+  },
+  {
+    id: 'round_clock_style6',
+    type: ClockType.Round,
+    style: ClockStyle.Style6,
+    colors: {
+      backgroundColor: '#092e2a',
       fontColor: ''
     }
   },
@@ -194,6 +246,116 @@ export const CLOCK_CONFIGS: ClockConfig[] = [
       cardColor: $r('app.color.flip_card_bg_color'),
       fontColor: $r('app.color.flip_text_color'),
       shadowColor: $r('app.color.card_shadow_color')
+    }
+  },
+  {
+    id: 'poster_clock_cyberpunk',
+    type: ClockType.Poster,
+    style: ClockStyle.Style1,
+    colors: {
+      backgroundColor: '#050713',
+      cardColor: '#101828',
+      fontColor: '#ffffff'
+    }
+  },
+  {
+    id: 'poster_clock_retro_flip',
+    type: ClockType.Poster,
+    style: ClockStyle.Style2,
+    colors: {
+      backgroundColor: '#ff8200',
+      cardColor: '#ff8200',
+      fontColor: '#172026'
+    }
+  },
+  {
+    id: 'poster_clock_cute',
+    type: ClockType.Poster,
+    style: ClockStyle.Style3,
+    colors: {
+      backgroundColor: '#fff4dc',
+      cardColor: '#fff8e8',
+      fontColor: '#9f5752'
+    }
+  },
+  {
+    id: 'poster_clock_minimal',
+    type: ClockType.Poster,
+    style: ClockStyle.Style4,
+    colors: {
+      backgroundColor: '#061a2e',
+      cardColor: '#123047',
+      fontColor: '#e8ffff'
+    }
+  },
+  {
+    id: 'poster_clock_funny',
+    type: ClockType.Poster,
+    style: ClockStyle.Style5,
+    colors: {
+      backgroundColor: '#08111d',
+      cardColor: '#111426',
+      fontColor: '#ffffff'
+    }
+  },
+  {
+    id: 'poster_clock_orbitron_hud',
+    type: ClockType.Poster,
+    style: ClockStyle.Style6,
+    colors: {
+      backgroundColor: '#020815',
+      cardColor: '#071d35',
+      fontColor: '#74f7ff'
+    }
+  },
+  {
+    id: 'poster_clock_exo_dashboard',
+    type: ClockType.Poster,
+    style: ClockStyle.Style7,
+    colors: {
+      backgroundColor: '#08131d',
+      cardColor: '#112636',
+      fontColor: '#e6fbff'
+    }
+  },
+  {
+    id: 'poster_clock_audiowide_synthwave',
+    type: ClockType.Poster,
+    style: ClockStyle.Style8,
+    colors: {
+      backgroundColor: '#180625',
+      cardColor: '#2b0d3e',
+      fontColor: '#ff6be8'
+    }
+  },
+  {
+    id: 'poster_clock_dseg_led',
+    type: ClockType.Poster,
+    style: ClockStyle.Style9,
+    colors: {
+      backgroundColor: '#050807',
+      cardColor: '#111a16',
+      fontColor: '#5cff9d'
+    }
+  },
+  {
+    id: 'poster_clock_plex_minimal',
+    type: ClockType.Poster,
+    style: ClockStyle.Style10,
+    colors: {
+      backgroundColor: '#f5f5f2',
+      cardColor: '#ffffff',
+      fontColor: '#111111'
+    }
+  },
+  {
+    id: 'poster_clock_space_terminal',
+    type: ClockType.Poster,
+    style: ClockStyle.Style11,
+    colors: {
+      backgroundColor: '#050607',
+      cardColor: '#101314',
+      fontColor: '#d9ffdf'
     }
   },
 ]

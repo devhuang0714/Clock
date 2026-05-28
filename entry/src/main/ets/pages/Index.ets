@@ -27,6 +27,7 @@ import { PrivacyManage } from '../common/utils/PrivacyManage';
 import { GlobalContext } from 'utils';
 import { AlertDialog } from '../views/AlertDialog'
 import { AppInfo } from '../common/utils/AppInfo';
+import { PosterClock } from '../views/Clocks/PosterClock';
 
 // 持久化存储UI状态
 PersistentStorage.persistProp('currentColorMode', ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET)
@@ -333,7 +334,8 @@ struct Index {
     } else if (this.clockConfig.type == ClockType.Round) {
       RoundClock({
         controller: this.clockController,
-        date: this.date
+        date: this.date,
+        style: this.clockConfig.style
       })
     } else if (this.clockConfig.type == ClockType.Digital) {
       DigitalClock({
@@ -373,6 +375,15 @@ struct Index {
       StereoscopicClock({
         controller: this.clockController,
         date: this.date,
+        colorsConfig: this.clockConfig.colors,
+        globalConfig: this.globalConfig,
+        isLandscape: this.isLandscape,
+      })
+    } else if (this.clockConfig.type == ClockType.Poster) {
+      PosterClock({
+        controller: this.clockController,
+        date: this.date,
+        style: this.clockConfig.style,
         colorsConfig: this.clockConfig.colors,
         globalConfig: this.globalConfig,
         isLandscape: this.isLandscape,

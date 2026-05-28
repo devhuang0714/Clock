@@ -16,6 +16,38 @@ export class Icons {
   static readonly DIGITAL_NUM_FONT_FAMILY_SRC: ResourceStr = $rawfile('digital-num-font.ttf')
   static readonly DIGITAL_NUM1_FONT_FAMILY_SRC: ResourceStr = $rawfile('digital-num-font1.ttf')
 
+  static readonly FONT_ERBOS_DRACO_1ST_OPEN_NBP: string = 'font-erbos-draco-1st-open-nbp'
+  static readonly FONT_JURA: string = 'font-jura'
+  static readonly FONT_ICELAND: string = 'font-iceland'
+  static readonly FONT_RALEWAY_DOTS: string = 'font-raleway-dots'
+  static readonly FONT_NOVA_SQUARE: string = 'font-nova-square'
+  static readonly FONT_NOVA_MONO: string = 'font-nova-mono'
+  static readonly FONT_GEO: string = 'font-geo'
+  static readonly FONT_MEGRIM: string = 'font-megrim'
+  static readonly FONT_MONOFETT: string = 'font-monofett'
+  static readonly FONT_ORBITRON: string = 'font-orbitron'
+  static readonly FONT_EXO2: string = 'font-exo2'
+  static readonly FONT_AUDIOWIDE: string = 'font-audiowide'
+  static readonly FONT_DSEG7_CLASSIC: string = 'font-dseg7-classic'
+  static readonly FONT_IBM_PLEX_MONO: string = 'font-ibm-plex-mono'
+  static readonly FONT_SPACE_MONO: string = 'font-space-mono'
+
+  static readonly FONT_ERBOS_DRACO_1ST_OPEN_NBP_SRC: ResourceStr = $rawfile('fonts/erbos_draco_1st_open_nbp.ttf')
+  static readonly FONT_JURA_SRC: ResourceStr = $rawfile('fonts/jura_regular.ttf')
+  static readonly FONT_ICELAND_SRC: ResourceStr = $rawfile('fonts/iceland_regular.ttf')
+  static readonly FONT_RALEWAY_DOTS_SRC: ResourceStr = $rawfile('fonts/raleway_dots_regular.ttf')
+  static readonly FONT_NOVA_SQUARE_SRC: ResourceStr = $rawfile('fonts/nova_square_regular.ttf')
+  static readonly FONT_NOVA_MONO_SRC: ResourceStr = $rawfile('fonts/nova_mono_regular.ttf')
+  static readonly FONT_GEO_SRC: ResourceStr = $rawfile('fonts/geo_regular.ttf')
+  static readonly FONT_MEGRIM_SRC: ResourceStr = $rawfile('fonts/megrim_regular.ttf')
+  static readonly FONT_MONOFETT_SRC: ResourceStr = $rawfile('fonts/monofett_regular.ttf')
+  static readonly FONT_ORBITRON_SRC: ResourceStr = $rawfile('fonts/orbitron_wght.ttf')
+  static readonly FONT_EXO2_SRC: ResourceStr = $rawfile('fonts/exo2_wght.ttf')
+  static readonly FONT_AUDIOWIDE_SRC: ResourceStr = $rawfile('fonts/audiowide_regular.ttf')
+  static readonly FONT_DSEG7_CLASSIC_SRC: ResourceStr = $rawfile('fonts/dseg7_classic_regular.ttf')
+  static readonly FONT_IBM_PLEX_MONO_SRC: ResourceStr = $rawfile('fonts/ibm_plex_mono_regular.ttf')
+  static readonly FONT_SPACE_MONO_SRC: ResourceStr = $rawfile('fonts/space_mono_regular.ttf')
+
   static readonly SETTINGS: string = '\ue785'
   static readonly THEME_DARK: string = '\ue634'
   static readonly THEME_LIGHT: string = '\ue600'
