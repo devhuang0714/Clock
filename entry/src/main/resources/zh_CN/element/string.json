@@ -13,6 +13,22 @@
       "value": "小布丁时钟"
     },
     {
+      "name": "ClockWidgetAbility_label",
+      "value": "桌面小组件"
+    },
+    {
+      "name": "ClockWidgetAbility_desc",
+      "value": "小布丁时钟桌面小组件"
+    },
+    {
+      "name": "clock_widget_display_name",
+      "value": "小布丁时钟"
+    },
+    {
+      "name": "clock_widget_desc",
+      "value": "分钟级桌面时钟小组件"
+    },
+    {
       "name": "introduce",
       "value": "简约不简单"
     },

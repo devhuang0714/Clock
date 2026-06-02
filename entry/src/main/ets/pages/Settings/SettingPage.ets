@@ -24,6 +24,11 @@ export struct SettingPage {
       url: 'pages/Settings/ClockThemesPage'
     },
     {
+      title: '桌面小组件',
+      unicode: Icons.MINI_WINDOW,
+      url: 'pages/Settings/ClockWidgetsPage'
+    },
+    {
       title: '字体预览',
       unicode: Icons.FLIP,
       url: 'pages/Settings/FontPreviewPage',

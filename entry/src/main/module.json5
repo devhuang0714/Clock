@@ -48,6 +48,21 @@
         ]
       }
     ],
+    "extensionAbilities": [
+      {
+        "name": "ClockWidgetAbility",
+        "srcEntry": "./ets/clockwidgetability/ClockWidgetAbility.ets",
+        "label": "$string:ClockWidgetAbility_label",
+        "description": "$string:ClockWidgetAbility_desc",
+        "type": "form",
+        "metadata": [
+          {
+            "name": "ohos.extension.form",
+            "resource": "$profile:form_config"
+          }
+        ]
+      }
+    ],
     "requestPermissions": [
       {
         "name": "ohos.permission.INTERNET"

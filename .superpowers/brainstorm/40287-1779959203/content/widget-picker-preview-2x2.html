@@ -1,0 +1,162 @@
+<style>
+  .phone-frame {
+    width: 390px;
+    margin: 0 auto;
+    border-radius: 34px;
+    padding: 18px;
+    background: #0f1115;
+    box-shadow: 0 28px 80px rgba(0,0,0,.28);
+  }
+  .screen {
+    min-height: 760px;
+    border-radius: 28px;
+    padding: 22px 18px 24px;
+    background: #17191f;
+    color: #f7f7f7;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", sans-serif;
+  }
+  .topbar { display:flex; align-items:center; justify-content:space-between; margin: 4px 0 18px; }
+  .title { font-size: 22px; font-weight: 750; letter-spacing: -.3px; }
+  .done { color:#5cc8ff; font-weight:700; font-size:16px; }
+  .tabs { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; padding:4px; background:#242832; border-radius:18px; margin-bottom:24px; }
+  .tab { text-align:center; padding:10px 0; border-radius:14px; color:#9fa6b5; font-weight:700; font-size:14px; }
+  .tab.active { background:#37a9ff; color:#fff; box-shadow:0 8px 20px rgba(55,169,255,.3); }
+  .group { margin-bottom: 26px; }
+  .group-header { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:12px; }
+  .group-title { font-size:17px; font-weight:760; }
+  .group-note { color:#8d94a3; font-size:12px; }
+  .widget-grid { display:grid; grid-template-columns: repeat(2, 1fr); gap:18px 18px; align-items:start; }
+  .widget-cell { position:relative; }
+  .widget-preview { position:relative; overflow:hidden; border-radius:24px; box-shadow:0 12px 30px rgba(0,0,0,.22); border:2px solid transparent; }
+  .widget-preview.selected { border-color:#48e06f; box-shadow:0 0 0 4px rgba(72,224,111,.12), 0 12px 30px rgba(0,0,0,.22); }
+  .size-2x2 { aspect-ratio:1/1; }
+  .check { position:absolute; right:10px; bottom:10px; width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:#48e06f; color:#08140c; font-weight:900; font-size:15px; }
+  .caption { margin-top:8px; font-size:14px; font-weight:700; color:#f4f5f7; }
+  .subcaption { margin-top:2px; font-size:12px; color:#838a98; }
+  .minimal { background:#f7f7f3; color:#111; padding:16px; box-sizing:border-box; }
+  .minimal .brand { font-size:10px; color:#64645e; font-weight:800; }
+  .minimal .time { margin-top:36px; font-size:34px; font-weight:900; letter-spacing:-1.5px; }
+  .minimal .date { margin-top:8px; color:#64645e; font-size:12px; }
+  .digital { background:#050807; color:#5cff9d; padding:14px; box-sizing:border-box; }
+  .digital .row { display:flex; justify-content:space-between; font-size:10px; color:#5cff9d; font-weight:800; }
+  .digital .time { margin-top:38px; font-size:34px; font-weight:900; letter-spacing:-1px; text-shadow:0 0 18px rgba(92,255,157,.35); }
+  .round-classic { background:#f5f5f2; display:flex; align-items:center; justify-content:center; }
+  .round-dark { background:#061018; display:flex; align-items:center; justify-content:center; }
+  .dial { width:108px; height:108px; border-radius:50%; position:relative; background:#fff; border:5px solid #e7e7e0; box-shadow: inset 0 0 0 1px #eee; }
+  .dial.dark { background:#0b1e2a; border-color:#37d7ff; box-shadow:0 0 24px rgba(55,215,255,.22); }
+  .hand-h, .hand-m { position:absolute; left:50%; bottom:50%; transform-origin:50% 100%; border-radius:6px; }
+  .hand-h { width:5px; height:28px; margin-left:-2.5px; background:#111; transform:rotate(50deg); }
+  .hand-m { width:3px; height:40px; margin-left:-1.5px; background:#d94d3d; transform:rotate(240deg); }
+  .dial.dark .hand-h { background:#eaf6ff; }
+  .dial.dark .hand-m { background:#37d7ff; }
+  .center { position:absolute; left:50%; top:50%; width:10px; height:10px; margin:-5px 0 0 -5px; background:#d94d3d; border-radius:50%; }
+  .dial.dark .center { background:#37d7ff; }
+  .tick { position:absolute; left:50%; top:8px; width:3px; height:12px; margin-left:-1.5px; background:#111; border-radius:2px; transform-origin:50% 46px; }
+  .dial.dark .tick { background:#37d7ff; }
+  .empty-hint { border:1px dashed #343946; border-radius:18px; padding:14px; color:#7f8796; font-size:13px; line-height:1.6; }
+</style>
+
+<h2>桌面小组件选择页预览</h2>
+<p class="subtitle">当前展示 2x2 尺寸：只显示支持 2x2 的表盘；每个表盘按真实桌面比例单独展示，不再包在大卡片里。</p>
+
+<div class="phone-frame">
+  <div class="screen">
+    <div class="topbar">
+      <div class="title">桌面小组件</div>
+      <div class="done">完成</div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active">2x2</div>
+      <div class="tab">2x4</div>
+      <div class="tab">4x4</div>
+    </div>
+
+    <div class="group">
+      <div class="group-header">
+        <div class="group-title">数字表盘</div>
+        <div class="group-note">2 款</div>
+      </div>
+      <div class="widget-grid">
+        <div class="widget-cell">
+          <div class="widget-preview size-2x2 selected minimal">
+            <div class="brand">FLIP CLOCK</div>
+            <div class="time">09:41</div>
+            <div class="date">05-28 周四</div>
+            <div class="check">✓</div>
+          </div>
+          <div class="caption">极简数字</div>
+          <div class="subcaption">大号时间和日期</div>
+        </div>
+        <div class="widget-cell">
+          <div class="widget-preview size-2x2 digital">
+            <div class="row"><span>TIME</span><span>05-28</span></div>
+            <div class="time">09:41</div>
+          </div>
+          <div class="caption">电子数字</div>
+          <div class="subcaption">数字钟和状态信息</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-header">
+        <div class="group-title">指针表盘</div>
+        <div class="group-note">6 款</div>
+      </div>
+      <div class="widget-grid">
+        <div class="widget-cell">
+          <div class="widget-preview size-2x2 round-classic">
+            <div class="dial">
+              <div class="tick" style="transform:rotate(0deg)"></div>
+              <div class="tick" style="transform:rotate(90deg)"></div>
+              <div class="tick" style="transform:rotate(180deg)"></div>
+              <div class="tick" style="transform:rotate(270deg)"></div>
+              <div class="hand-h"></div><div class="hand-m"></div><div class="center"></div>
+            </div>
+          </div>
+          <div class="caption">经典指针</div>
+          <div class="subcaption">经典白色圆盘</div>
+        </div>
+        <div class="widget-cell">
+          <div class="widget-preview size-2x2 round-dark">
+            <div class="dial dark">
+              <div class="tick" style="transform:rotate(0deg)"></div>
+              <div class="tick" style="transform:rotate(90deg)"></div>
+              <div class="tick" style="transform:rotate(180deg)"></div>
+              <div class="tick" style="transform:rotate(270deg)"></div>
+              <div class="hand-h"></div><div class="hand-m"></div><div class="center"></div>
+            </div>
+          </div>
+          <div class="caption">冷色科技</div>
+          <div class="subcaption">蓝绿光感指针</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-header">
+        <div class="group-title">日期表盘</div>
+        <div class="group-note">当前尺寸无可用</div>
+      </div>
+      <div class="empty-hint">农历日期等只支持 2x4 / 4x4，因此在 2x2 Tab 下不展示具体表盘。</div>
+    </div>
+  </div>
+</div>
+
+<div class="options">
+  <div class="option" data-choice="direction-ok" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>方向正确</h3>
+      <p>继续按这个结构细化 2x4 / 4x4 和交互细节。</p>
+    </div>
+  </div>
+  <div class="option" data-choice="needs-adjustment" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>需要调整</h3>
+      <p>告诉我你希望改动分组、间距、尺寸比例或文案层级。</p>
+    </div>
+  </div>
+</div>

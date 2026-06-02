@@ -1,0 +1,27 @@
+{
+  "forms": [
+    {
+      "name": "clock_widget",
+      "displayName": "$string:clock_widget_display_name",
+      "description": "$string:clock_widget_desc",
+      "src": "./ets/widget/pages/ClockWidgetCard.ets",
+      "uiSyntax": "arkts",
+      "window": {
+        "designWidth": 720,
+        "autoDesignWidth": true
+      },
+      "colorMode": "auto",
+      "isDynamic": true,
+      "isDefault": true,
+      "updateEnabled": false,
+      "scheduledUpdateTime": "10:30",
+      "updateDuration": 0,
+      "defaultDimension": "2*2",
+      "supportDimensions": [
+        "2*2",
+        "2*4",
+        "4*4"
+      ]
+    }
+  ]
+}

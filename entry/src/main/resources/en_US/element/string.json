@@ -13,6 +13,22 @@
       "value": "Flip Clock"
     },
     {
+      "name": "ClockWidgetAbility_label",
+      "value": "Clock Widgets"
+    },
+    {
+      "name": "ClockWidgetAbility_desc",
+      "value": "Flip Clock home screen widgets"
+    },
+    {
+      "name": "clock_widget_display_name",
+      "value": "Flip Clock"
+    },
+    {
+      "name": "clock_widget_desc",
+      "value": "Minute-level home screen clock widget"
+    },
+    {
       "name": "introduce",
       "value": "Simple but not simplistic"
     },
