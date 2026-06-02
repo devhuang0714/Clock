@@ -493,7 +493,7 @@ export struct ClockWidgetView {
       })
       .alignItems(VerticalAlign.Center)
     } else {
-      Column() {
+      Column({ space: 12 }) {
         this.RoundFace()
 
         if (this.widgetSize == ClockWidgetSize.Size4x4) {
