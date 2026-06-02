@@ -3,7 +3,11 @@
     "allow": [
       "Bash(/Users/huangyuxun/.claude/plugins/cache/claude-plugins-official/superpowers/5.1.0/skills/brainstorming/scripts/start-server.sh *)",
       "Bash(hvigor assembleHap *)",
-      "Bash(./run-harmony.sh *)"
+      "Bash(./run-harmony.sh *)",
+      "Bash(rg -n 'Text\\\\\\(`\\\\$\\\\{this\\\\.time\\\\}:\\\\$\\\\{this\\\\.seconds\\\\}`\\\\\\)' \"entry/src/main/ets/views/Clocks/PosterClock.ets\")",
+      "Bash(hdc list *)",
+      "Bash(/Applications/DevEco-Studio.app/Contents/sdk/default/openharmony/toolchains/hdc shell *)",
+      "Bash(/Applications/DevEco-Studio.app/Contents/sdk/default/openharmony/toolchains/hdc file *)"
     ]
   }
 }

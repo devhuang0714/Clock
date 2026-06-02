@@ -10,9 +10,10 @@ function posterTimeText(fontSize: number, color: ResourceColor, family: string) 
   .fontColor(color)
   .fontWeight(FontWeight.Bold)
   .textAlign(TextAlign.Center)
-  .minFontSize(24)
+  .minFontSize(18)
   .maxFontSize(fontSize)
   .maxLines(1)
+  .width('100%')
 }
 
 @Extend(Text)
@@ -244,10 +245,25 @@ export struct PosterClock {
           this.CyberRing()
 
           Column({ space: 6 }) {
-            Text(`${this.time}:${this.seconds}`)
-              .posterTimeText(this.isLandscape ? 118 : 66, '#61f4ff', Icons.FONT_NOVA_MONO)
-              .textShadow({ radius: 18, color: '#aa23d8ff', offsetX: 0, offsetY: 0 })
-              .width('100%')
+            Row({ space: this.isLandscape ? 8 : 3 }) {
+              Text(this.time)
+                .posterTimeText(this.isLandscape ? 118 : 52, '#61f4ff', Icons.FONT_NOVA_MONO)
+                .layoutWeight(1)
+                .textShadow({ radius: 18, color: '#aa23d8ff', offsetX: 0, offsetY: 0 })
+
+              Text(':')
+                .posterTimeText(this.isLandscape ? 118 : 44, '#61f4ff', Icons.FONT_NOVA_MONO)
+                .width(this.isLandscape ? 24 : 14)
+                .textShadow({ radius: 18, color: '#aa23d8ff', offsetX: 0, offsetY: 0 })
+
+              Text(this.seconds)
+                .posterTimeText(this.isLandscape ? 84 : 36, '#61f4ff', Icons.FONT_NOVA_MONO)
+                .width(this.isLandscape ? 96 : 52)
+                .textShadow({ radius: 18, color: '#aa23d8ff', offsetX: 0, offsetY: 0 })
+            }
+            .width(this.isLandscape ? '100%' : '92%')
+            .justifyContent(FlexAlign.Center)
+            .alignItems(VerticalAlign.Center)
 
             Text('REMAINING TIME')
               .fontFamily(Icons.FONT_ICELAND)
@@ -266,7 +282,7 @@ export struct PosterClock {
           .width('100%')
           .alignItems(HorizontalAlign.Center)
         }
-        .width(this.isLandscape ? '74%' : '92%')
+        .width(this.isLandscape ? '74%' : '100%')
         .height(this.isLandscape ? '58%' : '50%')
 
         Column() {
@@ -657,16 +673,43 @@ export struct PosterClock {
         .fontFamily(Icons.FONT_EXO2)
         .posterLabel(this.isLandscape ? 15 : 13, '#9dccff')
         .opacity(0.84)
-      Text(`${this.time}:${this.seconds}`)
-        .fontFamily(Icons.FONT_IBM_PLEX_MONO)
-        .fontSize(this.isLandscape ? 78 : 46)
-        .minFontSize(30)
-        .maxLines(1)
-        .fontColor('#f2f8ff')
-        .fontWeight(FontWeight.Bold)
-        .textAlign(TextAlign.Center)
-        .textShadow({ radius: 12, color: '#665aa7ff', offsetX: 0, offsetY: 0 })
-        .width(this.isLandscape ? '72%' : '58%')
+      Row({ space: this.isLandscape ? 8 : 3 }) {
+        Text(this.time)
+          .fontFamily(Icons.FONT_IBM_PLEX_MONO)
+          .fontSize(this.isLandscape ? 78 : 46)
+          .minFontSize(24)
+          .maxLines(1)
+          .fontColor('#f2f8ff')
+          .fontWeight(FontWeight.Bold)
+          .textAlign(TextAlign.End)
+          .textShadow({ radius: 12, color: '#665aa7ff', offsetX: 0, offsetY: 0 })
+          .layoutWeight(1)
+
+        Text(':')
+          .fontFamily(Icons.FONT_IBM_PLEX_MONO)
+          .fontSize(this.isLandscape ? 78 : 46)
+          .minFontSize(24)
+          .maxLines(1)
+          .fontColor('#f2f8ff')
+          .fontWeight(FontWeight.Bold)
+          .textAlign(TextAlign.Center)
+          .textShadow({ radius: 12, color: '#665aa7ff', offsetX: 0, offsetY: 0 })
+          .width(this.isLandscape ? 28 : 18)
+
+        Text(this.seconds)
+          .fontFamily(Icons.FONT_IBM_PLEX_MONO)
+          .fontSize(this.isLandscape ? 78 : 46)
+          .minFontSize(24)
+          .maxLines(1)
+          .fontColor('#f2f8ff')
+          .fontWeight(FontWeight.Bold)
+          .textAlign(TextAlign.Start)
+          .textShadow({ radius: 12, color: '#665aa7ff', offsetX: 0, offsetY: 0 })
+          .width(this.isLandscape ? 110 : 76)
+      }
+      .width(this.isLandscape ? '72%' : '78%')
+      .justifyContent(FlexAlign.Center)
+      .alignItems(VerticalAlign.Center)
       Text(this.period)
         .fontFamily(Icons.FONT_EXO2)
         .posterLabel(this.isLandscape ? 18 : 14, '#e7f3ff')
@@ -1109,7 +1152,7 @@ export struct PosterClock {
   CyberCircuitDecorations() {
     Stack() {
       Column({ space: 14 }) {
-        ForEach([160, 220, 128, 260, 190], (width: number, index: number) => {
+        ForEach([30, 42, 24, 50, 36], (width: number, index: number) => {
           Row({ space: 10 }) {
             Row()
               .width(7)
@@ -1117,7 +1160,7 @@ export struct PosterClock {
               .borderRadius(4)
               .backgroundColor(index % 2 == 0 ? '#558cecff' : '#334b9fd1')
             Row()
-              .width(width)
+              .width(`${width}%`)
               .height(1)
               .backgroundColor('#335cecff')
             Row()
@@ -1128,10 +1171,10 @@ export struct PosterClock {
           }
         })
       }
-      .offset({ x: this.isLandscape ? -430 : -240, y: -88 })
+      .offset({ x: this.isLandscape ? -430 : -180, y: -88 })
 
       Column({ space: 14 }) {
-        ForEach([190, 132, 250, 206, 154], (width: number, index: number) => {
+        ForEach([36, 25, 48, 39, 29], (width: number, index: number) => {
           Row({ space: 10 }) {
             Row()
               .width(5)
@@ -1139,7 +1182,7 @@ export struct PosterClock {
               .borderRadius(3)
               .backgroundColor('#334b9fd1')
             Row()
-              .width(width)
+              .width(`${width}%`)
               .height(1)
               .backgroundColor('#335cecff')
             Row()
@@ -1150,16 +1193,16 @@ export struct PosterClock {
           }
         })
       }
-      .offset({ x: this.isLandscape ? 430 : 240, y: -72 })
+      .offset({ x: this.isLandscape ? 430 : 180, y: -72 })
 
       Row()
-        .width(this.isLandscape ? 1020 : 520)
+        .width(this.isLandscape ? 1020 : '92%')
         .height(1)
         .backgroundColor('#245cecff')
         .offset({ y: 22 })
 
       Row()
-        .width(this.isLandscape ? 860 : 420)
+        .width(this.isLandscape ? 860 : '76%')
         .height(1)
         .backgroundColor('#2442d8ff')
         .offset({ y: 174 })
@@ -1172,42 +1215,43 @@ export struct PosterClock {
   CyberRing() {
     Stack() {
       Row()
-        .width(this.isLandscape ? 430 : 242)
+        .width(this.isLandscape ? '72%' : '68%')
         .aspectRatio(1)
-        .border({ width: 2, color: '#6a61eaff', radius: this.isLandscape ? 215 : 121 })
+        .border({ width: 2, color: '#6a61eaff' })
         .opacity(0.82)
 
       Row()
-        .width(this.isLandscape ? 370 : 204)
+        .width(this.isLandscape ? '62%' : '58%')
         .aspectRatio(1)
-        .border({ width: 5, color: '#5a65f3ff', radius: this.isLandscape ? 185 : 102 })
+        .border({ width: 5, color: '#5a65f3ff' })
         .opacity(0.42)
 
       Row()
-        .width(this.isLandscape ? 520 : 260)
+        .width(this.isLandscape ? '90%' : '76%')
         .height(2)
         .backgroundColor('#335cecff')
 
       Row()
         .width(2)
-        .height(this.isLandscape ? 320 : 168)
+        .height(this.isLandscape ? '64%' : '52%')
         .backgroundColor('#335cecff')
 
       ForEach([0, 1, 2, 3, 4, 5], (index: number) => {
         Row()
-          .width(this.isLandscape ? 16 : 11)
-          .height(this.isLandscape ? 16 : 11)
-          .borderRadius(this.isLandscape ? 8 : 6)
+          .width(this.isLandscape ? 16 : 10)
+          .height(this.isLandscape ? 16 : 10)
+          .borderRadius(this.isLandscape ? 8 : 5)
           .backgroundColor('#65d9ffff')
           .shadow({ radius: 18, color: '#cc1ba9ff', offsetX: 0, offsetY: 0 })
           .offset({
-            x: Math.cos(index * Math.PI / 3) * (this.isLandscape ? 214 : 120),
-            y: Math.sin(index * Math.PI / 3) * (this.isLandscape ? 214 : 120)
+            x: Math.cos(index * Math.PI / 3) * (this.isLandscape ? 150 : 80),
+            y: Math.sin(index * Math.PI / 3) * (this.isLandscape ? 150 : 80)
           })
       })
     }
     .width('100%')
     .height('100%')
+    .alignContent(Alignment.Center)
   }
 
   @Builder
@@ -1227,7 +1271,7 @@ export struct PosterClock {
           .width('64%')
           .backgroundColor('#7a6cecff')
       }
-      .width(this.isLandscape ? 360 : 220)
+      .width(this.isLandscape ? '80%' : '64%')
       .height(12)
       .border({ width: 1, color: '#775cecff', radius: 1 })
     }
