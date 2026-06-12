@@ -84,7 +84,7 @@ export struct FlipClock {
       Text(this.isPM ? 'PM' : 'AM')
         .fontSize(24)
         .fontWeight(FontWeight.Medium)
-        .fontColor(this.colorsConfig.fontColor)
+        .fontColor('#8A8F98')
         .textAlign(TextAlign.Center)
         .width(50)
         .height(50)

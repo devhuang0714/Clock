@@ -245,25 +245,10 @@ export struct PosterClock {
           this.CyberRing()
 
           Column({ space: 6 }) {
-            Row({ space: this.isLandscape ? 8 : 3 }) {
-              Text(this.time)
-                .posterTimeText(this.isLandscape ? 118 : 52, '#61f4ff', Icons.FONT_NOVA_MONO)
-                .layoutWeight(1)
-                .textShadow({ radius: 18, color: '#aa23d8ff', offsetX: 0, offsetY: 0 })
-
-              Text(':')
-                .posterTimeText(this.isLandscape ? 118 : 44, '#61f4ff', Icons.FONT_NOVA_MONO)
-                .width(this.isLandscape ? 24 : 14)
-                .textShadow({ radius: 18, color: '#aa23d8ff', offsetX: 0, offsetY: 0 })
-
-              Text(this.seconds)
-                .posterTimeText(this.isLandscape ? 84 : 36, '#61f4ff', Icons.FONT_NOVA_MONO)
-                .width(this.isLandscape ? 96 : 52)
-                .textShadow({ radius: 18, color: '#aa23d8ff', offsetX: 0, offsetY: 0 })
-            }
-            .width(this.isLandscape ? '100%' : '92%')
-            .justifyContent(FlexAlign.Center)
-            .alignItems(VerticalAlign.Center)
+            Text(`${this.time}:${this.seconds}`)
+              .posterTimeText(this.isLandscape ? 108 : 46, '#61f4ff', Icons.FONT_NOVA_MONO)
+              .width(this.isLandscape ? '100%' : '92%')
+              .textShadow({ radius: 18, color: '#aa23d8ff', offsetX: 0, offsetY: 0 })
 
             Text('REMAINING TIME')
               .fontFamily(Icons.FONT_ICELAND)
@@ -320,23 +305,40 @@ export struct PosterClock {
         .backgroundColor('#060606')
 
       Column({ space: this.isLandscape ? 12 : 18 }) {
-        Row({ space: 16 }) {
-          Text(DateUtils.formatDate(this.date, 'yyyy-MM-dd'))
-            .fontFamily(Icons.FONT_ERBOS_DRACO_1ST_OPEN_NBP)
-            .posterLabel(this.isLandscape ? 42 : 28, '#172026')
-            .opacity(0.96)
-          Text(this.week)
-            .fontFamily(Icons.FONT_ERBOS_DRACO_1ST_OPEN_NBP)
-            .posterLabel(this.isLandscape ? 34 : 24, '#172026')
-            .opacity(0.86)
+        if (this.isLandscape) {
+          Row({ space: 16 }) {
+            Text(DateUtils.formatDate(this.date, 'yyyy-MM-dd'))
+              .fontFamily(Icons.FONT_ERBOS_DRACO_1ST_OPEN_NBP)
+              .posterLabel(42, '#172026')
+              .opacity(0.96)
+            Text(this.week)
+              .fontFamily(Icons.FONT_ERBOS_DRACO_1ST_OPEN_NBP)
+              .posterLabel(34, '#172026')
+              .opacity(0.86)
+          }
+          .justifyContent(FlexAlign.Start)
+          .width('100%')
+        } else {
+          Column({ space: 4 }) {
+            Text(DateUtils.formatDate(this.date, 'yyyy-MM-dd'))
+              .fontFamily(Icons.FONT_ERBOS_DRACO_1ST_OPEN_NBP)
+              .posterLabel(30, '#172026')
+              .opacity(0.96)
+              .width('100%')
+            Text(this.week)
+              .fontFamily(Icons.FONT_ERBOS_DRACO_1ST_OPEN_NBP)
+              .posterLabel(24, '#172026')
+              .opacity(0.86)
+              .width('100%')
+          }
+          .alignItems(HorizontalAlign.Start)
+          .width('100%')
         }
-        .justifyContent(FlexAlign.Start)
-        .width('100%')
 
         Row({ space: this.isLandscape ? 14 : 8 }) {
           Text(this.time)
             .fontFamily(Icons.FONT_GEO)
-            .fontSize(this.isLandscape ? 162 : 96)
+            .fontSize(this.isLandscape ? 162 : 106)
             .minFontSize(54)
             .maxLines(1)
             .fontColor('#172026')
@@ -345,12 +347,12 @@ export struct PosterClock {
             .layoutWeight(1)
           Text(this.seconds)
             .fontFamily(Icons.FONT_GEO)
-            .fontSize(this.isLandscape ? 66 : 42)
+            .fontSize(this.isLandscape ? 66 : 46)
             .minFontSize(28)
             .maxLines(1)
             .fontColor('#172026')
             .fontWeight(FontWeight.Bold)
-            .margin({ top: this.isLandscape ? 74 : 44 })
+            .margin({ top: this.isLandscape ? 74 : 50 })
         }
         .width('100%')
 
@@ -372,6 +374,7 @@ export struct PosterClock {
       }
       .width('100%')
       .height('100%')
+      .justifyContent(this.isLandscape ? FlexAlign.Start : FlexAlign.Center)
       .padding({ left: this.isLandscape ? 28 : 20, right: this.isLandscape ? 28 : 20, top: this.isLandscape ? 18 : 16, bottom: 14 })
       .backgroundColor('#ff8200')
       .border({ width: 5, color: '#050505', radius: 12 })
@@ -503,7 +506,7 @@ export struct PosterClock {
   FunnyPoster() {
     Column() {
       Blank()
-        .layoutWeight(1)
+        .layoutWeight(this.isLandscape ? 1 : 1.8)
 
       Flex({
         direction: this.isLandscape ? FlexDirection.Row : FlexDirection.Column,
@@ -540,7 +543,8 @@ export struct PosterClock {
               .width(this.isLandscape ? 70 : 48)
           }
           .justifyContent(FlexAlign.Center)
-          .width(this.isLandscape ? 270 : '100%')
+          .alignItems(VerticalAlign.Bottom)
+          .width(this.isLandscape ? 360 : '100%')
 
           Text('今日摸鱼进度')
             .fontFamily(Icons.FONT_EXO2)
@@ -572,17 +576,18 @@ export struct PosterClock {
               .width(this.isLandscape ? 48 : 52)
           }
           .justifyContent(FlexAlign.Center)
-          .width(this.isLandscape ? 310 : '100%')
+          .width(this.isLandscape ? 360 : '100%')
         }
         .alignItems(HorizontalAlign.Center)
         .layoutWeight(1)
-        .width(this.isLandscape ? 360 : '100%')
+        .width(this.isLandscape ? 420 : '100%')
       }
       .width('100%')
       .padding({ left: this.isLandscape ? 24 : 34, right: this.isLandscape ? 24 : 34 })
+      .offset({ y: this.isLandscape ? 0 : 34 })
 
       Blank()
-        .layoutWeight(1)
+        .layoutWeight(this.isLandscape ? 1 : 0.2)
 
       Row({ space: 64 }) {
         this.BottomIcon('#ffd938')

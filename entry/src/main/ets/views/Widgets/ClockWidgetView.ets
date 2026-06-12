@@ -72,6 +72,10 @@ export struct ClockWidgetView {
     return DateUtils.getPeriod(this.getCurrentDate().getHours())
   }
 
+  private getClockText(format: string): string {
+    return DateUtils.formatDate(this.getCurrentDate(), format)
+  }
+
   private getHourAngle(): number {
     const date = this.getCurrentDate()
     return (date.getHours() % 12) * 30 + date.getMinutes() * 0.5
@@ -293,6 +297,29 @@ export struct ClockWidgetView {
   }
 
   @Builder
+  MinimalTimeText(fontSize: number, color: ResourceColor = this.config.colors.fontColor) {
+    Stack() {
+      Text(this.getClockText('HH:mm'))
+        .minFontSize(14)
+        .maxFontSize(fontSize)
+        .maxLines(1)
+        .fontWeight(FontWeight.Bold)
+        .fontColor(color)
+        .textAlign(TextAlign.Center)
+        .width('100%')
+
+      TextClock()
+        .format('HH:mm')
+        .onDateChange((value: number) => {
+          this.onMinuteChange(value)
+        })
+        .fontSize(1)
+        .fontColor(Color.Transparent)
+    }
+    .width('100%')
+  }
+
+  @Builder
   MinimalWidget() {
     Column() {
       Text('FLIP CLOCK')
@@ -303,7 +330,7 @@ export struct ClockWidgetView {
 
       Blank()
 
-      this.TimeText(this.getTimeFontSize())
+      this.MinimalTimeText(this.getTimeFontSize())
 
       Text(this.getDateText())
         .fontSize(this.widgetSize == ClockWidgetSize.Size2x2 ? 13 : 16)
@@ -340,7 +367,7 @@ export struct ClockWidgetView {
         Text(this.getPeriodText())
           .fontSize(this.widgetSize == ClockWidgetSize.Size4x4 ? 16 : 13)
           .fontWeight(FontWeight.Medium)
-          .fontColor(this.config.colors.accentColor ?? this.config.colors.fontColor)
+          .fontColor(this.config.colors.mutedColor ?? this.config.colors.fontColor)
       }
       .width('100%')
 

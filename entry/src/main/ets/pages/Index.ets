@@ -28,6 +28,7 @@ import { GlobalContext } from 'utils';
 import { AlertDialog } from '../views/AlertDialog'
 import { AppInfo } from '../common/utils/AppInfo';
 import { PosterClock } from '../views/Clocks/PosterClock';
+import { DEBUG } from 'utils/BuildProfile';
 
 // 持久化存储UI状态
 PersistentStorage.persistProp('currentColorMode', ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET)
@@ -415,8 +416,25 @@ struct Index {
       //     this.showFloatWindow()
       //   })
 
-      Blank()
-        .layoutWeight(1)
+      if (DEBUG) {
+        Row() {
+          Text(this.clockConfig.id)
+            .fontSize(14)
+            .fontWeight(FontWeight.Medium)
+            .fontColor($r('app.color.tool_item_color'))
+            .maxLines(1)
+            .textOverflow({ overflow: TextOverflow.Ellipsis })
+            .textAlign(TextAlign.Center)
+            .padding({ left: 12, right: 12, top: 6, bottom: 6 })
+            .backgroundColor($r('app.color.tool_item_bg_color'))
+            .borderRadius(16)
+        }
+          .justifyContent(FlexAlign.Center)
+          .layoutWeight(1)
+      } else {
+        Blank()
+          .layoutWeight(1)
+      }
 
       ToolItem({
         unicode: Icons.SETTINGS,
