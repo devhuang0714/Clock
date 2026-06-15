@@ -14,11 +14,26 @@ export struct RoundClock {
   date: Date = new Date()
   @Prop style: ClockStyle = ClockStyle.Style1
   @State canvasWidth: number = 300; // 300是表盘默认大小
+  @State hourAngle: number = 0
+  @State minuteAngle: number = 0
+  @State secondAngle: number = 0
   private settings: RenderingContextSettings = new RenderingContextSettings(true);
   private context: CanvasRenderingContext2D = new CanvasRenderingContext2D(this.settings);
   private radius: number = 150; // 默认表盘半径
   private listener: ClockListener = {
     onUpdate: (date) => {
+      if (this.style == ClockStyle.Style2) {
+        const milliseconds = date.getMilliseconds()
+        const seconds = date.getSeconds() + milliseconds / 1000
+        const minutes = date.getMinutes() + seconds / 60
+        const hours = date.getHours() % 12 + minutes / 60
+
+        this.secondAngle = seconds * 6
+        this.minuteAngle = minutes * 6
+        this.hourAngle = hours * 30
+        return
+      }
+
       this.context.clearRect(0, 0, this.canvasWidth, this.canvasWidth);
       this.context.save();
       this.drawBackGround();
@@ -33,6 +48,9 @@ export struct RoundClock {
   aboutToAppear() {
     // this.getSize();
     this.controller.registerListener(this.listener)
+    if (this.style == ClockStyle.Style2) {
+      this.listener.onUpdate(this.date)
+    }
   }
 
   aboutToDisappear(): void {
@@ -435,14 +453,48 @@ export struct RoundClock {
 
   build() {
     Stack({ alignContent: Alignment.Center }) {
-      Canvas(this.context)
+      if (this.style == ClockStyle.Style2) {
+        Stack() {
+          Image($r('app.media.round_neon_clock_face'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+
+          Image($r('app.media.round_neon_hour_hand'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+            .rotate({ angle: this.hourAngle })
+
+          Image($r('app.media.round_neon_minute_hand'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+            .rotate({ angle: this.minuteAngle })
+
+          Image($r('app.media.round_neon_second_hand'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+            .rotate({ angle: this.secondAngle })
+
+          Image($r('app.media.round_neon_center_cap'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+        }
         .width(this.canvasWidth)
         .height(this.canvasWidth)
-        .borderRadius(this.canvasWidth * 0.5)
-        .clip(true)
-        .onReady(() => {
-          this.listener.onUpdate(this.date);
-        })
+      } else {
+        Canvas(this.context)
+          .width(this.canvasWidth)
+          .height(this.canvasWidth)
+          .borderRadius(this.canvasWidth * 0.5)
+          .clip(true)
+          .onReady(() => {
+            this.listener.onUpdate(this.date);
+          })
+      }
     }
     .width('100%')
     .height('100%')

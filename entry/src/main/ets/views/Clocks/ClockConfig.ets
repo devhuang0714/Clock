@@ -9,6 +9,7 @@ export enum ClockType {
   NormalDigital, // 普通数字时钟
   Stereoscopic,  // 立体感时钟
   Poster,        // 整屏主题时钟
+  Mechanical,    // 机械指针时钟
 }
 
 export enum ClockStyle {
@@ -133,6 +134,15 @@ export const CLOCK_CONFIGS: ClockConfig[] = [
     style: ClockStyle.Style6,
     colors: {
       backgroundColor: '#092e2a',
+      fontColor: ''
+    }
+  },
+  {
+    id: 'mechanical_clock_style1',
+    type: ClockType.Mechanical,
+    style: ClockStyle.Style1,
+    colors: {
+      backgroundColor: '#0d0f13',
       fontColor: ''
     }
   },

@@ -10,6 +10,7 @@ import { LunarCalendarClock } from './LunarCalendarClock';
 import { NormalDigitalClock } from './NormalDigitalClock';
 import { StereoscopicClock } from './StereoscopicClock';
 import { PosterClock } from './PosterClock';
+import { MechanicalClock } from './MechanicalClock';
 
 @Extend(Text)
 function setTabTextStyles(selected: boolean) {
@@ -335,6 +336,11 @@ export struct ClockStyleDialog {
             colorsConfig: clockConfig.colors,
             isLandscape: true,
           })
+        } else if (clockConfig.type == ClockType.Mechanical) {
+          MechanicalClock({
+            date: this.previewDate,
+            isLandscape: true
+          })
         }
       }
       .justifyContent(FlexAlign.Center)
@@ -453,6 +459,8 @@ struct ColorsView {
           }
           .alignContent(Alignment.BottomEnd)
         }
+        .width(40)
+        .height(40)
         .backgroundColor(item.color)
         .border({
           width: 2,

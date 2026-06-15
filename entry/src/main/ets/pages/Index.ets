@@ -29,6 +29,7 @@ import { AlertDialog } from '../views/AlertDialog'
 import { AppInfo } from '../common/utils/AppInfo';
 import { PosterClock } from '../views/Clocks/PosterClock';
 import { DEBUG } from 'utils/BuildProfile';
+import { MechanicalClock } from '../views/Clocks/MechanicalClock';
 
 // 持久化存储UI状态
 PersistentStorage.persistProp('currentColorMode', ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET)
@@ -190,7 +191,8 @@ struct Index {
 
   onConfigChange() {
     clearInterval(this.intervalId)
-    if (this.globalConfig.showMilliseconds && this.clockConfig.type == ClockType.NormalDigital) {
+    if ((this.globalConfig.showMilliseconds && this.clockConfig.type == ClockType.NormalDigital) ||
+      this.clockConfig.type == ClockType.Mechanical) {
       this.startClock(20)
     } else {
       this.startClock(1000)
@@ -388,6 +390,12 @@ struct Index {
         colorsConfig: this.clockConfig.colors,
         globalConfig: this.globalConfig,
         isLandscape: this.isLandscape,
+      })
+    } else if (this.clockConfig.type == ClockType.Mechanical) {
+      MechanicalClock({
+        controller: this.clockController,
+        date: this.date,
+        isLandscape: this.isLandscape
       })
     }
   }

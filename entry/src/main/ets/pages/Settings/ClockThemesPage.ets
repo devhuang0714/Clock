@@ -9,6 +9,7 @@ import { LunarCalendarClock } from '../../views/Clocks/LunarCalendarClock';
 import { NormalDigitalClock } from '../../views/Clocks/NormalDigitalClock';
 import { StereoscopicClock } from '../../views/Clocks/StereoscopicClock';
 import { PosterClock } from '../../views/Clocks/PosterClock';
+import { MechanicalClock } from '../../views/Clocks/MechanicalClock';
 
 interface ClockThemeGroup {
   title: string
@@ -44,7 +45,8 @@ const CLOCK_THEME_GROUPS: ClockThemeGroup[] = [
       'round_clock_style3',
       'round_clock_style4',
       'round_clock_style5',
-      'round_clock_style6'
+      'round_clock_style6',
+      'mechanical_clock_style1'
     ])
   },
   {
@@ -298,6 +300,11 @@ struct ClockThemesPage {
             style: clockConfig.style,
             colorsConfig: clockConfig.colors,
             isLandscape: true,
+          })
+        } else if (clockConfig.type == ClockType.Mechanical) {
+          MechanicalClock({
+            date: this.previewDate,
+            isLandscape: true
           })
         }
       }
