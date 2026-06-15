@@ -13,6 +13,7 @@ import { RotateClock } from '../views/Clocks/RotateClock'
 import { ClockStyleDialog } from '../views/Clocks/ClockStyleDialog'
 import {
   ClockConfig,
+  ClockStyle,
   ClockType,
   CLOCK_CONFIGS,
   DEFAULT_GLOBAL_CONFIG,
@@ -192,6 +193,7 @@ struct Index {
   onConfigChange() {
     clearInterval(this.intervalId)
     if ((this.globalConfig.showMilliseconds && this.clockConfig.type == ClockType.NormalDigital) ||
+      (this.clockConfig.type == ClockType.Round && this.clockConfig.style == ClockStyle.Style2) ||
       this.clockConfig.type == ClockType.Mechanical) {
       this.startClock(20)
     } else {
