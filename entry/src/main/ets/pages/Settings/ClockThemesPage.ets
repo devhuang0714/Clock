@@ -108,7 +108,11 @@ const CLOCK_THEME_GROUPS: ClockThemeGroup[] = [
     title: '可爱趣味',
     items: configsByIds([
       'poster_clock_cute',
-      'poster_clock_funny'
+      'poster_clock_funny',
+      'poster_clock_office_snooze',
+      'poster_clock_office_monday',
+      'poster_clock_office_coffee',
+      'poster_clock_office_payday'
     ])
   }
 ]

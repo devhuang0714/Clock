@@ -131,8 +131,40 @@ export struct PosterClock {
           this.DsegLedPoster()
         } else if (this.style == ClockStyle.Style10) {
           this.PlexMinimalPoster()
-        } else {
+        } else if (this.style == ClockStyle.Style11) {
           this.SpaceTerminalPoster()
+        } else if (this.style == ClockStyle.Style12) {
+          this.OfficePoster(
+            $rawfile('images/poster_clocks/office/snooze_character.png'),
+            $rawfile('images/poster_clocks/office/snooze_title.png'),
+            '今日摸鱼额度',
+            84,
+            67
+          )
+        } else if (this.style == ClockStyle.Style13) {
+          this.OfficePoster(
+            $rawfile('images/poster_clocks/office/monday_character.png'),
+            $rawfile('images/poster_clocks/office/monday_title.png'),
+            '精神加载中',
+            72,
+            64
+          )
+        } else if (this.style == ClockStyle.Style14) {
+          this.OfficePoster(
+            $rawfile('images/poster_clocks/office/coffee_character.png'),
+            $rawfile('images/poster_clocks/office/coffee_title.png'),
+            '今日清醒进度',
+            78,
+            62
+          )
+        } else {
+          this.OfficePoster(
+            $rawfile('images/poster_clocks/office/payday_character.png'),
+            $rawfile('images/poster_clocks/office/payday_title.png'),
+            '下班倒计时',
+            74,
+            62
+          )
         }
       }
     }
@@ -224,11 +256,16 @@ export struct PosterClock {
             direction: GradientDirection.Bottom,
             colors: [[0xff111418, 0.0], [0xff050607, 1.0]]
           })
-      } else {
+      } else if (this.style == ClockStyle.Style11) {
         Row()
           .width('100%')
           .height('100%')
           .backgroundColor('#050607')
+      } else {
+        Row()
+          .width('100%')
+          .height('100%')
+          .backgroundColor(this.colorsConfig.backgroundColor)
       }
     }
   }
@@ -884,6 +921,155 @@ export struct PosterClock {
     }
     .width('100%')
     .height('100%')
+  }
+
+  @Builder
+  OfficePoster(character: ResourceStr, title: ResourceStr, progressLabel: string, characterWidth: number,
+    titleWidth: number) {
+    Stack() {
+      if (this.isLandscape) {
+        Column() {
+          Blank()
+            .layoutWeight(1)
+
+          Flex({
+            direction: FlexDirection.Row,
+            justifyContent: FlexAlign.Center,
+            alignItems: ItemAlign.Center
+          }) {
+            Image(character)
+              .width(characterWidth * 4)
+              .objectFit(ImageFit.Contain)
+              .margin({ right: 28 })
+
+            Column({ space: 10 }) {
+              Image(title)
+                .width(titleWidth * 4)
+                .objectFit(ImageFit.Contain)
+                .margin({ bottom: 4 })
+
+              this.OfficeTimeBlock()
+              this.OfficeProgress(progressLabel)
+            }
+            .width(420)
+            .alignItems(HorizontalAlign.Center)
+          }
+          .width('100%')
+          .padding({ left: 24, right: 24 })
+
+          Blank()
+            .layoutWeight(1)
+        }
+        .width('100%')
+        .height('100%')
+      } else {
+        Column({ space: 18 }) {
+          Image(character)
+            .width('78%')
+            .objectFit(ImageFit.Contain)
+            .margin({ top: 24 })
+
+          Image(title)
+            .width('56%')
+            .objectFit(ImageFit.Contain)
+
+          this.OfficeTimeBlock()
+          this.OfficeProgress(progressLabel)
+        }
+        .width('100%')
+        .height('100%')
+        .justifyContent(FlexAlign.Center)
+        .alignItems(HorizontalAlign.Center)
+        .padding({ left: 28, right: 28, bottom: 36 })
+      }
+    }
+    .width('100%')
+    .height('100%')
+  }
+
+  @Builder
+  OfficeTimeBlock() {
+    Row({ space: this.isLandscape ? 10 : 6 }) {
+      Text(this.time)
+        .fontFamily(Icons.FONT_IBM_PLEX_MONO)
+        .fontSize(this.isLandscape ? 88 : 68)
+        .minFontSize(this.isLandscape ? 36 : 34)
+        .maxFontSize(this.isLandscape ? 88 : 68)
+        .maxLines(1)
+        .fontColor(this.colorsConfig.fontColor)
+        .fontWeight(FontWeight.Bold)
+        .textAlign(TextAlign.End)
+        .textShadow({ radius: 12, color: '#55000000', offsetX: 0, offsetY: 4 })
+        .width(this.isLandscape ? 280 : 244)
+
+      Text(`:${this.seconds}`)
+        .fontFamily(Icons.FONT_IBM_PLEX_MONO)
+        .fontSize(this.isLandscape ? 38 : 28)
+        .minFontSize(this.isLandscape ? 18 : 18)
+        .maxFontSize(this.isLandscape ? 38 : 28)
+        .maxLines(1)
+        .fontColor(this.colorsConfig.fontColor)
+        .fontWeight(FontWeight.Bold)
+        .opacity(0.78)
+        .width(this.isLandscape ? 70 : 48)
+        .margin({ top: this.isLandscape ? 0 : 22 })
+    }
+    .alignItems(this.isLandscape ? VerticalAlign.Bottom : VerticalAlign.Center)
+    .justifyContent(FlexAlign.Center)
+    .width(this.isLandscape ? 360 : 322)
+  }
+
+  @Builder
+  OfficeProgress(label: string) {
+    Column({ space: this.isLandscape ? 8 : 12 }) {
+      Row({ space: this.isLandscape ? 10 : 10 }) {
+        Blank()
+          .width(this.isLandscape ? 48 : 50)
+
+        Text(label)
+          .fontFamily(Icons.FONT_IBM_PLEX_MONO)
+          .posterLabel(this.isLandscape ? 17 : 18, this.colorsConfig.fontColor)
+          .fontWeight(FontWeight.Bold)
+          .layoutWeight(1)
+          .textAlign(TextAlign.Start)
+
+        Blank()
+          .width(this.isLandscape ? 48 : 50)
+      }
+      .width('100%')
+      .alignItems(VerticalAlign.Center)
+
+      Row({ space: this.isLandscape ? 10 : 10 }) {
+        Blank()
+          .width(this.isLandscape ? 48 : 50)
+
+        Row() {
+          Row()
+            .height(this.isLandscape ? 12 : 14)
+            .width(`${this.workProgress}%`)
+            .linearGradient({
+              direction: GradientDirection.Right,
+              colors: [[0xff6aa9ff, 0.0], [0xff98e4ff, 1.0]]
+            })
+            .borderRadius(this.isLandscape ? 9 : 7)
+        }
+        .layoutWeight(1)
+        .height(this.isLandscape ? 16 : 22)
+        .padding(this.isLandscape ? 2 : 3)
+        .border({ width: this.isLandscape ? 1 : 2, color: this.colorsConfig.fontColor, radius: this.isLandscape ? 10 : 11 })
+        .opacity(0.9)
+
+        Text(`${this.workProgress}%`)
+          .fontFamily(Icons.FONT_IBM_PLEX_MONO)
+          .posterLabel(this.isLandscape ? 17 : 20, this.colorsConfig.fontColor)
+          .fontWeight(FontWeight.Bold)
+          .width(this.isLandscape ? 48 : 50)
+      }
+      .width('100%')
+      .alignItems(VerticalAlign.Center)
+
+    }
+    .width(this.isLandscape ? 360 : '104%')
   }
 
   @Builder

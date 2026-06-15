@@ -23,6 +23,10 @@ export enum ClockStyle {
   Style9,
   Style10,
   Style11,
+  Style12,
+  Style13,
+  Style14,
+  Style15,
 }
 
 export interface ClockColorsConfig {
@@ -295,6 +299,42 @@ export const CLOCK_CONFIGS: ClockConfig[] = [
     colors: {
       backgroundColor: '#08111d',
       cardColor: '#111426',
+      fontColor: '#ffffff'
+    }
+  },
+  {
+    id: 'poster_clock_office_snooze',
+    type: ClockType.Poster,
+    style: ClockStyle.Style12,
+    colors: {
+      backgroundColor: '#06152f',
+      fontColor: '#ffffff'
+    }
+  },
+  {
+    id: 'poster_clock_office_monday',
+    type: ClockType.Poster,
+    style: ClockStyle.Style13,
+    colors: {
+      backgroundColor: '#06152f',
+      fontColor: '#ffffff'
+    }
+  },
+  {
+    id: 'poster_clock_office_coffee',
+    type: ClockType.Poster,
+    style: ClockStyle.Style14,
+    colors: {
+      backgroundColor: '#06152f',
+      fontColor: '#ffffff'
+    }
+  },
+  {
+    id: 'poster_clock_office_payday',
+    type: ClockType.Poster,
+    style: ClockStyle.Style15,
+    colors: {
+      backgroundColor: '#06152f',
       fontColor: '#ffffff'
     }
   },

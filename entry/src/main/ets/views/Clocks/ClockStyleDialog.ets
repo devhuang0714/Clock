@@ -39,6 +39,12 @@ interface TabItem {
   type: TabType
 }
 
+interface ColorItem {
+  color: ResourceColor,
+  title?: string,
+  isDefault?: boolean
+}
+
 @CustomDialog
 export struct ClockStyleDialog {
   static CONTENT_HEIGHT: number = 120
@@ -107,6 +113,10 @@ export struct ClockStyleDialog {
     return this.selectedConfig.id == item.id
   }
 
+  getDefaultConfig(): ClockConfig {
+    return CLOCK_CONFIGS.find((item: ClockConfig) => item.id == this.selectedConfig.id) ?? this.selectedConfig
+  }
+
   scrollToCenter(index: number) {
     const width = px2vp(display.getDefaultDisplaySync().width)
     let itemRect = this.scroller.getItemRect(index)
@@ -148,7 +158,9 @@ export struct ClockStyleDialog {
               this.ClockStylesView(TabType.Theme)
             } else if (item.type == TabType.Background) {
               ColorsView({
-                selectedColor: this.selectedConfig.colors.backgroundColor as string,
+                selectedColor: this.selectedConfig.colors.backgroundColor,
+                defaultColor: this.getDefaultConfig().colors.backgroundColor,
+                showDefaultOption: true,
                 onSelected: (color) => {
                   this.selectedConfig.colors.backgroundColor = color
                   this.onSelected(this.selectedConfig)
@@ -166,7 +178,9 @@ export struct ClockStyleDialog {
                 .visibility(this.selectedTabItem.type == TabType.CardColor ? Visibility.Visible : Visibility.Hidden)
             } else if (item.type == TabType.FontColor) {
               ColorsView({
-                selectedColor: this.selectedConfig.colors.fontColor as string,
+                selectedColor: this.selectedConfig.colors.fontColor,
+                defaultColor: this.getDefaultConfig().colors.fontColor,
+                showDefaultOption: true,
                 onSelected: (color) => {
                   this.selectedConfig.colors.fontColor = color
                   this.onSelected(this.selectedConfig)
@@ -347,8 +361,10 @@ export struct ClockStyleDialog {
 
 @Component
 struct ColorsView {
-  @Prop selectedColor: string = '#ffcccc'
-  onSelected: (color: string) => void = () => {
+  @Prop selectedColor: ResourceColor = '#ffcccc'
+  @Prop defaultColor: ResourceColor = ''
+  @Prop showDefaultOption: boolean = false
+  onSelected: (color: ResourceColor) => void = () => {
   }
   private colors: string[] = [
     "#ffffff", "#000000", "#ffcccc", "#ff9999", "#ff6666", "#ff3333", "#ff0000", "#f50000", "#d60000", "#a30000",
@@ -364,6 +380,35 @@ struct ColorsView {
   ]
   private scroller: Scroller = new Scroller()
 
+  getColorItems(): ColorItem[] {
+    const items: ColorItem[] = this.colors.map((color: string): ColorItem => {
+      return { color: color }
+    })
+    if (this.showDefaultOption) {
+      items.unshift({
+        color: this.defaultColor,
+        title: '[默认]',
+        isDefault: true
+      })
+    }
+    return items
+  }
+
+  isSameColor(a: ResourceColor, b: ResourceColor): boolean {
+    return JSON.stringify(a) == JSON.stringify(b)
+  }
+
+  isSelectedColor(item: ColorItem): boolean {
+    if (item.isDefault) {
+      return this.isSameColor(this.selectedColor, this.defaultColor)
+    }
+    if (this.showDefaultOption && this.isSameColor(this.selectedColor, this.defaultColor) &&
+      this.isSameColor(item.color, this.defaultColor)) {
+      return false
+    }
+    return this.isSameColor(this.selectedColor, item.color)
+  }
+
   scrollToCenter(index: number) {
     const width = px2vp(display.getDefaultDisplaySync().width)
     let itemRect = this.scroller.getItemRect(index)
@@ -377,14 +422,29 @@ struct ColorsView {
 
   build() {
     Grid(this.scroller) {
-      ForEach(this.colors, (color: string) => {
+      ForEach(this.getColorItems(), (item: ColorItem, index: number) => {
         GridItem() {
           Stack() {
             Row()
               .height('100%')
               .aspectRatio(1)
 
-            if (this.selectedColor == color) {
+            if (item.title != undefined) {
+              Row() {
+                Text(item.title)
+                  .fontSize(10)
+                  .fontColor('#ffffff')
+                  .fontWeight(FontWeight.Medium)
+                  .textAlign(TextAlign.Center)
+                  .textShadow({ radius: 2, color: '#99000000', offsetX: 0, offsetY: 1 })
+              }
+              .width('100%')
+              .height('100%')
+              .justifyContent(FlexAlign.Center)
+              .alignItems(VerticalAlign.Center)
+            }
+
+            if (this.isSelectedColor(item)) {
               Text(Icons.CHECKED)
                 .fontFamily(Icons.FONT_FAMILY)
                 .fontSize(24)
@@ -393,18 +453,16 @@ struct ColorsView {
           }
           .alignContent(Alignment.BottomEnd)
         }
-        .backgroundColor(color)
+        .backgroundColor(item.color)
         .border({
           width: 2,
-          color: this.selectedColor == color ? Color.Green : color,
+          color: this.isSelectedColor(item) ? Color.Green : item.color,
           radius: 8
         })
         .onClick(() => {
           startVibration()
-          this.selectedColor = color
-          this.onSelected(color)
-
-          let index = this.colors.indexOf(this.selectedColor)
+          this.selectedColor = item.color
+          this.onSelected(item.color)
           this.scrollToCenter(index)
         })
       })
@@ -415,7 +473,7 @@ struct ColorsView {
     .scrollBar(BarState.Off)
     .onAppear(() => {
       setTimeout(() => {
-        const index = this.colors.findIndex(color => color === this.selectedColor)
+        const index = this.getColorItems().findIndex((item: ColorItem) => this.isSelectedColor(item))
         this.scroller.scrollToIndex(index)
       }, 100)
     })
