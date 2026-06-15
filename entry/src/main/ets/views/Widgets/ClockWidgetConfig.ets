@@ -121,8 +121,8 @@ export const CLOCK_WIDGET_CONFIGS: ClockWidgetConfig[] = [
   },
   {
     id: 'widget_round',
-    title: '冷色科技',
-    subtitle: '蓝绿光感指针',
+    title: '机械指针',
+    subtitle: '金属质感分层表盘',
     type: ClockWidgetStyleType.Round,
     roundStyle: ClockWidgetRoundStyle.Cool,
     supportedSizes: [
@@ -131,11 +131,11 @@ export const CLOCK_WIDGET_CONFIGS: ClockWidgetConfig[] = [
       ClockWidgetSize.Size4x4
     ],
     colors: {
-      backgroundColor: '#061018',
-      cardColor: '#0B1E2A',
-      fontColor: '#EAF6FF',
-      mutedColor: '#6B8494',
-      accentColor: '#37D7FF'
+      backgroundColor: '#0D0F13',
+      cardColor: '#0D0F13',
+      fontColor: '#F4F6F8',
+      mutedColor: '#8C929A',
+      accentColor: '#8AA4C8'
     }
   },
   {

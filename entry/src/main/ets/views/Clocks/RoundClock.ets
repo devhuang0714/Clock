@@ -22,7 +22,7 @@ export struct RoundClock {
   private radius: number = 150; // 默认表盘半径
   private listener: ClockListener = {
     onUpdate: (date) => {
-      if (this.style == ClockStyle.Style2) {
+      if (this.style == ClockStyle.Style2 || this.style == ClockStyle.Style3) {
         const milliseconds = date.getMilliseconds()
         const seconds = date.getSeconds() + milliseconds / 1000
         const minutes = date.getMinutes() + seconds / 60
@@ -48,7 +48,7 @@ export struct RoundClock {
   aboutToAppear() {
     // this.getSize();
     this.controller.registerListener(this.listener)
-    if (this.style == ClockStyle.Style2) {
+    if (this.style == ClockStyle.Style2 || this.style == ClockStyle.Style3) {
       this.listener.onUpdate(this.date)
     }
   }
@@ -479,6 +479,38 @@ export struct RoundClock {
             .rotate({ angle: this.secondAngle })
 
           Image($r('app.media.round_neon_center_cap'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+        }
+        .width(this.canvasWidth)
+        .height(this.canvasWidth)
+      } else if (this.style == ClockStyle.Style3) {
+        Stack() {
+          Image($r('app.media.round_clock_style3_clock_face'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+
+          Image($r('app.media.round_clock_style3_hour_hand'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+            .rotate({ angle: this.hourAngle })
+
+          Image($r('app.media.round_clock_style3_minute_hand'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+            .rotate({ angle: this.minuteAngle })
+
+          Image($r('app.media.round_clock_style3_second_hand'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+            .rotate({ angle: this.secondAngle })
+
+          Image($r('app.media.round_clock_style3_center_cap'))
             .width('100%')
             .height('100%')
             .objectFit(ImageFit.Contain)

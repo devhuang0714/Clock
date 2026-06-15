@@ -106,7 +106,7 @@ export const CLOCK_CONFIGS: ClockConfig[] = [
     type: ClockType.Round,
     style: ClockStyle.Style3,
     colors: {
-      backgroundColor: '#080411',
+      backgroundColor: '#0d0f13',
       fontColor: ''
     }
   },

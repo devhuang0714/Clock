@@ -539,47 +539,85 @@ export struct ClockWidgetView {
 
   @Builder
   RoundFace() {
-    Stack() {
-      this.RoundFaceBase()
+    if (this.getRoundStyle() == ClockWidgetRoundStyle.Cool) {
+      this.RoundMechanicalFace()
+    } else {
+      Stack() {
+        this.RoundFaceBase()
 
-      if (this.getRoundStyle() == ClockWidgetRoundStyle.Classic) {
-        this.RoundTicks()
-        this.RoundHourLabels(CLOCK_WIDGET_NUMBER_LABELS)
-      } else if (this.getRoundStyle() == ClockWidgetRoundStyle.Cool) {
-        this.RoundTicks()
-        this.RoundDotMarkers()
-      } else if (this.getRoundStyle() == ClockWidgetRoundStyle.Cyberpunk) {
-        this.RoundCyberpunkMarks()
-        this.RoundHourLabels(CLOCK_WIDGET_NUMBER_LABELS)
-      } else if (this.getRoundStyle() == ClockWidgetRoundStyle.Cute) {
-        this.RoundPastelDots()
-        this.RoundTicks()
-        this.RoundHourLabels(CLOCK_WIDGET_NUMBER_LABELS)
-      } else if (this.getRoundStyle() == ClockWidgetRoundStyle.Retro) {
-        this.RoundTicks()
-        this.RoundHourLabels(CLOCK_WIDGET_ROMAN_LABELS)
-      } else if (this.getRoundStyle() == ClockWidgetRoundStyle.ArtDeco) {
-        this.RoundDecoSpokes()
-        this.RoundDiamondMarkers()
-        this.RoundHourLabels(CLOCK_WIDGET_ROMAN_LABELS)
+        if (this.getRoundStyle() == ClockWidgetRoundStyle.Classic) {
+          this.RoundTicks()
+          this.RoundHourLabels(CLOCK_WIDGET_NUMBER_LABELS)
+        } else if (this.getRoundStyle() == ClockWidgetRoundStyle.Cyberpunk) {
+          this.RoundCyberpunkMarks()
+          this.RoundHourLabels(CLOCK_WIDGET_NUMBER_LABELS)
+        } else if (this.getRoundStyle() == ClockWidgetRoundStyle.Cute) {
+          this.RoundPastelDots()
+          this.RoundTicks()
+          this.RoundHourLabels(CLOCK_WIDGET_NUMBER_LABELS)
+        } else if (this.getRoundStyle() == ClockWidgetRoundStyle.Retro) {
+          this.RoundTicks()
+          this.RoundHourLabels(CLOCK_WIDGET_ROMAN_LABELS)
+        } else if (this.getRoundStyle() == ClockWidgetRoundStyle.ArtDeco) {
+          this.RoundDecoSpokes()
+          this.RoundDiamondMarkers()
+          this.RoundHourLabels(CLOCK_WIDGET_ROMAN_LABELS)
+        }
+
+        this.RoundHand(this.getHourAngle(), this.getRoundHourHandWidth(), this.getRoundHourHandLength(),
+          this.getRoundHourHandColor())
+        this.RoundHand(this.getMinuteAngle(), this.getRoundMinuteHandWidth(), this.getRoundMinuteHandLength(),
+          this.getRoundMinuteHandColor())
+
+        Circle()
+          .width(this.widgetSize == ClockWidgetSize.Size4x4 ? 24 : 18)
+          .height(this.widgetSize == ClockWidgetSize.Size4x4 ? 24 : 18)
+          .fill(this.config.colors.cardColor ?? this.config.colors.backgroundColor)
+          .stroke(this.getRoundCenterColor())
+          .strokeWidth(this.widgetSize == ClockWidgetSize.Size4x4 ? 4 : 3)
+
+        Circle()
+          .width(this.widgetSize == ClockWidgetSize.Size4x4 ? 12 : 9)
+          .height(this.widgetSize == ClockWidgetSize.Size4x4 ? 12 : 9)
+          .fill(this.getRoundCenterColor())
+
+        TextClock()
+          .format('HH:mm')
+          .onDateChange((value: number) => {
+            this.onMinuteChange(value)
+          })
+          .fontSize(1)
+          .fontColor(Color.Transparent)
       }
+      .width(this.getRoundDialSize())
+      .height(this.getRoundDialSize())
+    }
+  }
 
-      this.RoundHand(this.getHourAngle(), this.getRoundHourHandWidth(), this.getRoundHourHandLength(),
-        this.getRoundHourHandColor())
-      this.RoundHand(this.getMinuteAngle(), this.getRoundMinuteHandWidth(), this.getRoundMinuteHandLength(),
-        this.getRoundMinuteHandColor())
+  @Builder
+  RoundMechanicalFace() {
+    Stack() {
+      Image($r('app.media.round_clock_style3_clock_face'))
+        .width('100%')
+        .height('100%')
+        .objectFit(ImageFit.Contain)
 
-      Circle()
-        .width(this.widgetSize == ClockWidgetSize.Size4x4 ? 24 : 18)
-        .height(this.widgetSize == ClockWidgetSize.Size4x4 ? 24 : 18)
-        .fill(this.config.colors.cardColor ?? this.config.colors.backgroundColor)
-        .stroke(this.getRoundCenterColor())
-        .strokeWidth(this.widgetSize == ClockWidgetSize.Size4x4 ? 4 : 3)
+      Image($r('app.media.round_clock_style3_hour_hand'))
+        .width('100%')
+        .height('100%')
+        .objectFit(ImageFit.Contain)
+        .rotate({ angle: this.getHourAngle() })
 
-      Circle()
-        .width(this.widgetSize == ClockWidgetSize.Size4x4 ? 12 : 9)
-        .height(this.widgetSize == ClockWidgetSize.Size4x4 ? 12 : 9)
-        .fill(this.getRoundCenterColor())
+      Image($r('app.media.round_clock_style3_minute_hand'))
+        .width('100%')
+        .height('100%')
+        .objectFit(ImageFit.Contain)
+        .rotate({ angle: this.getMinuteAngle() })
+
+      Image($r('app.media.round_clock_style3_center_cap'))
+        .width('100%')
+        .height('100%')
+        .objectFit(ImageFit.Contain)
 
       TextClock()
         .format('HH:mm')
