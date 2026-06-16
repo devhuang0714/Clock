@@ -1,4 +1,5 @@
 import { ConfigurationConstant } from '@kit.AbilityKit';
+import { BuilderNode, FrameNode, NodeController, NodeRenderType, PiPWindow, UIContext } from '@kit.ArkUI';
 import window from '@ohos.window';
 import common from '@ohos.app.ability.common';
 import mediaQuery from '@ohos.mediaquery';
@@ -6,7 +7,7 @@ import router from '@ohos.router';
 import { AppConstants, Icons } from '../common/constants/Constants';
 import { ClockController } from '../views/Clocks/ClockController'
 import { RoundClock } from '../views/Clocks/RoundClock';
-import { FlipClock } from '../views/Clocks/FlipClock';
+import { FlipCard, FlipCardController, FlipClock } from '../views/Clocks/FlipClock';
 import { DigitalClock } from '../views/Clocks/DigitalClock';
 import { LunarCalendarClock } from '../views/Clocks/LunarCalendarClock'
 import { RotateClock } from '../views/Clocks/RotateClock'
@@ -36,6 +37,42 @@ import { MechanicalClock } from '../views/Clocks/MechanicalClock';
 PersistentStorage.persistProp('currentColorMode', ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET)
 PersistentStorage.persistProp('defaultClockConfig', CLOCK_CONFIGS[0])
 PersistentStorage.persistProp('globalClockConfig', DEFAULT_GLOBAL_CONFIG)
+PersistentStorage.persistProp('isLandscape', false)
+
+const PIP_CLOCK_PORTRAIT_WIDTH = 180
+const PIP_CLOCK_PORTRAIT_HEIGHT = 320
+const PIP_CLOCK_LANDSCAPE_WIDTH = 320
+const PIP_CLOCK_LANDSCAPE_HEIGHT = 180
+
+@Builder
+function PipClockBuilder() {
+  ClockPipView()
+}
+
+class ClockPipNodeController extends NodeController {
+  private builderNode: BuilderNode<[]> | null = null
+  private width: number = PIP_CLOCK_PORTRAIT_WIDTH
+  private height: number = PIP_CLOCK_PORTRAIT_HEIGHT
+
+  constructor(isLandscape: boolean) {
+    super()
+    this.width = isLandscape ? PIP_CLOCK_LANDSCAPE_WIDTH : PIP_CLOCK_PORTRAIT_WIDTH
+    this.height = isLandscape ? PIP_CLOCK_LANDSCAPE_HEIGHT : PIP_CLOCK_PORTRAIT_HEIGHT
+  }
+
+  makeNode(uiContext: UIContext): FrameNode | null {
+    const builderNode = new BuilderNode<[]>(uiContext, {
+      selfIdealSize: {
+        width: this.width,
+        height: this.height
+      },
+      type: NodeRenderType.RENDER_TYPE_TEXTURE
+    })
+    builderNode.build(wrapBuilder(PipClockBuilder))
+    this.builderNode = builderNode
+    return builderNode.getFrameNode()
+  }
+}
 
 @Entry
 @Component
@@ -53,6 +90,10 @@ struct Index {
   @Watch('onConfigChange') @StorageLink('globalClockConfig') globalConfig: GlobalClockConfig = DEFAULT_GLOBAL_CONFIG
   private date: Date = new Date()
   private clockController: ClockController = new ClockController()
+  private pipXComponentController: XComponentController = new XComponentController()
+  private pipUiController: ClockPipNodeController = new ClockPipNodeController(false)
+  private pipController: PiPWindow.PiPController | null = null
+  private pipIsLandscape: boolean = false
   private intervalId: number = 0;
   private cleanTimeoutId: number = 0;
   private clockStyleDialog: CustomDialogController = new CustomDialogController({
@@ -109,6 +150,8 @@ struct Index {
   })
 
   aboutToAppear(): void {
+    this.isLandscape = this.listener.matches as boolean
+    AppStorage.setOrCreate('isLandscape', this.isLandscape)
     // 绑定横竖屏切换回调函数
     this.listener.on('change', (mediaQueryResult: mediaQuery.MediaQueryResult) => {
       console.log(`mediaQueryResult: ${mediaQueryResult.matches as boolean}`)
@@ -235,69 +278,54 @@ struct Index {
     this.clockController.update(this.date)
   }
 
-  showFloatWindow() {
-    // 创建悬浮窗
-    let windowClass: window.Window | null = null
-    let config: window.Configuration = {
-      name: 'floatWindow',
-      windowType: window.WindowType.TYPE_FLOAT,
-      ctx: getContext()
-    }
-    window.createWindow(config, (err: BusinessError, data) => {
-      if (err.code) {
-        console.error('Failed to create the floatWindow. Cause: ' + JSON.stringify(err))
+  async startPictureInPicture() {
+    try {
+      if (!PiPWindow.isPiPEnabled()) {
+        console.warn('Picture-in-picture is not enabled on this device.')
         return
       }
-      console.info('Succeeded in creating the floatWindow. Data: ' + JSON.stringify(data))
 
-      windowClass = data
-      // 设置位置、大小等相关信息
-      windowClass.moveWindowTo(300, 300, (err: BusinessError) => {
-        if (err.code) {
-          console.error('Failed to move the window. Cause: ' + JSON.stringify(err))
-          return
+      const width = this.isLandscape ? PIP_CLOCK_LANDSCAPE_WIDTH : PIP_CLOCK_PORTRAIT_WIDTH
+      const height = this.isLandscape ? PIP_CLOCK_LANDSCAPE_HEIGHT : PIP_CLOCK_PORTRAIT_HEIGHT
+      if (this.pipController && this.pipIsLandscape != this.isLandscape) {
+        try {
+          await this.pipController.stopPiP()
+        } catch (error) {
+          const err = error as BusinessError
+          console.warn(`Failed to stop previous PiP before orientation switch. Code=${err.code}, message=${err.message}`)
         }
-        console.info('Succeeded in moving the window.')
-      })
-      // 设置尺寸
-      windowClass.resize(200, 100, (err: BusinessError) => {
-        if (err.code) {
-          console.error('Failed to change the window. Cause: ' + JSON.stringify(err))
-          return
-        }
-        console.info('Succeeded in changing the window.')
-      })
-      // 设置加载悬浮窗的目标页面
-      windowClass.setUIContent('pages/Index', (err: BusinessError) => {
-        if (err.code) {
-          console.error('Failed to load the content. Cause: ' + JSON.stringify(err))
-          return
-        }
-        console.info('Succeeded in loading the content.');
-        // 显示悬浮窗。
-        (windowClass as window.Window).showWindow((err: BusinessError) => {
-          let errCode: number = err.code;
-          if (errCode) {
-            console.error('Failed to show the window. Cause: ' + JSON.stringify(err));
-            return;
-          }
-          console.info('Succeeded in showing the window.');
-        });
-      })
-    })
-  }
+        this.pipController = null
+      }
 
-  destroyFloatWindow() {
-    // https://developer.huawei.com/consumer/cn/doc/harmonyos-guides/application-window-stage-0000001820999885#ZH-CN_TOPIC_0000001811156966__%E8%AE%BE%E7%BD%AE%E6%82%AC%E6%B5%AE%E7%AA%97
-    // 4.销毁悬浮窗。当不再需要悬浮窗时，可根据具体实现逻辑，使用destroy对其进行销毁。
-    // windowClass.destroyWindow((err: BusinessError) => {
-    //   let errCode: number = err.code;
-    //   if (errCode) {
-    //     console.error('Failed to destroy the window. Cause: ' + JSON.stringify(err));
-    //     return;
-    //   }
-    //   console.info('Succeeded in destroying the window.');
-    // });
+      if (!this.pipController) {
+        const context = getContext(this) as common.UIAbilityContext
+        this.pipIsLandscape = this.isLandscape
+        this.pipUiController = new ClockPipNodeController(this.isLandscape)
+        this.pipController = await PiPWindow.create({
+          context,
+          componentController: this.pipXComponentController,
+          templateType: PiPWindow.PiPTemplateType.VIDEO_LIVE,
+          contentWidth: width,
+          contentHeight: height,
+          controlGroups: [],
+          customUIController: this.pipUiController,
+          defaultWindowSizeType: 1,
+          cornerAdsorptionEnabled: true
+        })
+        this.pipController.on('stateChange', (state: PiPWindow.PiPState, reason: string) => {
+          console.info(`PiP state changed. state=${state}, reason=${reason}`)
+        })
+        this.pipController.on('controlPanelActionEvent', (event: PiPWindow.PiPActionEventType, status?: number) => {
+          console.info(`PiP control event. event=${event}, status=${status}`)
+        })
+      }
+
+      this.pipController.setAutoStartEnabled(true)
+      await this.pipController.startPiP()
+    } catch (error) {
+      const err = error as BusinessError
+      console.error(`Failed to start picture-in-picture. Code=${err.code}, message=${err.message}`)
+    }
   }
 
   build() {
@@ -317,6 +345,7 @@ struct Index {
 
       this.TopTools()
       this.BottomTools()
+      this.PipSource()
     }
     .height('100%')
     .height('100%')
@@ -327,6 +356,24 @@ struct Index {
     .onAppear(() => {
       this.checkUpdate()
     })
+  }
+
+  @Builder
+  PipSource() {
+    XComponent({
+      id: 'flipClockPipSource',
+      type: XComponentType.SURFACE,
+      controller: this.pipXComponentController
+    })
+      .width(this.isLandscape ? PIP_CLOCK_LANDSCAPE_WIDTH : PIP_CLOCK_PORTRAIT_WIDTH)
+      .height(this.isLandscape ? PIP_CLOCK_LANDSCAPE_HEIGHT : PIP_CLOCK_PORTRAIT_HEIGHT)
+      .opacity(0.01)
+      .hitTestBehavior(HitTestMode.None)
+      .zIndex(-1)
+      .alignRules({
+        top: { anchor: "__container__", align: VerticalAlign.Top },
+        left: { anchor: "__container__", align: HorizontalAlign.Start }
+      })
   }
 
   @Builder
@@ -420,14 +467,13 @@ struct Index {
           this.globalConfig.themeMode = mode
           getContext().getApplicationContext().setColorMode(mode);
         })
-      //
-      // ToolItem({
-      //   unicode: Icons.MINI_WINDOW,
-      //   fontSize: 24
-      // })
-      //   .onClick(() => {
-      //     this.showFloatWindow()
-      //   })
+      ToolItem({
+        unicode: Icons.MINI_WINDOW,
+        fontSize: 24
+      })
+        .onClick(() => {
+          this.startPictureInPicture()
+        })
 
       if (DEBUG) {
         Row() {
@@ -505,6 +551,213 @@ struct Index {
       bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
     })
     .id("tools")
+  }
+}
+
+@Component
+struct ClockPipView {
+  @Watch('onClockConfigChange') @StorageLink('defaultClockConfig') clockConfig: ClockConfig = CLOCK_CONFIGS[0]
+  @StorageLink('globalClockConfig') globalConfig: GlobalClockConfig = DEFAULT_GLOBAL_CONFIG
+  @StorageLink('isLandscape') isLandscape: boolean = false
+  @State now: Date = new Date()
+  private clockController: ClockController = new ClockController()
+  private hourController: FlipCardController = new FlipCardController()
+  private minuteController: FlipCardController = new FlipCardController()
+  private secondController: FlipCardController = new FlipCardController()
+  private intervalId: number = 0
+
+  aboutToAppear(): void {
+    this.updateTime()
+    this.onClockConfigChange()
+  }
+
+  aboutToDisappear(): void {
+    clearInterval(this.intervalId)
+  }
+
+  onClockConfigChange() {
+    clearInterval(this.intervalId)
+    const interval = this.clockConfig.type == ClockType.Round &&
+      (this.clockConfig.style == ClockStyle.Style2 || this.clockConfig.style == ClockStyle.Style3 ||
+        this.clockConfig.style == ClockStyle.Style4 || this.clockConfig.style == ClockStyle.Style5 ||
+        this.clockConfig.style == ClockStyle.Style6 || this.clockConfig.style == ClockStyle.Style7) ? 20 : 1000
+    this.intervalId = setInterval(() => {
+      this.updateTime()
+    }, interval)
+    this.updateTime()
+  }
+
+  updateTime() {
+    this.now = new Date()
+    this.clockController.update(this.now)
+
+    const hours = this.globalConfig.use24HourFormat ? this.now.getHours() : this.get12Hour(this.now)
+    this.hourController.change(hours.toString().padStart(2, '0'))
+    this.minuteController.change(this.now.getMinutes().toString().padStart(2, '0'))
+    this.secondController.change(this.now.getSeconds().toString().padStart(2, '0'))
+  }
+
+  get12Hour(date: Date): number {
+    const hours = date.getHours() % 12
+    return hours === 0 ? 12 : hours
+  }
+
+  getHourText(): string {
+    const hours = this.globalConfig.use24HourFormat ? this.now.getHours() : this.get12Hour(this.now)
+    return hours.toString().padStart(2, '0')
+  }
+
+  build() {
+    Stack() {
+      if (this.clockConfig.type == ClockType.Flip) {
+        this.PipFlipClock()
+      } else {
+        this.CurrentClockFace()
+      }
+    }
+    .width('100%')
+    .height('100%')
+    .backgroundColor(this.clockConfig.colors.backgroundColor)
+    .borderRadius(28)
+    .clip(true)
+  }
+
+  @Builder
+  PipFlipClock() {
+    if (this.isLandscape) {
+      Row({ space: 10 }) {
+        this.PipFlipCardItems()
+      }
+      .width('100%')
+      .height('100%')
+      .justifyContent(FlexAlign.Center)
+      .alignItems(VerticalAlign.Center)
+      .padding({ left: 10, right: 10, top: 12, bottom: 12 })
+      .backgroundColor(this.clockConfig.colors.backgroundColor)
+    } else {
+      Column({ space: 8 }) {
+        this.PipFlipCardItems()
+      }
+      .width('100%')
+      .height('100%')
+      .justifyContent(FlexAlign.Center)
+      .alignItems(HorizontalAlign.Center)
+      .padding({ left: 12, right: 12, top: 14, bottom: 14 })
+      .backgroundColor(this.clockConfig.colors.backgroundColor)
+    }
+  }
+
+  @Builder
+  PipFlipCardItems() {
+    FlipCard({
+      fontSize: this.isLandscape ? 44 : 48,
+      fontColor: this.clockConfig.colors.fontColor,
+      color: this.clockConfig.colors.cardColor,
+      shadowColor: Color.Transparent,
+      space: 2,
+      current: this.getHourText(),
+      controller: this.hourController
+    })
+
+    FlipCard({
+      fontSize: this.isLandscape ? 44 : 48,
+      fontColor: this.clockConfig.colors.fontColor,
+      color: this.clockConfig.colors.cardColor,
+      shadowColor: Color.Transparent,
+      space: 2,
+      current: this.now.getMinutes().toString().padStart(2, '0'),
+      controller: this.minuteController
+    })
+
+    FlipCard({
+      fontSize: this.isLandscape ? 44 : 48,
+      fontColor: this.clockConfig.colors.fontColor,
+      color: this.clockConfig.colors.cardColor,
+      shadowColor: Color.Transparent,
+      space: 2,
+      current: this.now.getSeconds().toString().padStart(2, '0'),
+      controller: this.secondController
+    })
+  }
+
+  @Builder
+  CurrentClockFace() {
+    Column() {
+      if (this.clockConfig.type == ClockType.Round) {
+        RoundClock({
+          controller: this.clockController,
+          date: this.now,
+          style: this.clockConfig.style
+        })
+      } else if (this.clockConfig.type == ClockType.Digital) {
+        DigitalClock({
+          controller: this.clockController,
+          date: this.now,
+          colorsConfig: this.clockConfig.colors,
+          globalConfig: this.globalConfig,
+        })
+      } else if (this.clockConfig.type == ClockType.Rotate) {
+        RotateClock({
+          controller: this.clockController,
+          date: this.now,
+          style: this.clockConfig.style,
+          colorsConfig: this.clockConfig.colors,
+          globalConfig: this.globalConfig,
+          lightOn: this.clockConfig.ext?.lightOn,
+          isLandscape: this.isLandscape,
+        })
+      } else if (this.clockConfig.type == ClockType.LunarCalendar) {
+        LunarCalendarClock({
+          controller: this.clockController,
+          date: this.now,
+          style: this.clockConfig.style,
+          colorsConfig: this.clockConfig.colors,
+          globalConfig: this.globalConfig,
+          isLandscape: this.isLandscape,
+        })
+      } else if (this.clockConfig.type == ClockType.NormalDigital) {
+        NormalDigitalClock({
+          controller: this.clockController,
+          date: this.now,
+          colorsConfig: this.clockConfig.colors,
+          globalConfig: this.globalConfig,
+          isLandscape: this.isLandscape,
+        })
+      } else if (this.clockConfig.type == ClockType.Stereoscopic) {
+        StereoscopicClock({
+          controller: this.clockController,
+          date: this.now,
+          colorsConfig: this.clockConfig.colors,
+          globalConfig: this.globalConfig,
+          isLandscape: this.isLandscape,
+        })
+      } else if (this.clockConfig.type == ClockType.Poster) {
+        PosterClock({
+          controller: this.clockController,
+          date: this.now,
+          style: this.clockConfig.style,
+          colorsConfig: this.clockConfig.colors,
+          globalConfig: this.globalConfig,
+          isLandscape: this.isLandscape,
+        })
+      } else if (this.clockConfig.type == ClockType.Mechanical) {
+        MechanicalClock({
+          controller: this.clockController,
+          date: this.now,
+          isLandscape: this.isLandscape
+        })
+      }
+    }
+    .width('100%')
+    .height('100%')
+    .justifyContent(FlexAlign.Center)
+    .alignItems(HorizontalAlign.Center)
+    .scale({
+      x: this.isLandscape ? 0.48 : 0.54,
+      y: this.isLandscape ? 0.48 : 0.54,
+      centerX: '50%',
+      centerY: '50%'
+    })
   }
 }
 

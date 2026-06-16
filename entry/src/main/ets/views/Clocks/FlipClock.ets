@@ -170,7 +170,7 @@ export struct FlipCard {
     begin: 0,
     end: 1
   })
-  private controller: FlipCardController = new FlipCardController()
+  controller: FlipCardController = new FlipCardController()
 
   aboutToAppear(): void {
     this.prev = this.current
