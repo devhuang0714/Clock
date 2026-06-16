@@ -16,49 +16,6 @@ SIZE=1254
 CENTER=627
 FACE_SHIFT_Y=3
 
-build_uniform_tick_overlay() {
-  local svg="$WORK_DIR/tmp/uniform_ticks.svg"
-  awk -v c="$CENTER" 'BEGIN {
-    pi = atan2(0, -1)
-    print "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1254\" height=\"1254\" viewBox=\"0 0 1254 1254\">"
-    print "  <defs>"
-    print "    <filter id=\"cyanGlow\" x=\"-40%\" y=\"-40%\" width=\"180%\" height=\"180%\">"
-    print "      <feGaussianBlur stdDeviation=\"3\" result=\"blur\"/>"
-    print "      <feMerge><feMergeNode in=\"blur\"/><feMergeNode in=\"SourceGraphic\"/></feMerge>"
-    print "    </filter>"
-    print "  </defs>"
-    print "  <path d=\"M 627 627 m -536 0 a 536 536 0 1 0 1072 0 a 536 536 0 1 0 -1072 0 M 627 627 m -433 0 a 433 433 0 1 1 866 0 a 433 433 0 1 1 -866 0\" fill=\"#04111a\" fill-opacity=\"0.96\" fill-rule=\"evenodd\"/>"
-    print "  <circle cx=\"627\" cy=\"627\" r=\"523\" fill=\"none\" stroke=\"#1bd8ff\" stroke-width=\"3\" stroke-opacity=\"0.75\" filter=\"url(#cyanGlow)\"/>"
-    print "  <circle cx=\"627\" cy=\"627\" r=\"438\" fill=\"none\" stroke=\"#00c8df\" stroke-width=\"1.4\" stroke-opacity=\"0.45\"/>"
-    print "  <circle cx=\"627\" cy=\"627\" r=\"462\" fill=\"none\" stroke=\"#0a5f77\" stroke-width=\"1\" stroke-opacity=\"0.65\"/>"
-
-    for (i = 0; i < 60; i++) {
-      a = i * 2 * pi / 60 - pi / 2
-      if (i % 5 == 0) {
-        r1 = 474; r2 = 514; swGlow = 10; sw = 6; color = "#79f4ff"
-      } else {
-        r1 = 486; r2 = 510; swGlow = 5; sw = 2.6; color = "#20d9ff"
-      }
-      x1 = c + cos(a) * r1; y1 = c + sin(a) * r1
-      x2 = c + cos(a) * r2; y2 = c + sin(a) * r2
-      printf "  <line x1=\"%.3f\" y1=\"%.3f\" x2=\"%.3f\" y2=\"%.3f\" stroke=\"#0bbfff\" stroke-width=\"%.1f\" stroke-opacity=\"0.26\" stroke-linecap=\"round\" filter=\"url(#cyanGlow)\"/>\n", x1, y1, x2, y2, swGlow
-      printf "  <line x1=\"%.3f\" y1=\"%.3f\" x2=\"%.3f\" y2=\"%.3f\" stroke=\"%s\" stroke-width=\"%.1f\" stroke-opacity=\"0.96\" stroke-linecap=\"round\"/>\n", x1, y1, x2, y2, color, sw
-    }
-
-    for (i = 0; i < 60; i += 5) {
-      a = i * 2 * pi / 60 - pi / 2
-      label = (i == 0) ? "60" : sprintf("%02d", i)
-      r = 545
-      x = c + cos(a) * r
-      y = c + sin(a) * r + 7
-      printf "  <text x=\"%.3f\" y=\"%.3f\" text-anchor=\"middle\" font-family=\"Arial, Helvetica, sans-serif\" font-size=\"25\" font-weight=\"500\" fill=\"#52e7ff\" fill-opacity=\"0.88\">%s</text>\n", x, y, label
-    }
-
-    print "</svg>"
-  }' > "$svg"
-  magick "$svg" "$WORK_DIR/tmp/uniform_ticks.png"
-}
-
 make_hand_layer() {
   local crop="$1"
   local pivot_x="$2"
@@ -106,12 +63,6 @@ magick "$FACE_SRC" \
 
 magick -size "${SIZE}x${SIZE}" xc:none \
   "$WORK_DIR/tmp/clock_face_keyed.png" -geometry "+0+${FACE_SHIFT_Y}" -composite \
-  "$WORK_DIR/tmp/clock_face_base.png"
-
-build_uniform_tick_overlay
-
-magick "$WORK_DIR/tmp/clock_face_base.png" \
-  "$WORK_DIR/tmp/uniform_ticks.png" -composite \
   "$OUT_DIR/clock_face.png"
 
 make_hand_layer '129x687+227+373' 64.5 543 365 hour_hand.png

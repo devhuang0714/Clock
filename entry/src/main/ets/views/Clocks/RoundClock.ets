@@ -22,7 +22,7 @@ export struct RoundClock {
   private radius: number = 150; // 默认表盘半径
   private listener: ClockListener = {
     onUpdate: (date) => {
-      if (this.style == ClockStyle.Style2 || this.style == ClockStyle.Style3) {
+      if (this.isImageStackStyle()) {
         const milliseconds = date.getMilliseconds()
         const seconds = date.getSeconds() + milliseconds / 1000
         const minutes = date.getMinutes() + seconds / 60
@@ -48,7 +48,7 @@ export struct RoundClock {
   aboutToAppear() {
     // this.getSize();
     this.controller.registerListener(this.listener)
-    if (this.style == ClockStyle.Style2 || this.style == ClockStyle.Style3) {
+    if (this.isImageStackStyle()) {
       this.listener.onUpdate(this.date)
     }
   }
@@ -67,6 +67,12 @@ export struct RoundClock {
 
   fillTime(time: number) {
     return time < 10 ? `0${time}` : `${time}`;
+  }
+
+  isImageStackStyle(): boolean {
+    return this.style == ClockStyle.Style2 || this.style == ClockStyle.Style3 ||
+      this.style == ClockStyle.Style4 || this.style == ClockStyle.Style5 ||
+      this.style == ClockStyle.Style6 || this.style == ClockStyle.Style7
   }
 
   drawBackGround() {
@@ -487,30 +493,158 @@ export struct RoundClock {
         .height(this.canvasWidth)
       } else if (this.style == ClockStyle.Style3) {
         Stack() {
-          Image($r('app.media.round_clock_style3_clock_face'))
+          Image($r('app.media.round_cyber_clock_face'))
             .width('100%')
             .height('100%')
             .objectFit(ImageFit.Contain)
 
-          Image($r('app.media.round_clock_style3_hour_hand'))
+          Image($r('app.media.round_cyber_hour_hand'))
             .width('100%')
             .height('100%')
             .objectFit(ImageFit.Contain)
             .rotate({ angle: this.hourAngle })
 
-          Image($r('app.media.round_clock_style3_minute_hand'))
+          Image($r('app.media.round_cyber_minute_hand'))
             .width('100%')
             .height('100%')
             .objectFit(ImageFit.Contain)
             .rotate({ angle: this.minuteAngle })
 
-          Image($r('app.media.round_clock_style3_second_hand'))
+          Image($r('app.media.round_cyber_second_hand'))
             .width('100%')
             .height('100%')
             .objectFit(ImageFit.Contain)
             .rotate({ angle: this.secondAngle })
 
-          Image($r('app.media.round_clock_style3_center_cap'))
+          Image($r('app.media.round_cyber_center_cap'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+        }
+        .width(this.canvasWidth)
+        .height(this.canvasWidth)
+      } else if (this.style == ClockStyle.Style4) {
+        Stack() {
+          Image($r('app.media.round_style4_clock_face'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+
+          Image($r('app.media.round_style4_hour_hand'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+            .rotate({ angle: this.hourAngle })
+
+          Image($r('app.media.round_style4_minute_hand'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+            .rotate({ angle: this.minuteAngle })
+
+          Image($r('app.media.round_style4_second_hand'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+            .rotate({ angle: this.secondAngle })
+
+          Image($r('app.media.round_style4_center_cap'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+        }
+        .width(this.canvasWidth)
+        .height(this.canvasWidth)
+      } else if (this.style == ClockStyle.Style5) {
+        Stack() {
+          Image($r('app.media.round_style5_clock_face'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+
+          Image($r('app.media.round_style5_hour_hand'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+            .rotate({ angle: this.hourAngle })
+
+          Image($r('app.media.round_style5_minute_hand'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+            .rotate({ angle: this.minuteAngle })
+
+          Image($r('app.media.round_style5_second_hand'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+            .rotate({ angle: this.secondAngle })
+
+          Image($r('app.media.round_style5_center_cap'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+        }
+        .width(this.canvasWidth)
+        .height(this.canvasWidth)
+      } else if (this.style == ClockStyle.Style6) {
+        Stack() {
+          Image($r('app.media.round_style6_clock_face'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+
+          Image($r('app.media.round_style6_hour_hand'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+            .rotate({ angle: this.hourAngle })
+
+          Image($r('app.media.round_style6_minute_hand'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+            .rotate({ angle: this.minuteAngle })
+
+          Image($r('app.media.round_style6_second_hand'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+            .rotate({ angle: this.secondAngle })
+
+          Image($r('app.media.round_style6_center_cap'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+        }
+        .width(this.canvasWidth)
+        .height(this.canvasWidth)
+      } else if (this.style == ClockStyle.Style7) {
+        Stack() {
+          Image($r('app.media.round_style7_clock_face'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+
+          Image($r('app.media.round_style7_hour_hand'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+            .rotate({ angle: this.hourAngle })
+
+          Image($r('app.media.round_style7_minute_hand'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+            .rotate({ angle: this.minuteAngle })
+
+          Image($r('app.media.round_style7_second_hand'))
+            .width('100%')
+            .height('100%')
+            .objectFit(ImageFit.Contain)
+            .rotate({ angle: this.secondAngle })
+
+          Image($r('app.media.round_style7_center_cap'))
             .width('100%')
             .height('100%')
             .objectFit(ImageFit.Contain)
