@@ -24,13 +24,7 @@ interface FeedbackAttachment {
   content: IBuffer
 }
 
-interface FeedbackField {
-  label: string
-  value: string | number
-}
-
 interface FeedbackInfo {
-  commonFields: FeedbackField[]
   extInfo: Record<string, string | number>
 }
 
@@ -90,7 +84,6 @@ struct FeedbackPage {
   @State selectedImageUris: string[] = []
   @State pageWidth: number = 0
   @State pageHeight: number = 0
-  @State diagnosticFields: FeedbackField[] = []
   @State sending: boolean = false
   controller: TextAreaController = new TextAreaController()
   private readonly maxAttachmentCount: number = 3
@@ -99,10 +92,6 @@ struct FeedbackPage {
 
   get isLandscape(): boolean {
     return this.pageWidth > this.pageHeight && this.pageWidth >= 700
-  }
-
-  aboutToAppear(): void {
-    this.diagnosticFields = this.buildFeedbackInfo().commonFields
   }
 
   async selectImages() {
@@ -166,25 +155,7 @@ struct FeedbackPage {
       "odid": deviceInfo.ODID,
     }
 
-    const deviceParts = [
-      String(extInfo['manufactureInfo'] ?? '').trim(),
-      String(extInfo['marketName'] ?? '').trim(),
-      String(extInfo['deviceType'] ?? '').trim(),
-    ].filter((item: string) => item.length > 0)
-    const osParts = [
-      String(extInfo['distributionOSName'] ?? '').trim(),
-      String(extInfo['distributionOSVersion'] ?? '').trim(),
-      String(extInfo['displayVersion'] ?? '').trim(),
-    ].filter((item: string) => item.length > 0)
-    const commonFields: FeedbackField[] = [
-      { label: 'App版本', value: `${displayFeedbackValue(appVersion)} (${displayFeedbackValue(bundleInfo['versionCode'])})` },
-      { label: '设备信息', value: displayFeedbackValue(deviceParts.join(' / ')) },
-      { label: '系统版本', value: displayFeedbackValue(osParts.join(' / ')) },
-      { label: '设备ID', value: displayFeedbackValue(extInfo['odid']) },
-    ]
-
     return {
-      commonFields,
       extInfo,
     }
   }
@@ -275,7 +246,6 @@ struct FeedbackPage {
             Column({ space: 18 }) {
               this.Attachments()
               this.ContactInfo()
-              this.DiagnosticsInfo()
             }
             .width(320)
             .alignItems(HorizontalAlign.Start)
@@ -290,7 +260,6 @@ struct FeedbackPage {
             this.EmailInput()
             this.Attachments()
             this.ContactInfo()
-            this.DiagnosticsInfo()
           }
           .width('100%')
           .alignItems(HorizontalAlign.Start)
@@ -299,6 +268,7 @@ struct FeedbackPage {
       }
       .width('100%')
       .layoutWeight(1)
+      .align(Alignment.TopStart)
       .scrollBar(BarState.Off)
     }
     .width('100%')
@@ -409,7 +379,7 @@ struct FeedbackPage {
                 .objectFit(ImageFit.Cover)
 
               Row() {
-                Text(Icons.CLOSE)
+                Text(Icons.DELETE)
                   .fontFamily(Icons.FONT_FAMILY)
                   .fontSize(14)
                   .fontColor(Color.White)
@@ -428,19 +398,20 @@ struct FeedbackPage {
             .height(this.attachmentPreviewSize)
             .borderRadius(8)
             .clip(true)
-            .backgroundColor($r('app.color.flip_card_bg_color'))
+            .backgroundColor(Color.White)
           })
 
           if (this.selectedImageUris.length < this.maxAttachmentCount) {
             Button() {
-              Text('+')
+              Text(Icons.ADD)
+                .fontFamily(Icons.FONT_FAMILY)
                 .fontSize(28)
                 .fontColor('#999999')
             }
             .width(this.attachmentPreviewSize)
             .height(this.attachmentPreviewSize)
             .type(ButtonType.Normal)
-            .backgroundColor($r('app.color.flip_card_bg_color'))
+            .backgroundColor(Color.White)
             .borderRadius(8)
             .border({
               color: '#999999',
@@ -483,36 +454,6 @@ struct FeedbackPage {
       })
     }
     .width('100%')
-    .alignItems(HorizontalAlign.Start)
-  }
-
-  @Builder
-  DiagnosticsInfo() {
-    Column({ space: 8 }) {
-      Text('随反馈提交的信息')
-        .fontSize(14)
-        .fontColor($r('app.color.main_text_color'))
-
-      ForEach(this.diagnosticFields, (item: FeedbackField) => {
-        Row({ space: 8 }) {
-          Text(item.label)
-            .fontSize(12)
-            .fontColor('#666666')
-            .width(64)
-
-          Text(`${item.value}`)
-            .fontSize(12)
-            .fontColor($r('app.color.main_text_color'))
-            .maxLines(1)
-            .textOverflow({ overflow: TextOverflow.Ellipsis })
-            .layoutWeight(1)
-        }
-      })
-    }
-    .width('100%')
-    .padding(12)
-    .borderRadius(8)
-    .backgroundColor($r('app.color.flip_card_bg_color'))
     .alignItems(HorizontalAlign.Start)
   }
 

@@ -77,7 +77,8 @@ export struct SettingPage {
     Column() {
       NavigationBar({
         backIcon: Icons.CLOSE,
-        title: ''
+        title: '',
+        largeBackIcon: true
       })
 
       Blank()

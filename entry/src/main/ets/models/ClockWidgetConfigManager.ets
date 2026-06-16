@@ -85,6 +85,11 @@ export class ClockWidgetConfigManager {
     preferences.flush()
   }
 
+  static getSavedFormWidgetId(context: Context, formId: string): string {
+    const preferences = ClockWidgetConfigManager.getPreferences(context)
+    return preferences.getSync(ClockWidgetConfigManager.getFormWidgetIdKey(formId), '') as string
+  }
+
   static getFormWidgetId(context: Context, formId: string, fallback?: string): string {
     const preferences = ClockWidgetConfigManager.getPreferences(context)
     const key = ClockWidgetConfigManager.getFormWidgetIdKey(formId)

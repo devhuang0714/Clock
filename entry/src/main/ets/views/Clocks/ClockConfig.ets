@@ -30,6 +30,13 @@ export enum ClockStyle {
   Style15,
 }
 
+export enum ClockColorSetting {
+  Background,
+  FontColor,
+  CardColor,
+  ShadowColor
+}
+
 export interface ClockColorsConfig {
   backgroundColor: ResourceColor,
   fontColor: ResourceColor,
@@ -47,6 +54,16 @@ export interface ClockConfig {
   style: ClockStyle,
   colors: ClockColorsConfig,
   ext?: ClockConfigExt
+}
+
+export interface ClockThemeGroup {
+  title: string
+  ids: string[]
+}
+
+export interface ClockThemeGroupItems {
+  title: string
+  items: ClockConfig[]
 }
 
 export interface GlobalClockConfig {
@@ -418,3 +435,159 @@ export const CLOCK_CONFIGS: ClockConfig[] = [
     }
   },
 ]
+
+export const CLOCK_THEME_GROUPS: ClockThemeGroup[] = [
+  {
+    title: '基础翻页',
+    ids: [
+      'rotate_clock_style1',
+      'rotate_clock_style2',
+      'rotate_clock_style3',
+      'rotate_clock_style1_light',
+      'rotate_clock_style2_light',
+      'rotate_clock_style3_light'
+    ]
+  },
+  {
+    title: '基础数字',
+    ids: [
+      'normal_digital_clock_style1',
+      'digital_clock_style1',
+      'flip_clock_style1',
+      'stereoscopic_clock_style1'
+    ]
+  },
+  {
+    title: '日历时光',
+    ids: [
+      'lunar_calendar_clock_style1',
+      'lunar_calendar_clock_style2'
+    ]
+  },
+  {
+    title: '可爱趣味',
+    ids: [
+      'poster_clock_cute',
+      'poster_clock_funny',
+      'poster_clock_office_snooze',
+      'poster_clock_office_monday',
+      'poster_clock_office_coffee',
+      'poster_clock_office_payday'
+    ]
+  },
+  {
+    title: '圆形指针',
+    ids: [
+      'round_clock_style1',
+      'round_clock_style2',
+      'round_clock_style3',
+      'round_clock_style4',
+      'round_clock_style5',
+      'round_clock_style6',
+      'round_clock_style7',
+      'mechanical_clock_style1'
+    ]
+  },
+  {
+    title: '海报 HUD',
+    ids: [
+      'poster_clock_cyberpunk',
+      'poster_clock_minimal',
+      'poster_clock_orbitron_hud',
+      'poster_clock_exo_dashboard'
+    ]
+  },
+  {
+    title: '海报复古',
+    ids: [
+      'poster_clock_retro_flip',
+      'poster_clock_dseg_led',
+      'poster_clock_space_terminal',
+      'poster_clock_audiowide_synthwave',
+      'poster_clock_plex_minimal'
+    ]
+  }
+]
+
+export function getClockConfigById(id: string): ClockConfig | undefined {
+  return CLOCK_CONFIGS.find((item: ClockConfig) => item.id == id)
+}
+
+export function getClockConfigsByIds(ids: string[]): ClockConfig[] {
+  const configs: ClockConfig[] = []
+  ids.forEach((id: string) => {
+    const config = getClockConfigById(id)
+    if (config != undefined) {
+      configs.push(config)
+    }
+  })
+  return configs
+}
+
+export function getClockThemeGroupItems(): ClockThemeGroupItems[] {
+  return CLOCK_THEME_GROUPS.map((group: ClockThemeGroup): ClockThemeGroupItems => {
+    return {
+      title: group.title,
+      items: getClockConfigsByIds(group.ids)
+    }
+  })
+}
+
+export function getOrderedClockConfigs(): ClockConfig[] {
+  const configs: ClockConfig[] = []
+  CLOCK_THEME_GROUPS.forEach((group: ClockThemeGroup) => {
+    configs.push(...getClockConfigsByIds(group.ids))
+  })
+  CLOCK_CONFIGS.forEach((config: ClockConfig) => {
+    if (configs.find((item: ClockConfig) => item.id == config.id) == undefined) {
+      configs.push(config)
+    }
+  })
+  return configs
+}
+
+export function getClockColorSettings(config: ClockConfig): ClockColorSetting[] {
+  if (config.type == ClockType.Flip || config.type == ClockType.Stereoscopic) {
+    return [
+      ClockColorSetting.Background,
+      ClockColorSetting.FontColor,
+      ClockColorSetting.CardColor,
+      ClockColorSetting.ShadowColor
+    ]
+  }
+
+  if (config.type == ClockType.Rotate) {
+    return [
+      ClockColorSetting.Background,
+      ClockColorSetting.FontColor,
+      ClockColorSetting.CardColor
+    ]
+  }
+
+  if (config.type == ClockType.Digital || config.type == ClockType.NormalDigital ||
+    config.type == ClockType.LunarCalendar) {
+    return [
+      ClockColorSetting.Background,
+      ClockColorSetting.FontColor
+    ]
+  }
+
+  if (config.type == ClockType.Round || config.type == ClockType.Mechanical) {
+    return [ClockColorSetting.Background]
+  }
+
+  if (config.type == ClockType.Poster &&
+    (config.id == 'poster_clock_office_snooze' || config.id == 'poster_clock_office_monday' ||
+      config.id == 'poster_clock_office_coffee' || config.id == 'poster_clock_office_payday')) {
+    return [
+      ClockColorSetting.Background,
+      ClockColorSetting.FontColor
+    ]
+  }
+
+  return []
+}
+
+export function supportsClockColorSetting(config: ClockConfig, setting: ClockColorSetting): boolean {
+  return getClockColorSettings(config).indexOf(setting) >= 0
+}

@@ -19,6 +19,9 @@ export default class ClockWidgetAbility extends FormExtensionAbility {
       widgetStyleId = ClockWidgetConfigManager.consumePendingWidgetId(this.context, dimension)
     }
     if (widgetStyleId.length === 0) {
+      widgetStyleId = ClockWidgetConfigManager.getSavedFormWidgetId(this.context, formId)
+    }
+    if (widgetStyleId.length === 0) {
       widgetStyleId = ClockWidgetConfigManager.getDefaultWidgetId(this.context)
     }
 

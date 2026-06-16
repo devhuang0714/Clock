@@ -1,5 +1,12 @@
 import { Icons } from '../../common/constants/Constants'
-import { ClockConfig, ClockType, CLOCK_CONFIGS } from './ClockConfig'
+import {
+  ClockColorSetting,
+  ClockConfig,
+  ClockType,
+  CLOCK_CONFIGS,
+  getOrderedClockConfigs,
+  supportsClockColorSetting
+} from './ClockConfig'
 import display from '@ohos.display';
 import { startVibration } from '../../common/utils/Vibrator'
 import { FlipClock } from './FlipClock';
@@ -58,7 +65,7 @@ export struct ClockStyleDialog {
     title: '主题皮肤',
     type: TabType.Theme
   }]
-  @State clockItems: ClockConfig[] = CLOCK_CONFIGS
+  @State clockItems: ClockConfig[] = getOrderedClockConfigs()
   @Watch('changeConfig') @Prop selectedConfig: ClockConfig = CLOCK_CONFIGS[0]
   @State selectedTabItem: TabItem = this.tabItems[0]
   private scroller: Scroller = new Scroller()
@@ -71,6 +78,7 @@ export struct ClockStyleDialog {
     // this.clockStyleHeight = Math.max(AppInfo.getScreenHeight() * 0.11, 60)
     this.clockStyleHeight = 60
     ClockStyleDialog.CONTENT_HEIGHT = this.clockStyleHeight + 120
+    this.changeConfig()
   }
 
   deepCopy<T>(item: T): T {
@@ -78,29 +86,29 @@ export struct ClockStyleDialog {
   }
 
   changeConfig() {
-    const tabItems: TabItem[] = [
-      {
-        title: '主题皮肤',
-        type: TabType.Theme
-      },
-      {
+    const tabItems: TabItem[] = [{
+      title: '主题皮肤',
+      type: TabType.Theme
+    }]
+    if (supportsClockColorSetting(this.selectedConfig, ClockColorSetting.Background)) {
+      tabItems.push({
         title: '背景',
         type: TabType.Background
-      }
-    ]
-    if (this.selectedConfig.colors.fontColor != '') {
+      })
+    }
+    if (supportsClockColorSetting(this.selectedConfig, ClockColorSetting.FontColor)) {
       tabItems.push({
         title: '字体颜色',
         type: TabType.FontColor
       })
     }
-    if (this.selectedConfig.colors.cardColor != undefined) {
+    if (supportsClockColorSetting(this.selectedConfig, ClockColorSetting.CardColor)) {
       tabItems.push({
         title: '卡片颜色',
         type: TabType.CardColor
       })
     }
-    if (this.selectedConfig.colors.shadowColor != undefined) {
+    if (supportsClockColorSetting(this.selectedConfig, ClockColorSetting.ShadowColor)) {
       tabItems.push({
         title: '阴影颜色',
         type: TabType.ShadowColor
@@ -170,7 +178,9 @@ export struct ClockStyleDialog {
                 .visibility(this.selectedTabItem.type == TabType.Background ? Visibility.Visible : Visibility.Hidden)
             } else if (item.type == TabType.CardColor) {
               ColorsView({
-                selectedColor: this.selectedConfig.colors.cardColor as string,
+                selectedColor: this.selectedConfig.colors.cardColor ?? '',
+                defaultColor: this.getDefaultConfig().colors.cardColor ?? '',
+                showDefaultOption: true,
                 onSelected: (color) => {
                   this.selectedConfig.colors.cardColor = color
                   this.onSelected(this.selectedConfig)
@@ -191,6 +201,8 @@ export struct ClockStyleDialog {
             } else if (item.type == TabType.ShadowColor) {
               ColorsView({
                 selectedColor: (this.selectedConfig.colors.shadowColor ?? '') as string,
+                defaultColor: this.getDefaultConfig().colors.shadowColor ?? '',
+                showDefaultOption: true,
                 onSelected: (color) => {
                   this.selectedConfig.colors.shadowColor = color
                   this.onSelected(this.selectedConfig)
@@ -261,7 +273,7 @@ export struct ClockStyleDialog {
             startVibration()
 
             this.selectedConfig = this.deepCopy(item)
-            this.onSelected(item)
+            this.onSelected(this.selectedConfig)
 
             let index = this.clockItems.indexOf(item)
             this.scrollToCenter(index)

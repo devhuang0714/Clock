@@ -5,6 +5,7 @@ import router from '@ohos.router';
 export struct NavigationBar {
   @Prop backIcon: ResourceStr = Icons.BACK
   @Prop title: ResourceStr = ''
+  @Prop largeBackIcon: boolean = false
   onBack: (() => void) | undefined = undefined
 
   @Builder
@@ -17,9 +18,18 @@ export struct NavigationBar {
   build() {
     Row() {
       Row() {
-        Text(this.backIcon)
-          .fontFamily(Icons.FONT_FAMILY)
-          .fontSize(24)
+        if (this.largeBackIcon) {
+          Text(this.backIcon)
+            .fontFamily(Icons.FONT_FAMILY)
+            .fontSize(30)
+            .width(44)
+            .height(44)
+            .textAlign(TextAlign.Center)
+        } else {
+          Text(this.backIcon)
+            .fontFamily(Icons.FONT_FAMILY)
+            .fontSize(24)
+        }
 
         Text(this.title)
           .fontSize(18)
@@ -27,7 +37,7 @@ export struct NavigationBar {
       }
       .height(44)
       .backgroundColor(Color.Transparent)
-      .margin({ left: 12 })
+      .margin({ left: this.largeBackIcon ? 8 : 12 })
       .onClick(() => {
         if (this.onBack != undefined) {
           this.onBack()

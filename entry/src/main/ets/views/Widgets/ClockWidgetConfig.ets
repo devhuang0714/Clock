@@ -18,7 +18,8 @@ export enum ClockWidgetRoundStyle {
   Cyberpunk,
   Cute,
   Retro,
-  ArtDeco
+  ArtDeco,
+  DeepBlue
 }
 
 export interface ClockWidgetColors {
@@ -102,7 +103,7 @@ export const CLOCK_WIDGET_CONFIGS: ClockWidgetConfig[] = [
   },
   {
     id: 'widget_round_classic',
-    title: '经典指针',
+    title: '经典时钟',
     subtitle: '经典白色圆盘',
     type: ClockWidgetStyleType.Round,
     roundStyle: ClockWidgetRoundStyle.Classic,
@@ -112,7 +113,7 @@ export const CLOCK_WIDGET_CONFIGS: ClockWidgetConfig[] = [
       ClockWidgetSize.Size4x4
     ],
     colors: {
-      backgroundColor: '#F5F5F2',
+      backgroundColor: $r('app.color.main_background_color'),
       cardColor: '#FFFFFF',
       fontColor: '#111111',
       mutedColor: '#9A9A94',
@@ -121,8 +122,8 @@ export const CLOCK_WIDGET_CONFIGS: ClockWidgetConfig[] = [
   },
   {
     id: 'widget_round',
-    title: '机械指针',
-    subtitle: '金属质感分层表盘',
+    title: '霓虹机械',
+    subtitle: '蓝绿分层表盘',
     type: ClockWidgetStyleType.Round,
     roundStyle: ClockWidgetRoundStyle.Cool,
     supportedSizes: [
@@ -131,11 +132,11 @@ export const CLOCK_WIDGET_CONFIGS: ClockWidgetConfig[] = [
       ClockWidgetSize.Size4x4
     ],
     colors: {
-      backgroundColor: '#0D0F13',
-      cardColor: '#0D0F13',
-      fontColor: '#F4F6F8',
-      mutedColor: '#8C929A',
-      accentColor: '#8AA4C8'
+      backgroundColor: '#061018',
+      cardColor: '#061018',
+      fontColor: '#D8FBFF',
+      mutedColor: '#5B7C86',
+      accentColor: '#8FF7FF'
     }
   },
   {
@@ -150,8 +151,8 @@ export const CLOCK_WIDGET_CONFIGS: ClockWidgetConfig[] = [
       ClockWidgetSize.Size4x4
     ],
     colors: {
-      backgroundColor: '#080411',
-      cardColor: '#11071F',
+      backgroundColor: '#0D0F13',
+      cardColor: '#0D0F13',
       fontColor: '#FDF4FF',
       mutedColor: '#6F4D8F',
       accentColor: '#FF2BD6'
@@ -170,7 +171,7 @@ export const CLOCK_WIDGET_CONFIGS: ClockWidgetConfig[] = [
     ],
     colors: {
       backgroundColor: '#FFF3FB',
-      cardColor: '#FFE1F0',
+      cardColor: '#FFF3FB',
       fontColor: '#6A4B73',
       mutedColor: '#B887A2',
       accentColor: '#FF8FC7'
@@ -189,7 +190,7 @@ export const CLOCK_WIDGET_CONFIGS: ClockWidgetConfig[] = [
     ],
     colors: {
       backgroundColor: '#E8D6AE',
-      cardColor: '#F7E8C7',
+      cardColor: '#E8D6AE',
       fontColor: '#4A2B16',
       mutedColor: '#9E7440',
       accentColor: '#C99742'
@@ -208,10 +209,29 @@ export const CLOCK_WIDGET_CONFIGS: ClockWidgetConfig[] = [
     ],
     colors: {
       backgroundColor: '#092E2A',
-      cardColor: '#0B3A35',
+      cardColor: '#092E2A',
       fontColor: '#F7DFA1',
       mutedColor: '#8D6B2F',
       accentColor: '#E5BD62'
+    }
+  },
+  {
+    id: 'widget_round_deepblue',
+    title: '深蓝星盘',
+    subtitle: '深蓝分层表盘',
+    type: ClockWidgetStyleType.Round,
+    roundStyle: ClockWidgetRoundStyle.DeepBlue,
+    supportedSizes: [
+      ClockWidgetSize.Size2x2,
+      ClockWidgetSize.Size2x4,
+      ClockWidgetSize.Size4x4
+    ],
+    colors: {
+      backgroundColor: '#08121F',
+      cardColor: '#08121F',
+      fontColor: '#E8F4FF',
+      mutedColor: '#7F99B6',
+      accentColor: '#4DA3FF'
     }
   },
   {

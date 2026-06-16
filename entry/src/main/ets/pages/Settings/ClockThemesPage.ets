@@ -1,6 +1,6 @@
 import { AppConstants, Icons } from '../../common/constants/Constants'
 import router from '@ohos.router';
-import { ClockConfig, ClockType, CLOCK_CONFIGS } from '../../views/Clocks/ClockConfig';
+import { ClockConfig, ClockThemeGroupItems, ClockType, CLOCK_CONFIGS, getClockThemeGroupItems } from '../../views/Clocks/ClockConfig';
 import { FlipClock } from '../../views/Clocks/FlipClock';
 import { RoundClock } from '../../views/Clocks/RoundClock';
 import { DigitalClock } from '../../views/Clocks/DigitalClock';
@@ -11,119 +11,10 @@ import { StereoscopicClock } from '../../views/Clocks/StereoscopicClock';
 import { PosterClock } from '../../views/Clocks/PosterClock';
 import { MechanicalClock } from '../../views/Clocks/MechanicalClock';
 
-interface ClockThemeGroup {
-  title: string
-  items: ClockConfig[]
-}
-
-function configsByIds(ids: string[]): ClockConfig[] {
-  const configs: ClockConfig[] = []
-  ids.forEach((id: string) => {
-    const config = CLOCK_CONFIGS.find((item: ClockConfig) => item.id == id)
-    if (config != undefined) {
-      configs.push(config)
-    }
-  })
-  return configs
-}
-
-const CLOCK_THEME_GROUPS: ClockThemeGroup[] = [
-  {
-    title: '基础数字',
-    items: configsByIds([
-      'flip_clock_style1',
-      'digital_clock_style1',
-      'normal_digital_clock_style1',
-      'stereoscopic_clock_style1'
-    ])
-  },
-  {
-    title: '圆形指针',
-    items: configsByIds([
-      'round_clock_style1',
-      'round_clock_style2',
-      'round_clock_style3',
-      'round_clock_style4',
-      'round_clock_style5',
-      'round_clock_style6',
-      'round_clock_style7',
-      'mechanical_clock_style1'
-    ])
-  },
-  {
-    title: '机械旋转',
-    items: configsByIds([
-      'rotate_clock_style1',
-      'rotate_clock_style2',
-      'rotate_clock_style3',
-      'rotate_clock_style1_light',
-      'rotate_clock_style2_light',
-      'rotate_clock_style3_light'
-    ])
-  },
-  {
-    title: '日历时光',
-    items: configsByIds([
-      'lunar_calendar_clock_style1',
-      'lunar_calendar_clock_style2'
-    ])
-  },
-  {
-    title: '赛博 HUD',
-    items: configsByIds([
-      'poster_clock_cyberpunk',
-      'poster_clock_minimal',
-      'poster_clock_orbitron_hud'
-    ])
-  },
-  {
-    title: '科技仪表',
-    items: configsByIds([
-      'poster_clock_exo_dashboard'
-    ])
-  },
-  {
-    title: '复古电子',
-    items: configsByIds([
-      'poster_clock_retro_flip',
-      'poster_clock_dseg_led'
-    ])
-  },
-  {
-    title: '终端复古',
-    items: configsByIds([
-      'poster_clock_space_terminal'
-    ])
-  },
-  {
-    title: '霓虹合成波',
-    items: configsByIds([
-      'poster_clock_audiowide_synthwave'
-    ])
-  },
-  {
-    title: '极简高级',
-    items: configsByIds([
-      'poster_clock_plex_minimal'
-    ])
-  },
-  {
-    title: '可爱趣味',
-    items: configsByIds([
-      'poster_clock_cute',
-      'poster_clock_funny',
-      'poster_clock_office_snooze',
-      'poster_clock_office_monday',
-      'poster_clock_office_coffee',
-      'poster_clock_office_payday'
-    ])
-  }
-]
-
 @Entry
 @Component
 struct ClockThemesPage {
-  @State themeGroups: ClockThemeGroup[] = CLOCK_THEME_GROUPS
+  @State themeGroups: ClockThemeGroupItems[] = getClockThemeGroupItems()
   @State selectedConfig: ClockConfig = CLOCK_CONFIGS[0]
   @StorageProp('isLandscape') isLandscape: boolean = false
   private previewDate: Date = new Date('2022-09-22 00:22:00')
@@ -171,7 +62,7 @@ struct ClockThemesPage {
       .margin({ top: 40, bottom: 12, right: 12 })
 
       List({ space: 18 }) {
-        ForEach(this.themeGroups, (group: ClockThemeGroup) => {
+        ForEach(this.themeGroups, (group: ClockThemeGroupItems) => {
           ListItem() {
             Column({ space: 10 }) {
               Text(group.title)
