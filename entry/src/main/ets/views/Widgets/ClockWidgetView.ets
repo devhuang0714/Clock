@@ -262,6 +262,10 @@ export struct ClockWidgetView {
     return 72
   }
 
+  private getContainerBorderRadius(): number {
+    return 18
+  }
+
   build() {
     Stack() {
       if (this.config.type == ClockWidgetStyleType.Minimal) {
@@ -279,7 +283,7 @@ export struct ClockWidgetView {
     .width('100%')
     .height('100%')
     .clip(true)
-    .borderRadius(24)
+    .borderRadius(this.getContainerBorderRadius())
     .backgroundColor(this.config.colors.backgroundColor)
   }
 
@@ -422,7 +426,7 @@ export struct ClockWidgetView {
     }
     .width(this.widgetSize == ClockWidgetSize.Size4x4 ? 96 : 76)
     .height(this.widgetSize == ClockWidgetSize.Size4x4 ? 100 : 78)
-    .borderRadius(12)
+    .borderRadius(6)
     .backgroundColor(this.config.colors.cardColor ?? '#EFEFEF')
     .shadow({
       radius: 10,

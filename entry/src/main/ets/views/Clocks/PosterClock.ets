@@ -137,7 +137,7 @@ export struct PosterClock {
           this.OfficePoster(
             $rawfile('images/poster_clocks/office/snooze_character.png'),
             $rawfile('images/poster_clocks/office/snooze_title.png'),
-            '今日摸鱼额度',
+            '今日摸鱼进度',
             84,
             67
           )
@@ -427,7 +427,7 @@ export struct PosterClock {
       this.Clouds()
       Column() {
         Blank()
-          .height(this.isLandscape ? 10 : 24)
+          .height(this.isLandscape ? 10 : 72)
 
         Row({ space: 12 }) {
           Text(this.dateStr.replace('年', ' / ').replace('月', ' / ').replace('日', ''))

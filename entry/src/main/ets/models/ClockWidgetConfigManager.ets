@@ -9,6 +9,12 @@ import {
 
 const defaultWidgetKey = 'defaultClockWidgetId'
 const formIdListKey = 'clockWidgetFormIdList'
+const pendingWidgetKey = 'pendingClockWidgetId'
+const pendingDimensionKey = 'pendingClockWidgetDimension'
+const pendingCreatedAtKey = 'pendingClockWidgetCreatedAt'
+const pendingWidgetTtlMs = 5 * 60 * 1000
+
+export const CLOCK_WIDGET_STYLE_PARAM: string = 'clock_widget_style_id'
 
 export interface ClockWidgetFormData {
   formId: string
@@ -53,6 +59,7 @@ export class ClockWidgetConfigManager {
       preferences.putSync(formIdListKey, formIds)
     }
     preferences.deleteSync(ClockWidgetConfigManager.getFormDimensionKey(formId))
+    preferences.deleteSync(ClockWidgetConfigManager.getFormWidgetIdKey(formId))
     preferences.flush()
   }
 
@@ -72,10 +79,58 @@ export class ClockWidgetConfigManager {
     return preferences.getSync(ClockWidgetConfigManager.getFormDimensionKey(formId), fallback) as number
   }
 
-  static createFormData(context: Context, formId: string, dimension: number): ClockWidgetFormData {
+  static saveFormWidgetId(context: Context, formId: string, widgetId: string): void {
+    const preferences = ClockWidgetConfigManager.getPreferences(context)
+    preferences.putSync(ClockWidgetConfigManager.getFormWidgetIdKey(formId), widgetId)
+    preferences.flush()
+  }
+
+  static getFormWidgetId(context: Context, formId: string, fallback?: string): string {
+    const preferences = ClockWidgetConfigManager.getPreferences(context)
+    const key = ClockWidgetConfigManager.getFormWidgetIdKey(formId)
+    const savedWidgetId = preferences.getSync(key, '') as string
+    if (savedWidgetId.length > 0) {
+      return savedWidgetId
+    }
+
+    const resolvedWidgetId = fallback ?? ClockWidgetConfigManager.getDefaultWidgetId(context)
+    preferences.putSync(key, resolvedWidgetId)
+    preferences.flush()
+    return resolvedWidgetId
+  }
+
+  static savePendingWidgetId(context: Context, widgetId: string, dimension: number): void {
+    const preferences = ClockWidgetConfigManager.getPreferences(context)
+    preferences.putSync(pendingWidgetKey, widgetId)
+    preferences.putSync(pendingDimensionKey, dimension)
+    preferences.putSync(pendingCreatedAtKey, Date.now())
+    preferences.flush()
+  }
+
+  static consumePendingWidgetId(context: Context, dimension: number): string {
+    const preferences = ClockWidgetConfigManager.getPreferences(context)
+    const pendingDimension = preferences.getSync(pendingDimensionKey, 0) as number
+    const pendingWidgetId = preferences.getSync(pendingWidgetKey, '') as string
+    const pendingCreatedAt = preferences.getSync(pendingCreatedAtKey, 0) as number
+    preferences.deleteSync(pendingWidgetKey)
+    preferences.deleteSync(pendingDimensionKey)
+    preferences.deleteSync(pendingCreatedAtKey)
+    preferences.flush()
+
+    if (
+      pendingDimension == dimension &&
+      pendingWidgetId.length > 0 &&
+      Date.now() - pendingCreatedAt <= pendingWidgetTtlMs
+    ) {
+      return pendingWidgetId
+    }
+    return ''
+  }
+
+  static createFormData(context: Context, formId: string, dimension: number, widgetId?: string): ClockWidgetFormData {
     const size = getClockWidgetSizeFromDimension(dimension)
     const widgetConfig = getClockWidgetConfigForSize(
-      ClockWidgetConfigManager.getDefaultWidgetId(context),
+      widgetId ?? ClockWidgetConfigManager.getFormWidgetId(context, formId),
       size
     )
 
@@ -103,5 +158,9 @@ export class ClockWidgetConfigManager {
 
   private static getFormDimensionKey(formId: string): string {
     return `${formId}_clock_widget_dimension`
+  }
+
+  private static getFormWidgetIdKey(formId: string): string {
+    return `${formId}_clock_widget_style_id`
   }
 }
