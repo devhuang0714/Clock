@@ -138,6 +138,15 @@ export const CLOCK_CONFIGS: ClockConfig[] = [
     }
   },
   {
+    id: 'round_clock_style7',
+    type: ClockType.Round,
+    style: ClockStyle.Style7,
+    colors: {
+      backgroundColor: '#08121f',
+      fontColor: ''
+    }
+  },
+  {
     id: 'mechanical_clock_style1',
     type: ClockType.Mechanical,
     style: ClockStyle.Style1,

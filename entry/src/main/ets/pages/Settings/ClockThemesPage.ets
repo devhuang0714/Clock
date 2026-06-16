@@ -46,6 +46,7 @@ const CLOCK_THEME_GROUPS: ClockThemeGroup[] = [
       'round_clock_style4',
       'round_clock_style5',
       'round_clock_style6',
+      'round_clock_style7',
       'mechanical_clock_style1'
     ])
   },
