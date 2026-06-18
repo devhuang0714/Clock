@@ -130,10 +130,6 @@ struct Index {
     closeAnimation: {
       duration: 0
     },
-    offset: {
-      dx: 0,
-      dy: AppConstants.DEFAULT_NAV_HEIGHT
-    },
   })
   goStoreDialogController: CustomDialogController = new CustomDialogController({
     builder: AlertDialog({

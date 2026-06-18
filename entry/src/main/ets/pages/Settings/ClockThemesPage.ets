@@ -1,23 +1,27 @@
 import { AppConstants, Icons } from '../../common/constants/Constants'
 import router from '@ohos.router';
-import { ClockConfig, ClockThemeGroupItems, ClockType, CLOCK_CONFIGS, getClockThemeGroupItems } from '../../views/Clocks/ClockConfig';
-import { FlipClock } from '../../views/Clocks/FlipClock';
-import { RoundClock } from '../../views/Clocks/RoundClock';
-import { DigitalClock } from '../../views/Clocks/DigitalClock';
-import { RotateClock } from '../../views/Clocks/RotateClock';
-import { LunarCalendarClock } from '../../views/Clocks/LunarCalendarClock';
-import { NormalDigitalClock } from '../../views/Clocks/NormalDigitalClock';
-import { StereoscopicClock } from '../../views/Clocks/StereoscopicClock';
-import { PosterClock } from '../../views/Clocks/PosterClock';
-import { MechanicalClock } from '../../views/Clocks/MechanicalClock';
+import mediaQuery from '@ohos.mediaquery';
+import { ClockConfig, ClockThemeGroupItems, CLOCK_CONFIGS, getClockThemeGroupItems } from '../../views/Clocks/ClockConfig';
+import {
+  ClockPreviewCanvas,
+  getCurrentPreviewCanvasHeight,
+  getCurrentPreviewCanvasWidth,
+  getCurrentPreviewItemHeight,
+  getCurrentPreviewItemWidth,
+  getCurrentPreviewScale,
+  isCurrentPreviewLandscape
+} from '../../views/Clocks/ClockPreviewCanvas';
+import { NavigationBar } from '../../views/NavigationBar';
 
 @Entry
 @Component
 struct ClockThemesPage {
+  listener: mediaQuery.MediaQueryListener = mediaQuery.matchMediaSync('(orientation: landscape)');
   @State themeGroups: ClockThemeGroupItems[] = getClockThemeGroupItems()
   @State selectedConfig: ClockConfig = CLOCK_CONFIGS[0]
-  @StorageProp('isLandscape') isLandscape: boolean = false
+  @StorageLink('isLandscape') isLandscape: boolean = false
   private previewDate: Date = new Date('2022-09-22 00:22:00')
+  private isListeningOrientation: boolean = false
 
   pageTransition() {
     PageTransitionEnter({ type: RouteType.Push, duration: 300 })
@@ -34,32 +38,68 @@ struct ClockThemesPage {
     if (config != undefined) {
       this.selectedConfig = config
     }
+    this.syncPreviewOrientation(isCurrentPreviewLandscape())
+    if (!this.isListeningOrientation) {
+      this.listener.on('change', (mediaQueryResult: mediaQuery.MediaQueryResult) => {
+        this.syncPreviewOrientation(mediaQueryResult.matches as boolean)
+      })
+      this.isListeningOrientation = true
+    }
+  }
+
+  syncPreviewOrientation(isLandscape: boolean) {
+    this.isLandscape = isLandscape
+    AppStorage.setOrCreate('isLandscape', isLandscape)
+  }
+
+  saveAndBack() {
+    AppStorage.setOrCreate('defaultClockConfig', this.selectedConfig)
+    router.back({
+      url: 'pages/Index'
+    })
   }
 
   isSelected(item: ClockConfig): boolean {
     return this.selectedConfig.id == item.id
   }
 
+  getPreviewCanvasWidth(): number {
+    return getCurrentPreviewCanvasWidth(this.isLandscape)
+  }
+
+  getPreviewCanvasHeight(): number {
+    return getCurrentPreviewCanvasHeight(this.isLandscape)
+  }
+
+  getClockStyleItemWidth(): number {
+    return getCurrentPreviewItemWidth(this.isLandscape)
+  }
+
+  getClockStyleItemHeight(): number {
+    return getCurrentPreviewItemHeight(this.isLandscape)
+  }
+
+  getPreviewScale(): number {
+    return getCurrentPreviewScale(this.isLandscape)
+  }
+
+  getGridColumnsTemplate(): string {
+    return `repeat(auto-fill, ${this.getClockStyleItemWidth()})`
+  }
+
   build() {
     Column() {
-      Row() {
-        Button('完成')
-          .type(ButtonType.Normal)
-          .padding(0)
-          .fontSize(18)
-          .fontColor($r('app.color.flip_text_color'))
-          .backgroundColor(Color.Transparent)
-          .onClick(() => {
-            AppStorage.setOrCreate('defaultClockConfig', this.selectedConfig)
-            router.back({
-              url: 'pages/Index'
-            })
-          })
-      }
-      .width('100%')
-      .height(40)
-      .justifyContent(FlexAlign.End)
-      .margin({ top: 40, bottom: 12, right: 12 })
+      NavigationBar({
+        backIcon: Icons.CLOSE,
+        title: '',
+        largeBackIcon: true,
+        onBack: () => {
+          router.back()
+        },
+        builder: (): void => {
+          this.DoneButton()
+        }
+      })
 
       List({ space: 18 }) {
         ForEach(this.themeGroups, (group: ClockThemeGroupItems) => {
@@ -78,7 +118,7 @@ struct ClockThemesPage {
               }
               .rowsGap(12)
               .columnsGap(24)
-              .columnsTemplate(this.isLandscape ? '1fr 1fr 1fr 1fr 1fr' : '1fr 1fr')
+              .columnsTemplate(this.getGridColumnsTemplate())
               .scrollBar(BarState.Off)
             }
             .width('100%')
@@ -87,27 +127,29 @@ struct ClockThemesPage {
       }
       .scrollBar(BarState.Off)
       .layoutWeight(1)
-
-      Button() {
-        Text(Icons.PACK_UP)
-          .fontFamily(Icons.FONT_FAMILY)
-          .fontSize(28)
-          .fontColor($r('app.color.flip_text_color'))
-      }
-      .type(ButtonType.Normal)
-      .padding(8)
-      .backgroundColor(Color.Transparent)
-      .onClick(() => {
-        router.back()
-      })
+      .padding({ left: 24, right: 24, top: 12 })
     }
     .width('100%')
     .height('100%')
     .backgroundColor($r('app.color.main_background_color'))
     .padding({
-      bottom: AppConstants.DEFAULT_NAV_HEIGHT,
-      left: 24,
-      right: 24
+      bottom: AppConstants.DEFAULT_NAV_HEIGHT
+    })
+  }
+
+  @Builder
+  DoneButton() {
+    Button() {
+      Text('完成')
+        .fontSize(18)
+        .fontColor($r('app.color.flip_text_color'))
+    }
+    .type(ButtonType.Normal)
+    .padding(8)
+    .backgroundColor(Color.Transparent)
+    .margin({ right: 12 })
+    .onClick(() => {
+      this.saveAndBack()
     })
   }
 
@@ -126,8 +168,8 @@ struct ClockThemesPage {
       }
       .alignContent(Alignment.BottomEnd)
     }
-    .height(60)
-    .width(60 * 1150 / 534)
+    .height(this.getClockStyleItemHeight())
+    .width(this.getClockStyleItemWidth())
     .border({
       width: 2,
       color: this.isSelected(item) ? Color.Green : $r('app.color.flip_card_bg_color'),
@@ -141,83 +183,25 @@ struct ClockThemesPage {
 
   @Builder
   PreviewClockView(clockConfig: ClockConfig) {
-    RelativeContainer() {
-      Column() {
-        if (clockConfig.type == ClockType.Flip) {
-          FlipClock({
-            date: this.previewDate,
-            colorsConfig: clockConfig.colors,
-            isLandscape: true
-          })
-        } else if (clockConfig.type == ClockType.Round) {
-          RoundClock({
-            date: this.previewDate,
-            style: clockConfig.style
-          })
-        } else if (clockConfig.type == ClockType.Digital) {
-          DigitalClock({
-            date: this.previewDate,
-            colorsConfig: clockConfig.colors,
-          })
-        } else if (clockConfig.type == ClockType.Rotate) {
-          RotateClock({
-            date: this.previewDate,
-            style: clockConfig.style,
-            colorsConfig: clockConfig.colors,
-            lightOn: clockConfig.ext?.lightOn ?? false,
-            isLandscape: true,
-          })
-        } else if (clockConfig.type == ClockType.LunarCalendar) {
-          LunarCalendarClock({
-            date: this.previewDate,
-            style: clockConfig.style,
-            colorsConfig: clockConfig.colors,
-            isLandscape: true,
-          })
-        } else if (clockConfig.type == ClockType.NormalDigital) {
-          NormalDigitalClock({
-            date: this.previewDate,
-            colorsConfig: clockConfig.colors,
-            isLandscape: true,
-          })
-        } else if (clockConfig.type == ClockType.Stereoscopic) {
-          StereoscopicClock({
-            date: this.previewDate,
-            colorsConfig: clockConfig.colors,
-            isLandscape: true,
-          })
-        } else if (clockConfig.type == ClockType.Poster) {
-          PosterClock({
-            date: this.previewDate,
-            style: clockConfig.style,
-            colorsConfig: clockConfig.colors,
-            isLandscape: true,
-          })
-        } else if (clockConfig.type == ClockType.Mechanical) {
-          MechanicalClock({
-            date: this.previewDate,
-            isLandscape: true
-          })
-        }
-      }
-      .justifyContent(FlexAlign.Center)
-      .backgroundColor(clockConfig.colors.backgroundColor)
-      .alignRules({
-        top: { anchor: "__container__", align: VerticalAlign.Top },
-        left: { anchor: "__container__", align: HorizontalAlign.Start },
-        right: { anchor: "__container__", align: HorizontalAlign.End },
-        bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
+    Stack({ alignContent: Alignment.Center }) {
+      ClockPreviewCanvas({
+        clockConfig: clockConfig,
+        date: this.previewDate,
+        isLandscape: this.isLandscape,
+        canvasWidth: this.getPreviewCanvasWidth(),
+        canvasHeight: this.getPreviewCanvasHeight()
       })
-      .id("preview_clock")
-      .height(534)
-      .width(1150)
+        .width(this.getPreviewCanvasWidth())
+        .height(this.getPreviewCanvasHeight())
+        .scale({
+          x: this.getPreviewScale(),
+          y: this.getPreviewScale(),
+          centerX: '50%',
+          centerY: '50%'
+        })
     }
     .width('100%')
     .height('100%')
     .backgroundColor(Color.Transparent)
-    .scale({
-      x: 60 / 534,
-      y: 60 / 534
-    })
   }
 }

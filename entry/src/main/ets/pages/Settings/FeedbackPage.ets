@@ -381,7 +381,7 @@ struct FeedbackPage {
               Row() {
                 Text(Icons.DELETE)
                   .fontFamily(Icons.FONT_FAMILY)
-                  .fontSize(14)
+                  .fontSize(12)
                   .fontColor(Color.White)
               }
               .width(18)
@@ -410,7 +410,6 @@ struct FeedbackPage {
             }
             .width(this.attachmentPreviewSize)
             .height(this.attachmentPreviewSize)
-            .type(ButtonType.Normal)
             .backgroundColor(Color.White)
             .borderRadius(8)
             .border({

@@ -106,19 +106,6 @@ export struct SettingPage {
 
       Blank()
         .layoutWeight(1)
-
-      Button() {
-        Text(Icons.PACK_UP)
-          .fontFamily(Icons.FONT_FAMILY)
-          .fontSize(28)
-          .fontColor($r('app.color.flip_text_color'))
-      }
-      .type(ButtonType.Normal)
-      .padding(8)
-      .backgroundColor(Color.Transparent)
-      .onClick(() => {
-        router.back()
-      })
     }
     .width('100%')
     .height('100%')

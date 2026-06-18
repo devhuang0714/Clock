@@ -9,9 +9,12 @@ import {
 import display from '@ohos.display';
 import { startVibration } from '../../common/utils/Vibrator'
 import {
-  CLOCK_PREVIEW_LANDSCAPE_HEIGHT,
-  CLOCK_PREVIEW_LANDSCAPE_WIDTH,
-  ClockPreviewCanvas
+  ClockPreviewCanvas,
+  getCurrentPreviewCanvasHeight,
+  getCurrentPreviewCanvasWidth,
+  getCurrentPreviewItemHeight,
+  getCurrentPreviewItemWidth,
+  getCurrentPreviewScale
 } from './ClockPreviewCanvas';
 
 @Extend(Text)
@@ -48,20 +51,27 @@ interface ColorItem {
   isDefault?: boolean
 }
 
+const TAB_BAR_HEIGHT = 32
+const TAB_CONTENT_GAP = 12
+const PANEL_PADDING = 12
+const PANEL_BOTTOM_GAP = 20
+const COLOR_PICKER_HEIGHT = 40
+const PANEL_CLOSE_OFFSET_EXTRA = 24
+
 @CustomDialog
 export struct ClockStyleDialog {
-  static CONTENT_HEIGHT: number = 120
   controller: CustomDialogController
   onSelected: (config: ClockConfig) => void = () => {
   }
-  @State clockStyleHeight: number = 60
-  @State offsetY: number = ClockStyleDialog.CONTENT_HEIGHT
+  @State offsetY: number = 240
+  @State isClosing: boolean = false
   @State tabItems: TabItem[] = [{
     title: '主题皮肤',
     type: TabType.Theme
   }]
   @State clockItems: ClockConfig[] = getOrderedClockConfigs()
   @Watch('changeConfig') @Prop selectedConfig: ClockConfig = CLOCK_CONFIGS[0]
+  @Watch('onPreviewOrientationChange') @StorageLink('isLandscape') isLandscape: boolean = false
   @State selectedTabItem: TabItem = this.tabItems[0]
   private scroller: Scroller = new Scroller()
   private previewDate: Date = new Date('2022-09-22 09:22:00')
@@ -70,10 +80,18 @@ export struct ClockStyleDialog {
     // 深拷贝，防止直接修改原数据
     this.selectedConfig = this.deepCopy(this.selectedConfig)
 
-    // this.clockStyleHeight = Math.max(AppInfo.getScreenHeight() * 0.11, 60)
-    this.clockStyleHeight = 60
-    ClockStyleDialog.CONTENT_HEIGHT = this.clockStyleHeight + 120
+    this.isClosing = false
+    this.offsetY = this.getPanelCloseOffset()
     this.changeConfig()
+  }
+
+  onPreviewOrientationChange() {
+    if (this.isClosing) {
+      this.offsetY = this.getPanelCloseOffset()
+    }
+    if (this.selectedTabItem.type == TabType.Theme) {
+      this.scrollSelectedClockIntoView(50)
+    }
   }
 
   deepCopy<T>(item: T): T {
@@ -132,6 +150,55 @@ export struct ClockStyleDialog {
     })
   }
 
+  scrollSelectedClockIntoView(delay: number = 100) {
+    setTimeout(() => {
+      const index = this.clockItems.findIndex(item => item.id === this.selectedConfig.id)
+      if (index >= 0) {
+        this.scroller.scrollToIndex(index)
+      }
+    }, delay)
+  }
+
+  getPreviewCanvasWidth(): number {
+    return getCurrentPreviewCanvasWidth(this.isLandscape)
+  }
+
+  getPreviewCanvasHeight(): number {
+    return getCurrentPreviewCanvasHeight(this.isLandscape)
+  }
+
+  getClockStyleItemWidth(): number {
+    return getCurrentPreviewItemWidth(this.isLandscape)
+  }
+
+  getClockStyleItemHeight(): number {
+    return getCurrentPreviewItemHeight(this.isLandscape)
+  }
+
+  getPreviewScale(): number {
+    return getCurrentPreviewScale(this.isLandscape)
+  }
+
+  getTabContentHeight(): number {
+    return Math.max(this.getClockStyleItemHeight(), COLOR_PICKER_HEIGHT)
+  }
+
+  getPanelHeight(): number {
+    return TAB_BAR_HEIGHT + TAB_CONTENT_GAP + this.getTabContentHeight() + PANEL_PADDING * 2
+  }
+
+  getPanelCloseOffset(): number {
+    return this.getPanelHeight() + PANEL_BOTTOM_GAP + PANEL_CLOSE_OFFSET_EXTRA
+  }
+
+  closeDialog() {
+    if (this.isClosing) {
+      return
+    }
+    this.isClosing = true
+    this.offsetY = this.getPanelCloseOffset()
+  }
+
   build() {
     Column() {
       Column() {
@@ -152,11 +219,12 @@ export struct ClockStyleDialog {
         .align(Alignment.Start)
         .scrollable(ScrollDirection.Horizontal)
         .scrollBar(BarState.Off)
+        .height(TAB_BAR_HEIGHT)
 
         Blank()
-          .height(12)
+          .height(TAB_CONTENT_GAP)
 
-        Stack() {
+        Stack({ alignContent: Alignment.TopStart }) {
           ForEach(this.tabItems, (item: TabItem) => {
             if (item.type == TabType.Theme) {
               this.ClockStylesView(TabType.Theme)
@@ -207,10 +275,12 @@ export struct ClockStyleDialog {
             }
           })
         }
+        .height(this.getTabContentHeight())
       }
-      .height(ClockStyleDialog.CONTENT_HEIGHT)
+      .height(this.getPanelHeight())
       .width('100%')
-      .padding(12)
+      .padding(PANEL_PADDING)
+      .margin({ bottom: PANEL_BOTTOM_GAP })
       .backgroundColor($r('app.color.cover_bg_color'))
       .backdropBlur(20) // 高斯模糊
       .offset({
@@ -219,7 +289,7 @@ export struct ClockStyleDialog {
       .animation({
         duration: 400,
         onFinish: () => {
-          if (this.offsetY == ClockStyleDialog.CONTENT_HEIGHT) {
+          if (this.isClosing) {
             this.controller.close()
           }
         }
@@ -232,10 +302,11 @@ export struct ClockStyleDialog {
     .height('100%')
     .width('100%')
     .onAppear(() => {
+      this.isClosing = false
       this.offsetY = 0
     })
     .onClick(() => {
-      this.offsetY = ClockStyleDialog.CONTENT_HEIGHT
+      this.closeDialog()
     })
   }
 
@@ -256,7 +327,8 @@ export struct ClockStyleDialog {
           }
           .alignContent(Alignment.BottomEnd)
         }
-        .width(this.clockStyleHeight * 1150 / 534)
+        .width(this.getClockStyleItemWidth())
+        .height(this.getClockStyleItemHeight())
         .border({
           width: 2,
           color: this.isSelected(item) ? Color.Green : $r('app.color.flip_card_bg_color'),
@@ -276,35 +348,38 @@ export struct ClockStyleDialog {
         })
       })
     }
-    .height(this.clockStyleHeight)
+    .height(this.getClockStyleItemHeight())
     .columnsGap(12)
     .rowsTemplate('1fr')
     .scrollBar(BarState.Off)
     .visibility(this.selectedTabItem.type == type ? Visibility.Visible : Visibility.Hidden)
     .onAppear(() => {
-      setTimeout(() => {
-        const index = this.clockItems.findIndex(item => item.id === this.selectedConfig.id)
-        this.scroller.scrollToIndex(index)
-      }, 100)
+      this.scrollSelectedClockIntoView()
     })
   }
 
   @Builder
   PreviewClockView(clockConfig: ClockConfig) {
-    ClockPreviewCanvas({
-      clockConfig: clockConfig,
-      date: this.previewDate,
-      isLandscape: true,
-      canvasWidth: CLOCK_PREVIEW_LANDSCAPE_WIDTH,
-      canvasHeight: CLOCK_PREVIEW_LANDSCAPE_HEIGHT
-    })
+    Stack({ alignContent: Alignment.Center }) {
+      ClockPreviewCanvas({
+        clockConfig: clockConfig,
+        date: this.previewDate,
+        isLandscape: this.isLandscape,
+        canvasWidth: this.getPreviewCanvasWidth(),
+        canvasHeight: this.getPreviewCanvasHeight()
+      })
+        .width(this.getPreviewCanvasWidth())
+        .height(this.getPreviewCanvasHeight())
+        .scale({
+          x: this.getPreviewScale(),
+          y: this.getPreviewScale(),
+          centerX: '50%',
+          centerY: '50%'
+        })
+    }
     .width('100%')
     .height('100%')
     .backgroundColor(Color.Transparent)
-    .scale({
-      x: this.clockStyleHeight / CLOCK_PREVIEW_LANDSCAPE_HEIGHT,
-      y: this.clockStyleHeight / CLOCK_PREVIEW_LANDSCAPE_HEIGHT
-    })
   }
 }
 

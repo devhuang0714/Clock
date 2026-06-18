@@ -1,4 +1,5 @@
 import { ClockController } from './ClockController'
+import display from '@ohos.display';
 import {
   ClockConfig,
   ClockType,
@@ -19,6 +20,45 @@ export const CLOCK_PREVIEW_LANDSCAPE_WIDTH = 1150
 export const CLOCK_PREVIEW_LANDSCAPE_HEIGHT = 534
 export const CLOCK_PREVIEW_PORTRAIT_WIDTH = 534
 export const CLOCK_PREVIEW_PORTRAIT_HEIGHT = 1150
+export const CLOCK_PREVIEW_CARD_SHORT_SIDE = 60
+
+const CLOCK_PREVIEW_CANVAS_SHORT_SIDE = CLOCK_PREVIEW_LANDSCAPE_HEIGHT
+
+export function isCurrentPreviewLandscape(): boolean {
+  const defaultDisplay = display.getDefaultDisplaySync()
+  return defaultDisplay.width >= defaultDisplay.height
+}
+
+export function getCurrentPreviewAspectRatio(): number {
+  const defaultDisplay = display.getDefaultDisplaySync()
+  const longerSide = Math.max(defaultDisplay.width, defaultDisplay.height)
+  const shorterSide = Math.max(Math.min(defaultDisplay.width, defaultDisplay.height), 1)
+  return longerSide / shorterSide
+}
+
+export function getCurrentPreviewCanvasWidth(isLandscape: boolean): number {
+  return isLandscape ? CLOCK_PREVIEW_CANVAS_SHORT_SIDE * getCurrentPreviewAspectRatio() : CLOCK_PREVIEW_CANVAS_SHORT_SIDE
+}
+
+export function getCurrentPreviewCanvasHeight(isLandscape: boolean): number {
+  return isLandscape ? CLOCK_PREVIEW_CANVAS_SHORT_SIDE : CLOCK_PREVIEW_CANVAS_SHORT_SIDE * getCurrentPreviewAspectRatio()
+}
+
+export function getCurrentPreviewItemWidth(isLandscape: boolean,
+  shortSide: number = CLOCK_PREVIEW_CARD_SHORT_SIDE): number {
+  return isLandscape ? shortSide * getCurrentPreviewAspectRatio() : shortSide
+}
+
+export function getCurrentPreviewItemHeight(isLandscape: boolean,
+  shortSide: number = CLOCK_PREVIEW_CARD_SHORT_SIDE): number {
+  return isLandscape ? shortSide : shortSide * getCurrentPreviewAspectRatio()
+}
+
+export function getCurrentPreviewScale(isLandscape: boolean,
+  shortSide: number = CLOCK_PREVIEW_CARD_SHORT_SIDE): number {
+  return Math.min(getCurrentPreviewItemWidth(isLandscape, shortSide) / getCurrentPreviewCanvasWidth(isLandscape),
+    getCurrentPreviewItemHeight(isLandscape, shortSide) / getCurrentPreviewCanvasHeight(isLandscape))
+}
 
 @Component
 export struct ClockPreviewCanvas {
