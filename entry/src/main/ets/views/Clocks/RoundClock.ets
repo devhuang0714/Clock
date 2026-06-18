@@ -1,5 +1,6 @@
 import HYLogger from '../../common/utils/HYLogger';
 import { display } from '@kit.ArkUI';
+import ClockSoundPlayer, { ROUND_CLOCK_TICK_SOUND } from '../../common/utils/ClockSoundPlayer'
 import { ClockController, ClockListener } from './ClockController'
 import { ClockStyle } from './ClockConfig'
 
@@ -20,8 +21,10 @@ export struct RoundClock {
   private settings: RenderingContextSettings = new RenderingContextSettings(true);
   private context: CanvasRenderingContext2D = new CanvasRenderingContext2D(this.settings);
   private radius: number = 150; // 默认表盘半径
+  private lastSoundSecond: number = -1
   private listener: ClockListener = {
     onUpdate: (date) => {
+      this.playTickSound(date)
       if (this.isImageStackStyle()) {
         const milliseconds = date.getMilliseconds()
         const seconds = date.getSeconds() + milliseconds / 1000
@@ -43,6 +46,14 @@ export struct RoundClock {
       this.drawDot();
       this.context.restore();
     }
+  }
+
+  private playTickSound(date: Date): void {
+    const second = date.getSeconds()
+    if (this.lastSoundSecond >= 0 && this.lastSoundSecond != second) {
+      ClockSoundPlayer.play(ROUND_CLOCK_TICK_SOUND)
+    }
+    this.lastSoundSecond = second
   }
 
   aboutToAppear() {

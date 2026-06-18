@@ -1,5 +1,6 @@
 import animator, { AnimatorResult } from '@ohos.animator';
 import measure from '@ohos.measure'
+import ClockSoundPlayer, { FLIP_CLOCK_PAGE_SOUND } from '../../common/utils/ClockSoundPlayer'
 import { ClockController, ClockListener } from './ClockController'
 import { ClockColorsConfig, DEFAULT_GLOBAL_CONFIG, GlobalClockConfig } from './ClockConfig'
 import { DateUtils } from '../../common/utils/DateUtils';
@@ -45,17 +46,27 @@ export struct FlipClock {
   @State minutes: string = '00'
   @State seconds: string = '00'
   @State isPM: boolean = false
+  private lastSoundSecond: number = -1
   private hourController: FlipCardController = new FlipCardController()
   private minuteController: FlipCardController = new FlipCardController()
   private secondController: FlipCardController = new FlipCardController()
   private listener: ClockListener = {
     onUpdate: (date) => {
+      this.playFlipSound(date)
       const hours = this.globalConfig.use24HourFormat ? date.getHours() : DateUtils.get12Hour(date)
       this.hourController.change(hours.toString().padStart(2, '0'))
       this.minuteController.change(date.getMinutes().toString().padStart(2, '0'))
       this.secondController.change(date.getSeconds().toString().padStart(2, '0'))
       this.isPM = date.getHours() >= 12
     }
+  }
+
+  private playFlipSound(date: Date): void {
+    const second = date.getSeconds()
+    if (this.lastSoundSecond >= 0 && this.lastSoundSecond != second) {
+      ClockSoundPlayer.play(FLIP_CLOCK_PAGE_SOUND)
+    }
+    this.lastSoundSecond = second
   }
 
   aboutToAppear(): void {
