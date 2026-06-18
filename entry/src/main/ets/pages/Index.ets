@@ -43,6 +43,10 @@ const PIP_CLOCK_PORTRAIT_WIDTH = 180
 const PIP_CLOCK_PORTRAIT_HEIGHT = 320
 const PIP_CLOCK_LANDSCAPE_WIDTH = 320
 const PIP_CLOCK_LANDSCAPE_HEIGHT = 180
+const PIP_CLOCK_PREVIEW_LANDSCAPE_WIDTH = 1150
+const PIP_CLOCK_PREVIEW_LANDSCAPE_HEIGHT = 534
+const PIP_CLOCK_PREVIEW_PORTRAIT_WIDTH = 534
+const PIP_CLOCK_PREVIEW_PORTRAIT_HEIGHT = 1150
 
 @Builder
 function PipClockBuilder() {
@@ -71,6 +75,12 @@ class ClockPipNodeController extends NodeController {
     builderNode.build(wrapBuilder(PipClockBuilder))
     this.builderNode = builderNode
     return builderNode.getFrameNode()
+  }
+
+  update(isLandscape: boolean) {
+    this.width = isLandscape ? PIP_CLOCK_LANDSCAPE_WIDTH : PIP_CLOCK_PORTRAIT_WIDTH
+    this.height = isLandscape ? PIP_CLOCK_LANDSCAPE_HEIGHT : PIP_CLOCK_PORTRAIT_HEIGHT
+    this.rebuild()
   }
 }
 
@@ -157,6 +167,7 @@ struct Index {
       console.log(`mediaQueryResult: ${mediaQueryResult.matches as boolean}`)
       this.isLandscape = mediaQueryResult.matches as boolean
       AppStorage.setOrCreate('isLandscape', this.isLandscape)
+      this.syncPictureInPictureOrientation()
     })
     this.isDark = this.currentMode == ConfigurationConstant.ColorMode.COLOR_MODE_DARK
 
@@ -278,6 +289,28 @@ struct Index {
     this.clockController.update(this.date)
   }
 
+  private getPipContentWidth(): number {
+    return this.isLandscape ? PIP_CLOCK_LANDSCAPE_WIDTH : PIP_CLOCK_PORTRAIT_WIDTH
+  }
+
+  private getPipContentHeight(): number {
+    return this.isLandscape ? PIP_CLOCK_LANDSCAPE_HEIGHT : PIP_CLOCK_PORTRAIT_HEIGHT
+  }
+
+  private async syncPictureInPictureOrientation() {
+    if (!this.pipController || this.pipIsLandscape == this.isLandscape) {
+      return
+    }
+    this.pipIsLandscape = this.isLandscape
+    this.pipUiController.update(this.isLandscape)
+    try {
+      this.pipController.updateContentSize(this.getPipContentWidth(), this.getPipContentHeight())
+    } catch (error) {
+      const err = error as BusinessError
+      console.warn(`Failed to update PiP content size. Code=${err.code}, message=${err.message}`)
+    }
+  }
+
   async startPictureInPicture() {
     try {
       if (!PiPWindow.isPiPEnabled()) {
@@ -285,16 +318,11 @@ struct Index {
         return
       }
 
-      const width = this.isLandscape ? PIP_CLOCK_LANDSCAPE_WIDTH : PIP_CLOCK_PORTRAIT_WIDTH
-      const height = this.isLandscape ? PIP_CLOCK_LANDSCAPE_HEIGHT : PIP_CLOCK_PORTRAIT_HEIGHT
+      const width = this.getPipContentWidth()
+      const height = this.getPipContentHeight()
       if (this.pipController && this.pipIsLandscape != this.isLandscape) {
-        try {
-          await this.pipController.stopPiP()
-        } catch (error) {
-          const err = error as BusinessError
-          console.warn(`Failed to stop previous PiP before orientation switch. Code=${err.code}, message=${err.message}`)
-        }
-        this.pipController = null
+        await this.syncPictureInPictureOrientation()
+        return
       }
 
       if (!this.pipController) {
@@ -607,17 +635,33 @@ struct ClockPipView {
     return hours.toString().padStart(2, '0')
   }
 
+  getPipWidth(): number {
+    return this.isLandscape ? PIP_CLOCK_LANDSCAPE_WIDTH : PIP_CLOCK_PORTRAIT_WIDTH
+  }
+
+  getPipHeight(): number {
+    return this.isLandscape ? PIP_CLOCK_LANDSCAPE_HEIGHT : PIP_CLOCK_PORTRAIT_HEIGHT
+  }
+
+  getPreviewScale(): number {
+    return Math.min(this.getPipWidth() / this.getPreviewWidth(), this.getPipHeight() / this.getPreviewHeight())
+  }
+
+  getPreviewWidth(): number {
+    return this.isLandscape ? PIP_CLOCK_PREVIEW_LANDSCAPE_WIDTH : PIP_CLOCK_PREVIEW_PORTRAIT_WIDTH
+  }
+
+  getPreviewHeight(): number {
+    return this.isLandscape ? PIP_CLOCK_PREVIEW_LANDSCAPE_HEIGHT : PIP_CLOCK_PREVIEW_PORTRAIT_HEIGHT
+  }
+
   build() {
-    Stack() {
-      if (this.clockConfig.type == ClockType.Flip) {
-        this.PipFlipClock()
-      } else {
-        this.CurrentClockFace()
-      }
+    Stack({ alignContent: Alignment.Center }) {
+      this.PreviewClockFace()
     }
     .width('100%')
     .height('100%')
-    .backgroundColor(this.clockConfig.colors.backgroundColor)
+    .backgroundColor('#00FF00')
     .borderRadius(28)
     .clip(true)
   }
@@ -677,6 +721,104 @@ struct ClockPipView {
       space: 2,
       current: this.now.getSeconds().toString().padStart(2, '0'),
       controller: this.secondController
+    })
+  }
+
+  @Builder
+  PreviewClockFace() {
+    RelativeContainer() {
+      Column() {
+        if (this.clockConfig.type == ClockType.Flip) {
+          FlipClock({
+            date: this.now,
+            colorsConfig: this.clockConfig.colors,
+            globalConfig: this.globalConfig,
+            isLandscape: this.isLandscape
+          })
+        } else if (this.clockConfig.type == ClockType.Round) {
+          RoundClock({
+            controller: this.clockController,
+            date: this.now,
+            style: this.clockConfig.style
+          })
+        } else if (this.clockConfig.type == ClockType.Digital) {
+          DigitalClock({
+            controller: this.clockController,
+            date: this.now,
+            colorsConfig: this.clockConfig.colors,
+            globalConfig: this.globalConfig,
+          })
+        } else if (this.clockConfig.type == ClockType.Rotate) {
+          RotateClock({
+            controller: this.clockController,
+            date: this.now,
+            style: this.clockConfig.style,
+            colorsConfig: this.clockConfig.colors,
+            globalConfig: this.globalConfig,
+            lightOn: this.clockConfig.ext?.lightOn,
+            isLandscape: this.isLandscape,
+          })
+        } else if (this.clockConfig.type == ClockType.LunarCalendar) {
+          LunarCalendarClock({
+            controller: this.clockController,
+            date: this.now,
+            style: this.clockConfig.style,
+            colorsConfig: this.clockConfig.colors,
+            globalConfig: this.globalConfig,
+            isLandscape: this.isLandscape,
+          })
+        } else if (this.clockConfig.type == ClockType.NormalDigital) {
+          NormalDigitalClock({
+            controller: this.clockController,
+            date: this.now,
+            colorsConfig: this.clockConfig.colors,
+            globalConfig: this.globalConfig,
+            isLandscape: this.isLandscape,
+          })
+        } else if (this.clockConfig.type == ClockType.Stereoscopic) {
+          StereoscopicClock({
+            controller: this.clockController,
+            date: this.now,
+            colorsConfig: this.clockConfig.colors,
+            globalConfig: this.globalConfig,
+            isLandscape: this.isLandscape,
+          })
+        } else if (this.clockConfig.type == ClockType.Poster) {
+          PosterClock({
+            controller: this.clockController,
+            date: this.now,
+            style: this.clockConfig.style,
+            colorsConfig: this.clockConfig.colors,
+            globalConfig: this.globalConfig,
+            isLandscape: this.isLandscape,
+          })
+        } else if (this.clockConfig.type == ClockType.Mechanical) {
+          MechanicalClock({
+            controller: this.clockController,
+            date: this.now,
+            isLandscape: this.isLandscape
+          })
+        }
+      }
+      .justifyContent(FlexAlign.Center)
+      .backgroundColor(this.clockConfig.colors.backgroundColor)
+      .alignRules({
+        top: { anchor: "__container__", align: VerticalAlign.Top },
+        left: { anchor: "__container__", align: HorizontalAlign.Start },
+        right: { anchor: "__container__", align: HorizontalAlign.End },
+        bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
+      })
+      .height(this.getPreviewHeight())
+      .width(this.getPreviewWidth())
+    }
+    .width(this.getPreviewWidth())
+    .height(this.getPreviewHeight())
+    .backgroundColor(Color.Transparent)
+    .scale({
+      x: this.getPreviewScale(),
+      y: this.getPreviewScale(),
+      centerX: '50%',
+      centerY: '50%'
     })
   }
 
