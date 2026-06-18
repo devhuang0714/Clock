@@ -184,11 +184,11 @@ export struct ClockStyleDialog {
   }
 
   getPanelHeight(): number {
-    return TAB_BAR_HEIGHT + TAB_CONTENT_GAP + this.getTabContentHeight() + PANEL_PADDING * 2
+    return TAB_BAR_HEIGHT + TAB_CONTENT_GAP + this.getTabContentHeight() + PANEL_PADDING * 2 + PANEL_BOTTOM_GAP
   }
 
   getPanelCloseOffset(): number {
-    return this.getPanelHeight() + PANEL_BOTTOM_GAP + PANEL_CLOSE_OFFSET_EXTRA
+    return this.getPanelHeight() + PANEL_CLOSE_OFFSET_EXTRA
   }
 
   closeDialog() {
@@ -279,8 +279,12 @@ export struct ClockStyleDialog {
       }
       .height(this.getPanelHeight())
       .width('100%')
-      .padding(PANEL_PADDING)
-      .margin({ bottom: PANEL_BOTTOM_GAP })
+      .padding({
+        left: PANEL_PADDING,
+        right: PANEL_PADDING,
+        top: PANEL_PADDING,
+        bottom: PANEL_PADDING + PANEL_BOTTOM_GAP
+      })
       .backgroundColor($r('app.color.cover_bg_color'))
       .backdropBlur(20) // 高斯模糊
       .offset({

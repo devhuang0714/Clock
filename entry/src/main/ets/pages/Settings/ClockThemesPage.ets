@@ -1,7 +1,13 @@
-import { AppConstants, Icons } from '../../common/constants/Constants'
+import { Icons } from '../../common/constants/Constants'
 import router from '@ohos.router';
 import mediaQuery from '@ohos.mediaquery';
-import { ClockConfig, ClockThemeGroupItems, CLOCK_CONFIGS, getClockThemeGroupItems } from '../../views/Clocks/ClockConfig';
+import display from '@ohos.display';
+import {
+  ClockConfig,
+  ClockThemeGroupItems,
+  CLOCK_CONFIGS,
+  getClockThemeGroupItems
+} from '../../views/Clocks/ClockConfig';
 import {
   ClockPreviewCanvas,
   getCurrentPreviewCanvasHeight,
@@ -12,6 +18,11 @@ import {
   isCurrentPreviewLandscape
 } from '../../views/Clocks/ClockPreviewCanvas';
 import { NavigationBar } from '../../views/NavigationBar';
+
+const PORTRAIT_PAGE_SIDE_PADDING = 24
+const THEME_ROW_ITEM_GAP = 16
+const THEME_ROW_EDGE_SPACER = PORTRAIT_PAGE_SIDE_PADDING - THEME_ROW_ITEM_GAP
+const THEME_VISIBLE_ITEM_COUNT = 3.35
 
 @Entry
 @Component
@@ -71,20 +82,23 @@ struct ClockThemesPage {
     return getCurrentPreviewCanvasHeight(this.isLandscape)
   }
 
+  getClockStyleItemShortSide(): number {
+    const defaultDisplay = display.getDefaultDisplaySync()
+    const displayShortSide = Math.min(px2vp(defaultDisplay.width), px2vp(defaultDisplay.height))
+    const availableWidth = Math.max(displayShortSide - PORTRAIT_PAGE_SIDE_PADDING * 2, 1)
+    return Math.floor((availableWidth - THEME_ROW_ITEM_GAP * 3) / THEME_VISIBLE_ITEM_COUNT)
+  }
+
   getClockStyleItemWidth(): number {
-    return getCurrentPreviewItemWidth(this.isLandscape)
+    return getCurrentPreviewItemWidth(this.isLandscape, this.getClockStyleItemShortSide())
   }
 
   getClockStyleItemHeight(): number {
-    return getCurrentPreviewItemHeight(this.isLandscape)
+    return getCurrentPreviewItemHeight(this.isLandscape, this.getClockStyleItemShortSide())
   }
 
   getPreviewScale(): number {
-    return getCurrentPreviewScale(this.isLandscape)
-  }
-
-  getGridColumnsTemplate(): string {
-    return `repeat(auto-fill, ${this.getClockStyleItemWidth()})`
+    return getCurrentPreviewScale(this.isLandscape, this.getClockStyleItemShortSide())
   }
 
   build() {
@@ -110,15 +124,27 @@ struct ClockThemesPage {
                 .fontWeight(FontWeight.Medium)
                 .fontColor($r('app.color.flip_text_color'))
                 .width('100%')
+                .padding({ left: PORTRAIT_PAGE_SIDE_PADDING, right: PORTRAIT_PAGE_SIDE_PADDING })
 
-              Grid() {
-                ForEach(group.items, (item: ClockConfig) => {
-                  this.ThemeGridItem(item)
-                }, (item: ClockConfig) => item.id)
+              Scroll() {
+                Row({ space: THEME_ROW_ITEM_GAP }) {
+                  Blank()
+                    .width(THEME_ROW_EDGE_SPACER)
+
+                  ForEach(group.items, (item: ClockConfig) => {
+                    this.ThemeItem(item)
+                  }, (item: ClockConfig) => item.id)
+
+                  Blank()
+                    .width(THEME_ROW_EDGE_SPACER)
+                }
+                .alignItems(VerticalAlign.Top)
+                .justifyContent(FlexAlign.Start)
+                .constraintSize({ minWidth: '100%' })
               }
-              .rowsGap(12)
-              .columnsGap(24)
-              .columnsTemplate(this.getGridColumnsTemplate())
+              .width('100%')
+              .height(this.getClockStyleItemHeight())
+              .scrollable(ScrollDirection.Horizontal)
               .scrollBar(BarState.Off)
             }
             .width('100%')
@@ -127,14 +153,12 @@ struct ClockThemesPage {
       }
       .scrollBar(BarState.Off)
       .layoutWeight(1)
-      .padding({ left: 24, right: 24, top: 12 })
+      .padding({ top: 12 })
     }
     .width('100%')
     .height('100%')
     .backgroundColor($r('app.color.main_background_color'))
-    .padding({
-      bottom: AppConstants.DEFAULT_NAV_HEIGHT
-    })
+    .expandSafeArea([SafeAreaType.SYSTEM], [SafeAreaEdge.BOTTOM])
   }
 
   @Builder
@@ -154,26 +178,24 @@ struct ClockThemesPage {
   }
 
   @Builder
-  ThemeGridItem(item: ClockConfig) {
-    GridItem() {
-      Stack() {
-        this.PreviewClockView(item)
+  ThemeItem(item: ClockConfig) {
+    Stack() {
+      this.PreviewClockView(item)
 
-        if (this.isSelected(item)) {
-          Text(Icons.CHECKED)
-            .fontFamily(Icons.FONT_FAMILY)
-            .fontSize(24)
-            .fontColor(Color.Green)
-        }
+      if (this.isSelected(item)) {
+        Text(Icons.CHECKED)
+          .fontFamily(Icons.FONT_FAMILY)
+          .fontSize(24)
+          .fontColor(Color.Green)
       }
-      .alignContent(Alignment.BottomEnd)
     }
+    .alignContent(Alignment.BottomEnd)
     .height(this.getClockStyleItemHeight())
     .width(this.getClockStyleItemWidth())
     .border({
       width: 2,
       color: this.isSelected(item) ? Color.Green : $r('app.color.flip_card_bg_color'),
-      radius: 8
+      radius: 18
     })
     .clip(true)
     .onClick(() => {

@@ -460,10 +460,10 @@ struct ClockWidgetsPage {
           if (this.isDefault(item)) {
             Text('默认')
               .fontSize(11)
-              .fontColor($r('app.color.blue'))
+              .fontColor(Color.Green)
               .padding({ left: 6, right: 6, top: 2, bottom: 2 })
               .borderRadius(8)
-              .backgroundColor('#22347FF1')
+              .backgroundColor('#2200FF00')
               .margin({ left: 6 })
           }
         }
@@ -487,7 +487,7 @@ struct ClockWidgetsPage {
           .fontSize(13)
           .fontColor(Color.White)
           .borderRadius(10)
-          .backgroundColor($r('app.color.blue'))
+          .backgroundColor(Color.Green)
           .onClick(() => {
             this.showAddFormMenu(item.id)
           })

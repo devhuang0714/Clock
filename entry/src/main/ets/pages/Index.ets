@@ -3,6 +3,7 @@ import { BuilderNode, FrameNode, NodeController, NodeRenderType, PiPWindow, UICo
 import window from '@ohos.window';
 import common from '@ohos.app.ability.common';
 import mediaQuery from '@ohos.mediaquery';
+import display from '@ohos.display';
 import router from '@ohos.router';
 import { AppConstants, Icons } from '../common/constants/Constants';
 import { ClockController } from '../views/Clocks/ClockController'
@@ -46,16 +47,33 @@ PersistentStorage.persistProp('defaultClockConfig', CLOCK_CONFIGS[0])
 PersistentStorage.persistProp('globalClockConfig', DEFAULT_GLOBAL_CONFIG)
 PersistentStorage.persistProp('isLandscape', false)
 
-const PIP_CLOCK_PORTRAIT_WIDTH = 180
-const PIP_CLOCK_PORTRAIT_HEIGHT = 320
-const PIP_CLOCK_LANDSCAPE_WIDTH = 320
-const PIP_CLOCK_LANDSCAPE_HEIGHT = 180
+interface PipClockSize {
+  width: number
+  height: number
+}
+
+const PIP_CLOCK_SHORT_SIDE = 180
 const PIP_CLOCK_PREVIEW_LANDSCAPE_WIDTH = CLOCK_PREVIEW_LANDSCAPE_WIDTH
 const PIP_CLOCK_PREVIEW_LANDSCAPE_HEIGHT = CLOCK_PREVIEW_LANDSCAPE_HEIGHT
 const PIP_CLOCK_PREVIEW_PORTRAIT_WIDTH = CLOCK_PREVIEW_PORTRAIT_WIDTH
 const PIP_CLOCK_PREVIEW_PORTRAIT_HEIGHT = CLOCK_PREVIEW_PORTRAIT_HEIGHT
 const PIP_CLOCK_LANDSCAPE_OVERSCAN_SCALE = 1.25
 const PIP_CLOCK_PORTRAIT_OVERSCAN_SCALE = 1.30
+
+function getScreenAspectRatio(): number {
+  const defaultDisplay = display.getDefaultDisplaySync()
+  const shortSide = Math.max(Math.min(defaultDisplay.width, defaultDisplay.height), 1)
+  const longSide = Math.max(defaultDisplay.width, defaultDisplay.height)
+  return longSide / shortSide
+}
+
+function getPipClockSize(isLandscape: boolean): PipClockSize {
+  const longSide = Math.round(PIP_CLOCK_SHORT_SIDE * getScreenAspectRatio())
+  return {
+    width: isLandscape ? longSide : PIP_CLOCK_SHORT_SIDE,
+    height: isLandscape ? PIP_CLOCK_SHORT_SIDE : longSide
+  }
+}
 
 @Builder
 function PipClockBuilder() {
@@ -64,13 +82,14 @@ function PipClockBuilder() {
 
 class ClockPipNodeController extends NodeController {
   private builderNode: BuilderNode<[]> | null = null
-  private width: number = PIP_CLOCK_PORTRAIT_WIDTH
-  private height: number = PIP_CLOCK_PORTRAIT_HEIGHT
+  private width: number = getPipClockSize(false).width
+  private height: number = getPipClockSize(false).height
 
   constructor(isLandscape: boolean) {
     super()
-    this.width = isLandscape ? PIP_CLOCK_LANDSCAPE_WIDTH : PIP_CLOCK_PORTRAIT_WIDTH
-    this.height = isLandscape ? PIP_CLOCK_LANDSCAPE_HEIGHT : PIP_CLOCK_PORTRAIT_HEIGHT
+    const size = getPipClockSize(isLandscape)
+    this.width = size.width
+    this.height = size.height
   }
 
   makeNode(uiContext: UIContext): FrameNode | null {
@@ -87,8 +106,13 @@ class ClockPipNodeController extends NodeController {
   }
 
   update(isLandscape: boolean) {
-    this.width = isLandscape ? PIP_CLOCK_LANDSCAPE_WIDTH : PIP_CLOCK_PORTRAIT_WIDTH
-    this.height = isLandscape ? PIP_CLOCK_LANDSCAPE_HEIGHT : PIP_CLOCK_PORTRAIT_HEIGHT
+    const size = getPipClockSize(isLandscape)
+    this.width = size.width
+    this.height = size.height
+    this.rebuild()
+  }
+
+  refresh() {
     this.rebuild()
   }
 }
@@ -244,6 +268,9 @@ struct Index {
 
   onColorModeChange(): void {
     this.isDark = this.currentMode == ConfigurationConstant.ColorMode.COLOR_MODE_DARK
+    if (this.pipController) {
+      this.pipUiController.refresh()
+    }
     const preferences = dataPreferences.getPreferencesSync(getContext(), { name: AppConstants.BUNDLE_NAME })
     preferences.putSync('defaultColorMode', this.currentMode)
     preferences.flush()
@@ -295,11 +322,11 @@ struct Index {
   }
 
   private getPipContentWidth(): number {
-    return this.isLandscape ? PIP_CLOCK_LANDSCAPE_WIDTH : PIP_CLOCK_PORTRAIT_WIDTH
+    return getPipClockSize(this.isLandscape).width
   }
 
   private getPipContentHeight(): number {
-    return this.isLandscape ? PIP_CLOCK_LANDSCAPE_HEIGHT : PIP_CLOCK_PORTRAIT_HEIGHT
+    return getPipClockSize(this.isLandscape).height
   }
 
   private async syncPictureInPictureOrientation() {
@@ -398,8 +425,8 @@ struct Index {
       type: XComponentType.SURFACE,
       controller: this.pipXComponentController
     })
-      .width(this.isLandscape ? PIP_CLOCK_LANDSCAPE_WIDTH : PIP_CLOCK_PORTRAIT_WIDTH)
-      .height(this.isLandscape ? PIP_CLOCK_LANDSCAPE_HEIGHT : PIP_CLOCK_PORTRAIT_HEIGHT)
+      .width(this.getPipContentWidth())
+      .height(this.getPipContentHeight())
       .opacity(0.01)
       .hitTestBehavior(HitTestMode.None)
       .zIndex(-1)
@@ -592,6 +619,7 @@ struct ClockPipView {
   @Watch('onClockConfigChange') @StorageLink('defaultClockConfig') clockConfig: ClockConfig = CLOCK_CONFIGS[0]
   @StorageLink('globalClockConfig') globalConfig: GlobalClockConfig = DEFAULT_GLOBAL_CONFIG
   @StorageLink('isLandscape') isLandscape: boolean = false
+  @StorageLink('currentColorMode') currentMode: number = ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET
   @State now: Date = new Date()
   private clockController: ClockController = new ClockController()
   private hourController: FlipCardController = new FlipCardController()
@@ -641,11 +669,11 @@ struct ClockPipView {
   }
 
   getPipWidth(): number {
-    return this.isLandscape ? PIP_CLOCK_LANDSCAPE_WIDTH : PIP_CLOCK_PORTRAIT_WIDTH
+    return getPipClockSize(this.isLandscape).width
   }
 
   getPipHeight(): number {
-    return this.isLandscape ? PIP_CLOCK_LANDSCAPE_HEIGHT : PIP_CLOCK_PORTRAIT_HEIGHT
+    return getPipClockSize(this.isLandscape).height
   }
 
   getPreviewScale(): number {
@@ -661,13 +689,22 @@ struct ClockPipView {
     return this.isLandscape ? PIP_CLOCK_PREVIEW_LANDSCAPE_HEIGHT : PIP_CLOCK_PREVIEW_PORTRAIT_HEIGHT
   }
 
+  getPipBackgroundColor(): ResourceColor {
+    if (this.currentMode == ConfigurationConstant.ColorMode.COLOR_MODE_DARK ||
+      this.currentMode == ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT ||
+      this.currentMode == ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET) {
+      return this.clockConfig.colors.backgroundColor
+    }
+    return this.clockConfig.colors.backgroundColor
+  }
+
   build() {
     Stack({ alignContent: Alignment.Center }) {
       this.PreviewClockFace()
     }
     .width('100%')
     .height('100%')
-    .backgroundColor('#00FF00')
+    .backgroundColor(this.getPipBackgroundColor())
     .borderRadius(28)
     .clip(true)
   }

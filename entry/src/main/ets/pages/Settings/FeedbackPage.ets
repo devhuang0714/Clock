@@ -63,7 +63,7 @@ struct FeedbackPage {
       type: 1000,
       title: '意见建议',
       normalColor: '#666666',
-      selectedColor: $r('app.color.blue'),
+      selectedColor: Color.Green,
       placeholder: '您有任何使用过程中的问题，或者希望增加一些交互/功能，都可以提交反馈。\n您的反馈是我改进的动力。\n\n您也可以发送邮件至：devhuang0714@gmail.com',
       emailTitle: '邮箱（如果您希望得到回复）',
       emailTips: '',
@@ -398,7 +398,7 @@ struct FeedbackPage {
             .height(this.attachmentPreviewSize)
             .borderRadius(8)
             .clip(true)
-            .backgroundColor(Color.White)
+            .backgroundColor(Color.Transparent)
           })
 
           if (this.selectedImageUris.length < this.maxAttachmentCount) {
@@ -410,7 +410,7 @@ struct FeedbackPage {
             }
             .width(this.attachmentPreviewSize)
             .height(this.attachmentPreviewSize)
-            .backgroundColor(Color.White)
+            .backgroundColor(Color.Transparent)
             .borderRadius(8)
             .border({
               color: '#999999',
@@ -461,7 +461,7 @@ struct FeedbackPage {
     Button() {
       Text(this.sending ? '发送中' : '发送')
         .fontSize(18)
-        .fontColor($r('app.color.blue'))
+        .fontColor(Color.Green)
         .fontWeight(FontWeight.Medium)
     }
     .type(ButtonType.Normal)

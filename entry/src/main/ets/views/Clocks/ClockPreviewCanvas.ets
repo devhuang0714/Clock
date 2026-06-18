@@ -22,7 +22,15 @@ export const CLOCK_PREVIEW_PORTRAIT_WIDTH = 534
 export const CLOCK_PREVIEW_PORTRAIT_HEIGHT = 1150
 export const CLOCK_PREVIEW_CARD_SHORT_SIDE = 60
 
-const CLOCK_PREVIEW_CANVAS_SHORT_SIDE = CLOCK_PREVIEW_LANDSCAPE_HEIGHT
+function getDisplayShortSideVp(): number {
+  const defaultDisplay = display.getDefaultDisplaySync()
+  return Math.max(Math.min(px2vp(defaultDisplay.width), px2vp(defaultDisplay.height)), 1)
+}
+
+function getDisplayLongSideVp(): number {
+  const defaultDisplay = display.getDefaultDisplaySync()
+  return Math.max(px2vp(defaultDisplay.width), px2vp(defaultDisplay.height))
+}
 
 export function isCurrentPreviewLandscape(): boolean {
   const defaultDisplay = display.getDefaultDisplaySync()
@@ -37,11 +45,11 @@ export function getCurrentPreviewAspectRatio(): number {
 }
 
 export function getCurrentPreviewCanvasWidth(isLandscape: boolean): number {
-  return isLandscape ? CLOCK_PREVIEW_CANVAS_SHORT_SIDE * getCurrentPreviewAspectRatio() : CLOCK_PREVIEW_CANVAS_SHORT_SIDE
+  return isLandscape ? getDisplayLongSideVp() : getDisplayShortSideVp()
 }
 
 export function getCurrentPreviewCanvasHeight(isLandscape: boolean): number {
-  return isLandscape ? CLOCK_PREVIEW_CANVAS_SHORT_SIDE : CLOCK_PREVIEW_CANVAS_SHORT_SIDE * getCurrentPreviewAspectRatio()
+  return isLandscape ? getDisplayShortSideVp() : getDisplayLongSideVp()
 }
 
 export function getCurrentPreviewItemWidth(isLandscape: boolean,

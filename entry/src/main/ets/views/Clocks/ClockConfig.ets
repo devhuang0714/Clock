@@ -440,6 +440,7 @@ export const CLOCK_THEME_GROUPS: ClockThemeGroup[] = [
   {
     title: '基础翻页',
     ids: [
+      'flip_clock_style1',
       'rotate_clock_style1',
       'rotate_clock_style2',
       'rotate_clock_style3',
@@ -453,13 +454,7 @@ export const CLOCK_THEME_GROUPS: ClockThemeGroup[] = [
     ids: [
       'normal_digital_clock_style1',
       'digital_clock_style1',
-      'flip_clock_style1',
-      'stereoscopic_clock_style1'
-    ]
-  },
-  {
-    title: '日历时光',
-    ids: [
+      'stereoscopic_clock_style1',
       'lunar_calendar_clock_style1',
       'lunar_calendar_clock_style2'
     ]
