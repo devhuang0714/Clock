@@ -32,6 +32,13 @@ import { AppInfo } from '../common/utils/AppInfo';
 import { PosterClock } from '../views/Clocks/PosterClock';
 import { DEBUG } from 'utils/BuildProfile';
 import { MechanicalClock } from '../views/Clocks/MechanicalClock';
+import {
+  CLOCK_PREVIEW_LANDSCAPE_HEIGHT,
+  CLOCK_PREVIEW_LANDSCAPE_WIDTH,
+  CLOCK_PREVIEW_PORTRAIT_HEIGHT,
+  CLOCK_PREVIEW_PORTRAIT_WIDTH,
+  ClockPreviewCanvas
+} from '../views/Clocks/ClockPreviewCanvas';
 
 // 持久化存储UI状态
 PersistentStorage.persistProp('currentColorMode', ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET)
@@ -43,10 +50,12 @@ const PIP_CLOCK_PORTRAIT_WIDTH = 180
 const PIP_CLOCK_PORTRAIT_HEIGHT = 320
 const PIP_CLOCK_LANDSCAPE_WIDTH = 320
 const PIP_CLOCK_LANDSCAPE_HEIGHT = 180
-const PIP_CLOCK_PREVIEW_LANDSCAPE_WIDTH = 1150
-const PIP_CLOCK_PREVIEW_LANDSCAPE_HEIGHT = 534
-const PIP_CLOCK_PREVIEW_PORTRAIT_WIDTH = 534
-const PIP_CLOCK_PREVIEW_PORTRAIT_HEIGHT = 1150
+const PIP_CLOCK_PREVIEW_LANDSCAPE_WIDTH = CLOCK_PREVIEW_LANDSCAPE_WIDTH
+const PIP_CLOCK_PREVIEW_LANDSCAPE_HEIGHT = CLOCK_PREVIEW_LANDSCAPE_HEIGHT
+const PIP_CLOCK_PREVIEW_PORTRAIT_WIDTH = CLOCK_PREVIEW_PORTRAIT_WIDTH
+const PIP_CLOCK_PREVIEW_PORTRAIT_HEIGHT = CLOCK_PREVIEW_PORTRAIT_HEIGHT
+const PIP_CLOCK_LANDSCAPE_OVERSCAN_SCALE = 1.25
+const PIP_CLOCK_PORTRAIT_OVERSCAN_SCALE = 1.30
 
 @Builder
 function PipClockBuilder() {
@@ -644,7 +653,8 @@ struct ClockPipView {
   }
 
   getPreviewScale(): number {
-    return Math.min(this.getPipWidth() / this.getPreviewWidth(), this.getPipHeight() / this.getPreviewHeight())
+    return Math.min(this.getPipWidth() / this.getPreviewWidth(), this.getPipHeight() / this.getPreviewHeight()) *
+    (this.isLandscape ? PIP_CLOCK_LANDSCAPE_OVERSCAN_SCALE : PIP_CLOCK_PORTRAIT_OVERSCAN_SCALE)
   }
 
   getPreviewWidth(): number {
@@ -726,91 +736,15 @@ struct ClockPipView {
 
   @Builder
   PreviewClockFace() {
-    RelativeContainer() {
-      Column() {
-        if (this.clockConfig.type == ClockType.Flip) {
-          FlipClock({
-            date: this.now,
-            colorsConfig: this.clockConfig.colors,
-            globalConfig: this.globalConfig,
-            isLandscape: this.isLandscape
-          })
-        } else if (this.clockConfig.type == ClockType.Round) {
-          RoundClock({
-            controller: this.clockController,
-            date: this.now,
-            style: this.clockConfig.style
-          })
-        } else if (this.clockConfig.type == ClockType.Digital) {
-          DigitalClock({
-            controller: this.clockController,
-            date: this.now,
-            colorsConfig: this.clockConfig.colors,
-            globalConfig: this.globalConfig,
-          })
-        } else if (this.clockConfig.type == ClockType.Rotate) {
-          RotateClock({
-            controller: this.clockController,
-            date: this.now,
-            style: this.clockConfig.style,
-            colorsConfig: this.clockConfig.colors,
-            globalConfig: this.globalConfig,
-            lightOn: this.clockConfig.ext?.lightOn,
-            isLandscape: this.isLandscape,
-          })
-        } else if (this.clockConfig.type == ClockType.LunarCalendar) {
-          LunarCalendarClock({
-            controller: this.clockController,
-            date: this.now,
-            style: this.clockConfig.style,
-            colorsConfig: this.clockConfig.colors,
-            globalConfig: this.globalConfig,
-            isLandscape: this.isLandscape,
-          })
-        } else if (this.clockConfig.type == ClockType.NormalDigital) {
-          NormalDigitalClock({
-            controller: this.clockController,
-            date: this.now,
-            colorsConfig: this.clockConfig.colors,
-            globalConfig: this.globalConfig,
-            isLandscape: this.isLandscape,
-          })
-        } else if (this.clockConfig.type == ClockType.Stereoscopic) {
-          StereoscopicClock({
-            controller: this.clockController,
-            date: this.now,
-            colorsConfig: this.clockConfig.colors,
-            globalConfig: this.globalConfig,
-            isLandscape: this.isLandscape,
-          })
-        } else if (this.clockConfig.type == ClockType.Poster) {
-          PosterClock({
-            controller: this.clockController,
-            date: this.now,
-            style: this.clockConfig.style,
-            colorsConfig: this.clockConfig.colors,
-            globalConfig: this.globalConfig,
-            isLandscape: this.isLandscape,
-          })
-        } else if (this.clockConfig.type == ClockType.Mechanical) {
-          MechanicalClock({
-            controller: this.clockController,
-            date: this.now,
-            isLandscape: this.isLandscape
-          })
-        }
-      }
-      .justifyContent(FlexAlign.Center)
-      .backgroundColor(this.clockConfig.colors.backgroundColor)
-      .alignRules({
-        top: { anchor: "__container__", align: VerticalAlign.Top },
-        left: { anchor: "__container__", align: HorizontalAlign.Start },
-        right: { anchor: "__container__", align: HorizontalAlign.End },
-        bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
-      })
-      .height(this.getPreviewHeight())
-      .width(this.getPreviewWidth())
-    }
+    ClockPreviewCanvas({
+      controller: this.clockController,
+      clockConfig: this.clockConfig,
+      date: this.now,
+      globalConfig: this.globalConfig,
+      isLandscape: this.isLandscape,
+      canvasWidth: this.getPreviewWidth(),
+      canvasHeight: this.getPreviewHeight()
+    })
     .width(this.getPreviewWidth())
     .height(this.getPreviewHeight())
     .backgroundColor(Color.Transparent)

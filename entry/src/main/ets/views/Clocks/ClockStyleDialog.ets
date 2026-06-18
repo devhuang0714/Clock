@@ -2,22 +2,17 @@ import { Icons } from '../../common/constants/Constants'
 import {
   ClockColorSetting,
   ClockConfig,
-  ClockType,
   CLOCK_CONFIGS,
   getOrderedClockConfigs,
   supportsClockColorSetting
 } from './ClockConfig'
 import display from '@ohos.display';
 import { startVibration } from '../../common/utils/Vibrator'
-import { FlipClock } from './FlipClock';
-import { RoundClock } from './RoundClock';
-import { DigitalClock } from './DigitalClock';
-import { RotateClock } from './RotateClock';
-import { LunarCalendarClock } from './LunarCalendarClock';
-import { NormalDigitalClock } from './NormalDigitalClock';
-import { StereoscopicClock } from './StereoscopicClock';
-import { PosterClock } from './PosterClock';
-import { MechanicalClock } from './MechanicalClock';
+import {
+  CLOCK_PREVIEW_LANDSCAPE_HEIGHT,
+  CLOCK_PREVIEW_LANDSCAPE_WIDTH,
+  ClockPreviewCanvas
+} from './ClockPreviewCanvas';
 
 @Extend(Text)
 function setTabTextStyles(selected: boolean) {
@@ -296,83 +291,19 @@ export struct ClockStyleDialog {
 
   @Builder
   PreviewClockView(clockConfig: ClockConfig) {
-    RelativeContainer() {
-      Column() {
-        if (clockConfig.type == ClockType.Flip) {
-          FlipClock({
-            date: this.previewDate,
-            colorsConfig: clockConfig.colors,
-            isLandscape: true
-          })
-        } else if (clockConfig.type == ClockType.Round) {
-          RoundClock({
-            date: this.previewDate,
-            style: clockConfig.style
-          })
-        } else if (clockConfig.type == ClockType.Digital) {
-          DigitalClock({
-            date: this.previewDate,
-            colorsConfig: clockConfig.colors,
-          })
-        } else if (clockConfig.type == ClockType.Rotate) {
-          RotateClock({
-            date: this.previewDate,
-            style: clockConfig.style,
-            colorsConfig: clockConfig.colors,
-            lightOn: clockConfig.ext?.lightOn ?? false,
-            isLandscape: true,
-          })
-        } else if (clockConfig.type == ClockType.LunarCalendar) {
-          LunarCalendarClock({
-            date: this.previewDate,
-            style: clockConfig.style,
-            colorsConfig: clockConfig.colors,
-            isLandscape: true,
-          })
-        } else if (clockConfig.type == ClockType.NormalDigital) {
-          NormalDigitalClock({
-            date: this.previewDate,
-            colorsConfig: clockConfig.colors,
-            isLandscape: true,
-          })
-        } else if (clockConfig.type == ClockType.Stereoscopic) {
-          StereoscopicClock({
-            date: this.previewDate,
-            colorsConfig: clockConfig.colors,
-            isLandscape: true,
-          })
-        } else if (clockConfig.type == ClockType.Poster) {
-          PosterClock({
-            date: this.previewDate,
-            style: clockConfig.style,
-            colorsConfig: clockConfig.colors,
-            isLandscape: true,
-          })
-        } else if (clockConfig.type == ClockType.Mechanical) {
-          MechanicalClock({
-            date: this.previewDate,
-            isLandscape: true
-          })
-        }
-      }
-      .justifyContent(FlexAlign.Center)
-      .backgroundColor(clockConfig.colors.backgroundColor)
-      .alignRules({
-        top: { anchor: "__container__", align: VerticalAlign.Top },
-        left: { anchor: "__container__", align: HorizontalAlign.Start },
-        right: { anchor: "__container__", align: HorizontalAlign.End },
-        bottom: { anchor: "__container__", align: VerticalAlign.Bottom }
-      })
-      .id("preview_clock")
-      .height(534)
-      .width(1150)
-    }
+    ClockPreviewCanvas({
+      clockConfig: clockConfig,
+      date: this.previewDate,
+      isLandscape: true,
+      canvasWidth: CLOCK_PREVIEW_LANDSCAPE_WIDTH,
+      canvasHeight: CLOCK_PREVIEW_LANDSCAPE_HEIGHT
+    })
     .width('100%')
     .height('100%')
     .backgroundColor(Color.Transparent)
     .scale({
-      x: this.clockStyleHeight / 534,
-      y: this.clockStyleHeight / 534
+      x: this.clockStyleHeight / CLOCK_PREVIEW_LANDSCAPE_HEIGHT,
+      y: this.clockStyleHeight / CLOCK_PREVIEW_LANDSCAPE_HEIGHT
     })
   }
 }
