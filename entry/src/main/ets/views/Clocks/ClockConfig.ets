@@ -419,7 +419,7 @@ export const CLOCK_CONFIGS: ClockConfig[] = [
     type: ClockType.Poster,
     style: ClockStyle.Style10,
     colors: {
-      backgroundColor: '#f5f5f2',
+      backgroundColor: '#000000',
       cardColor: '#ffffff',
       fontColor: '#111111'
     }

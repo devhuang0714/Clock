@@ -57,8 +57,7 @@ const PIP_CLOCK_PREVIEW_LANDSCAPE_WIDTH = CLOCK_PREVIEW_LANDSCAPE_WIDTH
 const PIP_CLOCK_PREVIEW_LANDSCAPE_HEIGHT = CLOCK_PREVIEW_LANDSCAPE_HEIGHT
 const PIP_CLOCK_PREVIEW_PORTRAIT_WIDTH = CLOCK_PREVIEW_PORTRAIT_WIDTH
 const PIP_CLOCK_PREVIEW_PORTRAIT_HEIGHT = CLOCK_PREVIEW_PORTRAIT_HEIGHT
-const PIP_CLOCK_LANDSCAPE_OVERSCAN_SCALE = 1.25
-const PIP_CLOCK_PORTRAIT_OVERSCAN_SCALE = 1.30
+const PIP_CLOCK_CONTENT_FIT_SCALE = 0.96
 
 function getScreenAspectRatio(): number {
   const defaultDisplay = display.getDefaultDisplaySync()
@@ -678,7 +677,7 @@ struct ClockPipView {
 
   getPreviewScale(): number {
     return Math.min(this.getPipWidth() / this.getPreviewWidth(), this.getPipHeight() / this.getPreviewHeight()) *
-    (this.isLandscape ? PIP_CLOCK_LANDSCAPE_OVERSCAN_SCALE : PIP_CLOCK_PORTRAIT_OVERSCAN_SCALE)
+    PIP_CLOCK_CONTENT_FIT_SCALE
   }
 
   getPreviewWidth(): number {
@@ -690,10 +689,8 @@ struct ClockPipView {
   }
 
   getPipBackgroundColor(): ResourceColor {
-    if (this.currentMode == ConfigurationConstant.ColorMode.COLOR_MODE_DARK ||
-      this.currentMode == ConfigurationConstant.ColorMode.COLOR_MODE_LIGHT ||
-      this.currentMode == ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET) {
-      return this.clockConfig.colors.backgroundColor
+    if (this.clockConfig.id == 'poster_clock_plex_minimal') {
+      return '#000000'
     }
     return this.clockConfig.colors.backgroundColor
   }

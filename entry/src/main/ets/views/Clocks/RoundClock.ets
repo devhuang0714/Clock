@@ -24,7 +24,9 @@ export struct RoundClock {
   private lastSoundSecond: number = -1
   private listener: ClockListener = {
     onUpdate: (date) => {
-      this.playTickSound(date)
+      if (this.style == ClockStyle.Style1) {
+        this.playTickSound(date)
+      }
       if (this.isImageStackStyle()) {
         const milliseconds = date.getMilliseconds()
         const seconds = date.getSeconds() + milliseconds / 1000
@@ -178,8 +180,10 @@ export struct RoundClock {
     grad.addColorStop(0.0, 'white');
     grad.addColorStop(0.9, '#eee');
     grad.addColorStop(1.0, 'white');
+    this.context.beginPath();
     this.context.fillStyle = grad;
-    this.context.fillRect(-this.radius, -this.radius, this.canvasWidth, this.canvasWidth);
+    this.context.arc(0, 0, this.radius, 0, 2 * Math.PI, false);
+    this.context.fill();
 
     this.strokeCircle(0, 0, this.radius - 5, '#fff', 6);
     this.context.font = '36px';

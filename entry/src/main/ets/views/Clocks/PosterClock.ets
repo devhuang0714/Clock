@@ -429,15 +429,11 @@ export struct PosterClock {
         Blank()
           .height(this.isLandscape ? 10 : 72)
 
-        Row({ space: 12 }) {
-          Text(this.dateStr.replace('年', ' / ').replace('月', ' / ').replace('日', ''))
-            .fontFamily(Icons.FONT_EXO2)
-            .posterLabel(this.isLandscape ? 18 : 18, '#9f5752')
-          Text(this.week)
-            .fontFamily(Icons.FONT_EXO2)
-            .posterLabel(this.isLandscape ? 18 : 18, '#9f5752')
-        }
-        .justifyContent(FlexAlign.Center)
+        Text(`${this.dateStr.replace('年', ' / ').replace('月', ' / ').replace('日', '')}  ${this.week}`)
+          .fontFamily(Icons.FONT_EXO2)
+          .posterLabel(18, '#9f5752')
+          .textAlign(TextAlign.Center)
+          .width(this.isLandscape ? '72%' : '88%')
 
         Row({ space: 6 }) {
           Text(this.time)
