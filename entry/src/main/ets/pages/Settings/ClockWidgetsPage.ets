@@ -22,6 +22,7 @@ import {
   isClockWidgetSizeSupported
 } from '../../views/Widgets/ClockWidgetConfig'
 import { ClockWidgetView } from '../../views/Widgets/ClockWidgetView'
+import Icon from '../../common/icons/Icon'
 
 interface ClockWidgetGroup {
   title: string
@@ -239,10 +240,11 @@ struct ClockWidgetsPage {
     Column({ space: 8 }) {
       Row() {
         Button() {
-          Text(Icons.CLOSE)
-            .fontFamily(Icons.FONT_FAMILY)
-            .fontSize(30)
-            .fontColor($r('app.color.flip_text_color'))
+          Icon({
+            name: Icons.CLOSE,
+            iconSize: 30,
+            color: $r('app.color.flip_text_color')
+          })
         }
         .type(ButtonType.Normal)
         .width(44)

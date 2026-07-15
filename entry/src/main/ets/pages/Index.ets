@@ -40,6 +40,7 @@ import {
   CLOCK_PREVIEW_PORTRAIT_WIDTH,
   ClockPreviewCanvas
 } from '../views/Clocks/ClockPreviewCanvas';
+import Icon from '../common/icons/Icon';
 
 // 持久化存储UI状态
 PersistentStorage.persistProp('currentColorMode', ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET)
@@ -515,7 +516,7 @@ struct Index {
   TopTools() {
     Row({ space: 12 }) {
       ToolItem({
-        unicode: this.isDark ? Icons.THEME_LIGHT : Icons.THEME_DARK,
+        iconName: this.isDark ? Icons.THEME_LIGHT : Icons.THEME_DARK,
         fontSize: this.isDark ? 24 : 28
       })
         .onClick(() => {
@@ -527,7 +528,7 @@ struct Index {
           getContext().getApplicationContext().setColorMode(mode);
         })
       ToolItem({
-        unicode: Icons.MINI_WINDOW,
+        iconName: Icons.MINI_WINDOW,
         fontSize: 24
       })
         .onClick(() => {
@@ -555,7 +556,7 @@ struct Index {
       }
 
       ToolItem({
-        unicode: Icons.SETTINGS,
+        iconName: Icons.SETTINGS,
         fontSize: 24
       })
         .onClick(() => {
@@ -582,7 +583,7 @@ struct Index {
   BottomTools() {
     Row({ space: 24 }) {
       ToolItem({
-        unicode: Icons.SCREEN_ORIENTATION,
+        iconName: Icons.SCREEN_ORIENTATION,
         fontSize: 20
       })
         .onClick(() => {
@@ -594,7 +595,7 @@ struct Index {
         .layoutWeight(1)
 
       ToolItem({
-        unicode: Icons.THEME_FILL_ICON,
+        iconName: Icons.THEME_FILL_ICON,
         fontSize: 24
       })
         .onClick(() => {
@@ -869,15 +870,16 @@ struct ClockPipView {
 
 @Component
 struct ToolItem {
-  @Prop unicode: string = Icons.SETTINGS
+  @Prop iconName: string = Icons.SETTINGS
   @Prop fontSize: number = 20
 
   build() {
     Button() {
-      Text(this.unicode)
-        .fontFamily(Icons.FONT_FAMILY)
-        .fontSize(this.fontSize)
-        .fontColor($r('app.color.tool_item_color'))
+      Icon({
+        name: this.iconName,
+        iconSize: this.fontSize,
+        color: $r('app.color.tool_item_color')
+      })
     }
     .backgroundColor($r('app.color.tool_item_bg_color'))
     .width(44)

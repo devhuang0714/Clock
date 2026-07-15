@@ -18,6 +18,7 @@ import {
   isCurrentPreviewLandscape
 } from '../../views/Clocks/ClockPreviewCanvas';
 import { NavigationBar } from '../../views/NavigationBar';
+import Icon from '../../common/icons/Icon';
 
 const PORTRAIT_PAGE_SIDE_PADDING = 24
 const THEME_ROW_ITEM_GAP = 16
@@ -183,10 +184,11 @@ struct ClockThemesPage {
       this.PreviewClockView(item)
 
       if (this.isSelected(item)) {
-        Text(Icons.CHECKED)
-          .fontFamily(Icons.FONT_FAMILY)
-          .fontSize(24)
-          .fontColor(Color.Green)
+        Icon({
+          name: Icons.CHECKED,
+          iconSize: 24,
+          color: Color.Green
+        })
       }
     }
     .alignContent(Alignment.BottomEnd)

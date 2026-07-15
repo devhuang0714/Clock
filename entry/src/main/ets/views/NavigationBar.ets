@@ -1,9 +1,10 @@
 import { AppConstants, Icons } from '../common/constants/Constants'
 import router from '@ohos.router';
+import Icon from '../common/icons/Icon';
 
 @Component
 export struct NavigationBar {
-  @Prop backIcon: ResourceStr = Icons.BACK
+  @Prop backIcon: string = Icons.BACK
   @Prop title: ResourceStr = ''
   @Prop largeBackIcon: boolean = false
   onBack: (() => void) | undefined = undefined
@@ -19,16 +20,19 @@ export struct NavigationBar {
     Row() {
       Row() {
         if (this.largeBackIcon) {
-          Text(this.backIcon)
-            .fontFamily(Icons.FONT_FAMILY)
-            .fontSize(30)
+          Icon({
+            name: this.backIcon,
+            iconSize: 30,
+            color: $r('app.color.main_text_color')
+          })
             .width(44)
             .height(44)
-            .textAlign(TextAlign.Center)
         } else {
-          Text(this.backIcon)
-            .fontFamily(Icons.FONT_FAMILY)
-            .fontSize(24)
+          Icon({
+            name: this.backIcon,
+            iconSize: 24,
+            color: $r('app.color.main_text_color')
+          })
         }
 
         Text(this.title)

@@ -53,10 +53,6 @@ export default class EntryAbility extends UIAbility {
 
       const fonts: Record<string, ResourceStr>[] = [
         {
-          'name':  Icons.FONT_FAMILY,
-          'rawfile': Icons.FAMILY_SRC
-        },
-        {
           'name': Icons.FLIP_NUM_FONT_FAMILY,
           'rawfile': Icons.FLIP_NUM_FONT_FAMILY_SRC
         },
@@ -129,7 +125,7 @@ export default class EntryAbility extends UIAbility {
           'rawfile': Icons.FONT_SPACE_MONO_SRC,
         },
       ]
-      // 注册IconFont
+      // 注册时钟显示字体
       fonts.map((item) => {
         font.registerFont({
           familyName: item.name,

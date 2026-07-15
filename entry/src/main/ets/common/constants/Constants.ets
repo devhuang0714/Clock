@@ -5,9 +5,6 @@ export class AppConstants {
 }
 
 export class Icons {
-  static readonly FONT_FAMILY: string = AppConstants.BUNDLE_NAME + 'iconfont'
-  static readonly FAMILY_SRC: ResourceStr = $rawfile('iconfont.ttf')
-
   static readonly FLIP_NUM_FONT_FAMILY: string = 'flip-num-font'
   static readonly DIGITAL_NUM_FONT_FAMILY: string = 'digital-num-font'
   static readonly DIGITAL_NUM1_FONT_FAMILY: string = 'digital-num-font1'

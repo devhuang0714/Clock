@@ -5,10 +5,11 @@ import common from '@ohos.app.ability.common';
 import { DEBUG } from 'utils/BuildProfile';
 import { AppInfo } from '../../common/utils/AppInfo';
 import { NavigationBar } from '../../views/NavigationBar';
+import Icon from '../../common/icons/Icon';
 
 interface SettingItem {
   title: string
-  unicode: string
+  iconName: string
   url?: string
   action?: () => void
   debugOnly?: boolean
@@ -20,37 +21,37 @@ export struct SettingPage {
   @State items: SettingItem[] = [
     {
       title: '表盘风格',
-      unicode: Icons.CLOCK,
+      iconName: Icons.CLOCK,
       url: 'pages/Settings/ClockThemesPage'
     },
     {
       title: '桌面小组件',
-      unicode: Icons.MINI_WINDOW,
+      iconName: Icons.MINI_WINDOW,
       url: 'pages/Settings/ClockWidgetsPage'
     },
     {
       title: '字体预览',
-      unicode: Icons.FLIP,
+      iconName: Icons.FLIP,
       url: 'pages/Settings/FontPreviewPage',
       debugOnly: true
     },
     {
       title: '自定义',
-      unicode: Icons.CUSTOM,
+      iconName: Icons.CUSTOM,
       url: 'pages/Settings/CustomPage'
     },
     {
       title: '意见反馈',
-      unicode: Icons.FEEDBACK,
+      iconName: Icons.FEEDBACK,
       url: 'pages/Settings/FeedbackPage'
     },
     {
       title: '分享',
-      unicode: Icons.SHARE,
+      iconName: Icons.SHARE,
       url: 'pages/Settings/SharePage'
     },
     {
-      unicode: Icons.CHECK_UPDATE,
+      iconName: Icons.CHECK_UPDATE,
       title: '检查更新',
       action: () => {
         AppInfo.goStore()
@@ -58,7 +59,7 @@ export struct SettingPage {
     },
     {
       title: '关于我们',
-      unicode: Icons.ABOUT,
+      iconName: Icons.ABOUT,
       url: 'pages/Settings/AboutPage'
     }
   ]
@@ -88,7 +89,7 @@ export struct SettingPage {
         ForEach(this.items, (item: SettingItem) => {
           if (!item.debugOnly || DEBUG) {
             GridItem() {
-              this.SettingItem(item.unicode, item.title)
+              this.SettingItem(item.iconName, item.title)
             }
             .onClick(() => {
               if (item.action) {
@@ -116,12 +117,13 @@ export struct SettingPage {
   }
 
   @Builder
-  SettingItem(unicode: string, title: string) {
+  SettingItem(iconName: string, title: string) {
     Column({ space: 24 }) {
-      Text(unicode)
-        .fontFamily(Icons.FONT_FAMILY)
-        .fontSize(36)
-        .fontColor($r('app.color.flip_text_color'))
+      Icon({
+        name: iconName,
+        iconSize: 36,
+        color: $r('app.color.flip_text_color')
+      })
 
       Text(title)
         .fontSize(16)

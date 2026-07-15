@@ -5,19 +5,19 @@ import hilog from '@ohos.hilog';
 import common from '@ohos.app.ability.common'
 import { AppConstants, Icons } from '../../common/constants/Constants';
 import { NavigationBar } from '../../views/NavigationBar'
-import Want from '@ohos.app.ability.Want';
 import { privacyManager } from '@kit.StoreKit';
 import Logger from '../../common/utils/HYLogger'
+import Icon from '../../common/icons/Icon'
 
 interface AboutItem {
   title: string
-  unicode: string
+  iconName: string
   url?: string
   action?: () => void
 }
 
 const DEFAULT_PRIVACY = "https://agreement-drcn.hispace.dbankcloud.cn/index.html?lang=zh&agreementId=1565146210803664192"
-const DEFAULT_USER_AGREEMENT = "https://fm.onezen.cc/folder/hyx/apps/clock/privacy/v1/privacy_policy.html"
+const DEFAULT_USER_AGREEMENT = "https://devhuang0714.cn/apps/clock/v1/user_ageement.html"
 
 @Entry
 @Component
@@ -26,21 +26,21 @@ export default struct AboutPage {
   @State versionName: string = 'v1.0.0'
   @State items: AboutItem[] = [
     {
-      unicode: Icons.PRIVACY,
+      iconName: Icons.PRIVACY,
       title: '隐私协议',
       action: () => {
         this.openPrivacy()
       }
     },
     {
-      unicode: Icons.USER_AGREEMENT,
+      iconName: Icons.USER_AGREEMENT,
       title: '用户协议',
       action: () => {
         this.openUserAgreement()
       }
     },
     {
-      unicode: Icons.FEEDBACK,
+      iconName: Icons.FEEDBACK,
       title: '意见反馈',
       url: 'pages/Settings/FeedbackPage',
     },
@@ -72,29 +72,25 @@ export default struct AboutPage {
   openPrivacy() {
     // 隐私协议
     let privacyStatementUrl = this.getPrivacyUrl(privacyManager.AppPrivacyLinkType.PRIVACY_STATEMENT_LINK) ?? DEFAULT_PRIVACY
-    this.openBrowsable(privacyStatementUrl)
+    this.openAgreement('隐私协议', privacyStatementUrl)
   }
 
   openUserAgreement() {
     // 用户协议
     let userAgreementUrl = this.getPrivacyUrl(privacyManager.AppPrivacyLinkType.USER_AGREEMENT_LINK) ?? DEFAULT_USER_AGREEMENT
-    this.openBrowsable(userAgreementUrl)
+    this.openAgreement('用户协议', userAgreementUrl)
   }
 
-  openBrowsable(url: string) {
-    let want: Want = {
-      action: 'ohos.want.action.viewData',
-      entities: ['entity.system.browsable'],
-      uri: url
-    };
-    const context: common.UIAbilityContext = getContext(this) as common.UIAbilityContext;
-    context.startAbility(want)
-      .then(() => {
-        console.error('Start browsableAbility successfully.');
-      })
-      .catch((err: BusinessError) => {
-        console.error(`Failed to startAbility. Code: ${err.code}, message: ${err.message}`);
-      });
+  openAgreement(title: string, url: string) {
+    router.pushUrl({
+      url: 'pages/Settings/PrivacyPage',
+      params: {
+        title,
+        url
+      }
+    }).catch((error: Error) => {
+      Logger.error(`Open agreement failed: ${JSON.stringify(error)}`)
+    })
   }
 
   getPrivacyUrl(type: privacyManager.AppPrivacyLinkType): string | null {
@@ -126,10 +122,11 @@ export default struct AboutPage {
         ForEach(this.items, (item: AboutItem) => {
           ListItem() {
             Row() {
-              Text(item.unicode)
-                .fontFamily(Icons.FONT_FAMILY)
-                .fontSize(24)
-                .fontColor($r('app.color.main_text_color'))
+              Icon({
+                name: item.iconName,
+                iconSize: 24,
+                color: $r('app.color.main_text_color')
+              })
                 .margin(8)
 
               Text(item.title)
@@ -139,9 +136,11 @@ export default struct AboutPage {
                 .fontColor($r('app.color.main_text_color'))
                 .layoutWeight(1)
 
-              Text(Icons.ARROW_RIGHT)
-                .fontFamily(Icons.FONT_FAMILY)
-                .fontSize(16)
+              Icon({
+                name: Icons.ARROW_RIGHT,
+                iconSize: 16,
+                color: $r('app.color.main_text_color')
+              })
             }
             .height(60)
             .padding({ left: 12, right: 12 })

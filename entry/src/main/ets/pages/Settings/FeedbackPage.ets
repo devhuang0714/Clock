@@ -8,6 +8,7 @@ import { AppInfo } from '../../common/utils/AppInfo'
 import pasteboard from '@ohos.pasteboard';
 import { deviceInfo } from '@kit.BasicServicesKit';
 import { photoAccessHelper } from '@kit.MediaLibraryKit';
+import Icon from '../../common/icons/Icon';
 
 interface FeedbackType {
   type: number
@@ -379,10 +380,11 @@ struct FeedbackPage {
                 .objectFit(ImageFit.Cover)
 
               Row() {
-                Text(Icons.DELETE)
-                  .fontFamily(Icons.FONT_FAMILY)
-                  .fontSize(12)
-                  .fontColor(Color.White)
+                Icon({
+                  name: Icons.DELETE,
+                  iconSize: 12,
+                  color: Color.White
+                })
               }
               .width(18)
               .height(18)
@@ -403,10 +405,11 @@ struct FeedbackPage {
 
           if (this.selectedImageUris.length < this.maxAttachmentCount) {
             Button() {
-              Text(Icons.ADD)
-                .fontFamily(Icons.FONT_FAMILY)
-                .fontSize(28)
-                .fontColor('#999999')
+              Icon({
+                name: Icons.ADD,
+                iconSize: 28,
+                color: '#999999'
+              })
             }
             .width(this.attachmentPreviewSize)
             .height(this.attachmentPreviewSize)

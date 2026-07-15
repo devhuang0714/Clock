@@ -8,6 +8,7 @@ import {
 } from './ClockConfig'
 import display from '@ohos.display';
 import { startVibration } from '../../common/utils/Vibrator'
+import Icon from '../../common/icons/Icon'
 import {
   ClockPreviewCanvas,
   getCurrentPreviewCanvasHeight,
@@ -323,10 +324,11 @@ export struct ClockStyleDialog {
             this.PreviewClockView(item)
 
             if (this.isSelected(item)) {
-              Text(Icons.CHECKED)
-                .fontFamily(Icons.FONT_FAMILY)
-                .fontSize(24)
-                .fontColor(Color.Green)
+              Icon({
+                name: Icons.CHECKED,
+                iconSize: 24,
+                color: Color.Green
+              })
             }
           }
           .alignContent(Alignment.BottomEnd)
@@ -473,10 +475,11 @@ struct ColorsView {
             }
 
             if (this.isSelectedColor(item)) {
-              Text(Icons.CHECKED)
-                .fontFamily(Icons.FONT_FAMILY)
-                .fontSize(24)
-                .fontColor(Color.Green)
+              Icon({
+                name: Icons.CHECKED,
+                iconSize: 24,
+                color: Color.Green
+              })
             }
           }
           .alignContent(Alignment.BottomEnd)

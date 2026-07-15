@@ -2,6 +2,7 @@ import { ClockColorsConfig, ClockStyle, DEFAULT_GLOBAL_CONFIG, GlobalClockConfig
 import { ClockController, ClockListener } from './ClockController'
 import { DateUtils } from '../../common/utils/DateUtils'
 import { Icons } from '../../common/constants/Constants'
+import Icon from '../../common/icons/Icon'
 
 @Extend(Text)
 function posterTimeText(fontSize: number, color: ResourceColor, family: string) {
@@ -1299,10 +1300,11 @@ export struct PosterClock {
   @Builder
   BottomIcon(color: ResourceColor) {
     Stack() {
-      Text(Icons.CLOCK)
-        .fontFamily(Icons.FONT_FAMILY)
-        .fontSize(24)
-        .fontColor(color)
+      Icon({
+        name: Icons.CLOCK,
+        iconSize: 24,
+        color: color
+      })
     }
     .width(34)
     .height(34)

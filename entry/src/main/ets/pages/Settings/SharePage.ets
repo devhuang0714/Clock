@@ -7,6 +7,7 @@ import { uniformTypeDescriptor as utd } from '@kit.ArkData';
 import fs from '@ohos.file.fs';
 import { fileUri } from '@kit.CoreFileKit';
 import { NavigationBar } from '../../views/NavigationBar';
+import Icon from '../../common/icons/Icon';
 
 const downloadUrl: string = `https://appgallery.huawei.com/app/detail?id=${AppConstants.BUNDLE_NAME}`;
 const downloadImageName: string = '小布丁时钟下载.png'
@@ -124,10 +125,11 @@ struct SharePage {
   NavMenuBuilder() {
     Row({ space: 2 }) {
       Button() {
-        Text(Icons.SHARE)
-          .fontFamily(Icons.FONT_FAMILY)
-          .fontSize(24)
-          .fontColor($r('app.color.flip_text_color'))
+        Icon({
+          name: Icons.SHARE,
+          iconSize: 24,
+          color: $r('app.color.flip_text_color')
+        })
       }
       .type(ButtonType.Normal)
       .borderRadius(3)
