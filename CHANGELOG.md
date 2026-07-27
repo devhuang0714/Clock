@@ -40,6 +40,7 @@
   - 新增 12 张海报表盘背景图，按横屏和竖屏分别提供 Orbitron、Exo2、Audiowide、DSEG、Plex、Space Mono 背景。
   - 新增 `FontPreviewPage` 字体预览页，用于查看字体样式、商用状态、数字是否等宽和适用场景。
   - 设置页新增调试专用“字体预览”入口，仅在 `DEBUG` 为 `true` 时展示。
+- 自定义设置新增“音效”开关，默认开启并持久化保存，可统一控制翻页钟和圆形指针钟音效。
 - 新增桌面服务卡片能力：
   - 新增 HarmonyOS 服务卡片 `ClockWidgetAbility`，并在 `module.json5` 中注册 `form` 类型 `extensionAbility`。
   - 新增 `clock_widget` 服务卡片配置，默认尺寸为 `2*2`，支持 `2*2`、`2*4`、`4*4` 三种尺寸。

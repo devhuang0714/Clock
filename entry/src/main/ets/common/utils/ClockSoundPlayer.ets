@@ -13,8 +13,15 @@ class ClockSoundPlayer {
   private soundIdPromises: Map<string, Promise<number>> = new Map()
 
   play(rawFilePath: string): void {
+    if (!this.isEnabled()) {
+      return
+    }
+
     this.load(rawFilePath)
       .then(async (soundId: number) => {
+        if (!this.isEnabled()) {
+          return
+        }
         const soundPool = await this.getSoundPool()
         await soundPool.play(soundId, {
           loop: 0,
@@ -27,6 +34,10 @@ class ClockSoundPlayer {
       .catch((error: BusinessError) => {
         HYLogger.warn(`${TAG} play ${rawFilePath} failed: ${JSON.stringify(error)}`)
       })
+  }
+
+  private isEnabled(): boolean {
+    return AppStorage.get<boolean>('soundEnabled') !== false
   }
 
   private getSoundPool(): Promise<media.SoundPool> {

@@ -13,6 +13,7 @@ interface CustomOptions {
 struct CustomPage {
   @StorageLink('currentColorMode') currentMode: number = ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET;
   @StorageLink('globalClockConfig') globalConfig: GlobalClockConfig = DEFAULT_GLOBAL_CONFIG
+  @StorageLink('soundEnabled') soundEnabled: boolean = true
 
   build() {
     Column() {
@@ -22,6 +23,13 @@ struct CustomPage {
 
       List({ space: 12 }) {
         this.ThemeItem()
+
+        this.CustomItem({
+          title: '音效',
+          isOn: this.soundEnabled
+        }, (isOn) => {
+          this.soundEnabled = isOn
+        })
 
         this.CustomItem({
           title: '横竖屏切换（跟随系统）',

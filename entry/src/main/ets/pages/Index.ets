@@ -47,6 +47,7 @@ PersistentStorage.persistProp('currentColorMode', ConfigurationConstant.ColorMod
 PersistentStorage.persistProp('defaultClockConfig', CLOCK_CONFIGS[0])
 PersistentStorage.persistProp('globalClockConfig', DEFAULT_GLOBAL_CONFIG)
 PersistentStorage.persistProp('isLandscape', false)
+PersistentStorage.persistProp('soundEnabled', true)
 
 interface PipClockSize {
   width: number
