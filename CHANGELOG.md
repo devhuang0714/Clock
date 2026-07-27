@@ -23,7 +23,7 @@
 - 
 ```
 
-## 未发布变更 - 2026-05-28
+## v1.3.0 - 2026-07-27
 
 ### 功能与体验
 
@@ -66,7 +66,7 @@
   - 新增 `debug` product，使用 debug 签名配置。
   - `strictMode` 增加 `harLocalDependencyCheck: false`。
   - `oh-package-lock.json5` 和 `entry/oh-package-lock.json5` 增加 `enableUnifiedLockfile: false`。
-  - `utils/BuildProfile.ets` 从 release 状态调整为 debug 状态。
+  - `utils/BuildProfile.ets` 切换为 release 状态，正式包隐藏调试入口。
 - 路由与资源配置调整：
   - `main_pages.json` 新增 `pages/Settings/FontPreviewPage` 和 `pages/Settings/ClockWidgetsPage`。
   - 新增服务卡片相关中英文字符串资源。
@@ -77,10 +77,6 @@
 
 ### 备注
 
-- 本节依据当前分支 `v1.1.0` 与 `v1.0.5` 的 Git 差异整理，并额外纳入当前工作区未提交的服务卡片改动。
-- 已提交差异包含 2 个提交：`298d528`、`3bd1fb2`。
-- 已提交文件差异为 59 个文件变更，约 2948 行新增、165 行删除。
-- 当前工作区仍有服务卡片相关文件未提交。
-- `AppScope/app.json5` 中 `versionName` 仍为 `1.0.5`，`versionCode` 仍为 `1000050`，发布前需要确认是否升版。
-- 已执行 HarmonyOS 构建：`assembleApp --mode project -p product=debug --no-daemon`，构建结果成功。
-- 构建过程中仍存在若干既有 ArkTS warning，包括 deprecated API、可能抛异常但未显式处理、部分权限提示等；本次变更未处理这些历史 warning。
+- 发布版本：`versionName` 为 `1.3.0`，`versionCode` 为 `1030000`。
+- 正式发布使用 `default` product、Release 构建模式和发布签名。
+- 构建过程中仍存在若干既有 ArkTS warning，包括 deprecated API、可能抛异常但未显式处理、部分权限提示等；本次版本未处理这些历史 warning。
